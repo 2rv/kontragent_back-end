@@ -17,4 +17,9 @@ export class UserSignUpDto {
   @MinLength(8)
   @MaxLength(100)
   password: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(100)
+  email: string;
 }
