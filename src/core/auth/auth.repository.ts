@@ -13,13 +13,6 @@ import { UserSignUpDto } from './dto/user-sign-up.dto';
 export class AuthRepository extends Repository<UserEntity> {
   async signUp(userSignUpDto: UserSignUpDto): Promise<UserEntity> {
     const { login, password, email } = userSignUpDto;
-    console.log(password);
-    
-    if (await this.findOne({ where: { login: login } }))
-      throw new ConflictException(AUTH_ERROR.USERNAME_ALREADY_EXISTS);
-
-    if (await this.findOne({ where: { email: email } }))
-      throw new ConflictException(AUTH_ERROR.EMAIL_ALREADY_EXISTS);
 
     const user: UserEntity = this.create();
     user.login = login;
@@ -29,21 +22,21 @@ export class AuthRepository extends Repository<UserEntity> {
       await user.save();
       return user;
     } catch (error) {
-      throw new InternalServerErrorException();
+      if (error.code === '23505') {
+        throw new ConflictException(AUTH_ERROR.LOGIN_USER_ALREADY_EXISTS);
+      } else {
+        throw new InternalServerErrorException();
+      }
     }
   }
 
   async login(userLoginDto: UserLoginDto): Promise<UserEntity> {
     const { login, password } = userLoginDto;
 
-    const user =
-      (await this.findOne({
-        where: [{ login }],
-      })) ||
-      (await this.findOne({
-        where: [{ email: login }],
-      }));
-      
+    const user = await this.findOne({
+      where: [{ login }, { email: login }],
+    });
+
     if (user === undefined) {
       throw new BadRequestException(AUTH_ERROR.COULDNT_FOUND_USER);
     } else {
