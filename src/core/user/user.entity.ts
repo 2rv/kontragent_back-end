@@ -14,12 +14,16 @@ import { USER_ROLE } from './enum/user-role.enum';
 
 @Entity({ name: 'user' })
 @Unique(['login'])
+@Unique(['email'])
 export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ unique: true })
   login: string;
+
+  @Column({ unique: true })
+  email: string;
 
   @Column({ nullable: false })
   password: string;
