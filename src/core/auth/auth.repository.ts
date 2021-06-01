@@ -23,7 +23,7 @@ export class AuthRepository extends Repository<UserEntity> {
       return user;
     } catch (error) {
       if (error.code === '23505') {
-        throw new ConflictException(AUTH_ERROR.LOGIN_USER_ALREADY_EXISTS);
+        throw new ConflictException(AUTH_ERROR.USER_ALREADY_EXISTS);
       } else {
         throw new InternalServerErrorException();
       }
