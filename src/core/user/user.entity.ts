@@ -13,8 +13,6 @@ import {
 import { USER_ROLE } from './enum/user-role.enum';
 
 @Entity({ name: 'user' })
-@Unique(['login'])
-@Unique(['email'])
 export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -22,7 +20,7 @@ export class UserEntity extends BaseEntity {
   @Column({ unique: true })
   login: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   email: string;
 
   @Column({ nullable: false })
@@ -39,6 +37,9 @@ export class UserEntity extends BaseEntity {
   @CreateDateColumn()
   createDate: string;
 
+  @Column({ default: false })
+  confirmEmail: boolean;
+
   static async hashPassword(password: string): Promise<string> {
     const salt = await generatePasswordSalt(password);
     return generateBcryptHash(password, salt);
@@ -48,5 +49,9 @@ export class UserEntity extends BaseEntity {
     const salt = await generatePasswordSalt(password);
     const hashPassword = generateBcryptHash(password, salt);
     return this.password === hashPassword;
+  }
+
+  async updatePassword(password): Promise<void> {
+    this.password = await UserEntity.hashPassword(password);
   }
 }

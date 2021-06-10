@@ -1,24 +1,25 @@
-import { AuthRepository } from './auth.repository';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserSignUpDto } from './dto/user-sign-up.dto';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './interface/jwt-payload.interface';
 import { UserLoginDto } from './dto/user-login.dto';
 import { UserEntity } from '../user/user.entity';
-import { Injectable, NotFoundException } from '@nestjs/common';
 import { AUTH_ERROR } from './enum/auth-error.enum';
 import { LoginInfoDto } from './dto/login-info.dto';
-import { AccountDataDto } from './dto/account-data.dto';
+import { UserRepository } from '../user/user.repository';
+import { Injectable, BadRequestException } from '@nestjs/common';
+import { UserSignUpDto } from './dto/user-sign-up.dto';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(AuthRepository)
-    private AuthRepository: AuthRepository,
+    @InjectRepository(UserRepository)
+    private userRepository: UserRepository,
     private jwtService: JwtService,
   ) {}
 
   async signUp(userSignUpDto: UserSignUpDto): Promise<LoginInfoDto> {
-    const user: UserEntity = await this.AuthRepository.signUp(userSignUpDto);
+    const user: UserEntity = await this.userRepository.createUser(
+      userSignUpDto,
+    );
 
     const accessToken = await this.createJwt(user);
 
@@ -26,9 +27,24 @@ export class AuthService {
   }
 
   async login(userLoginDto: UserLoginDto): Promise<LoginInfoDto> {
-    const userData = await this.AuthRepository.login(userLoginDto);
+    const { login, password } = userLoginDto;
 
-    const accessToken = await this.createJwt(userData);
+    const user = await this.userRepository.findOne({
+      where: [{ login }, { email: login }],
+    });
+
+    if (user === undefined) {
+      throw new BadRequestException(AUTH_ERROR.COULDNT_FOUND_USER);
+    } else {
+      const passwordCorrect = await user.validatePassword(password);
+
+      if (passwordCorrect === false) {
+        throw new BadRequestException(AUTH_ERROR.UNCORRECT_PASSWORD_OR_LOGIN);
+      } else {
+      }
+    }
+
+    const accessToken = await this.createJwt(user);
 
     const loginInfo: LoginInfoDto = { accessToken };
     return loginInfo;
@@ -49,24 +65,5 @@ export class AuthService {
     const accessToken = await this.createJwt(user);
 
     return { accessToken };
-  }
-
-  async getAccountById(id: number): Promise<UserEntity> {
-    const user = await this.AuthRepository.findOne({ id });
-
-    if (!user) {
-      throw new NotFoundException(AUTH_ERROR.USER_WITH_THIS_ID_NOT_FOUND);
-    }
-
-    return user;
-  }
-
-  async getAccountInfo(user: UserEntity): Promise<AccountDataDto> {
-    const accountData: AccountDataDto = {
-      id: user.id,
-      login: user.login,
-    };
-
-    return accountData;
   }
 }
