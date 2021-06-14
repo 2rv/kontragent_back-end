@@ -31,7 +31,7 @@ export class UserRecoveryService {
       where: [{ email: email }],
     });
 
-    if (user === undefined) {
+    if (!user) {
       throw new BadRequestException(AUTH_ERROR.COULDNT_FOUND_USER);
     }
 
