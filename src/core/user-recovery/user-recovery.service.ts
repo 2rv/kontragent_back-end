@@ -73,6 +73,6 @@ export class UserRecoveryService {
     user.updatePassword(password);
     await user.save();
 
-    // this.cacheManager.del(code);
+    this.cacheManager.del(code);
   }
 }
