@@ -49,7 +49,7 @@ export class UserRecoveryService {
     console.log(code);
   }
 
-  async updateUserPassoword(
+  async updateUserPassword(
     userRecoveryChangePasswordDto: UserRecoveryChangePasswordDto,
   ): Promise<void> {
     const { code, password } = userRecoveryChangePasswordDto;
