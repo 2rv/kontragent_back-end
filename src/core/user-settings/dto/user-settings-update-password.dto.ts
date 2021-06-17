@@ -7,3 +7,10 @@ export class UserSettingsUpdatePasswordDto {
   @MaxLength(100)
   newPassword: string;
 }
+
+export class UserSettingsUpdateEmailDto {
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(100)
+  email: string;
+}
