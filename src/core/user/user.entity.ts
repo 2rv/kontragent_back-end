@@ -54,8 +54,4 @@ export class UserEntity extends BaseEntity {
   async updatePassword(password): Promise<void> {
     this.password = await UserEntity.hashPassword(password);
   }
-
-  async updateEmail(email): Promise<void> {
-    this.email = email;
-  }
 }
