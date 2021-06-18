@@ -9,7 +9,7 @@ import { UserRecoveryPasswordPayload } from './type/user-recovery-password.type'
 import { randomUUID } from 'src/common/utils/hash';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from '../user/user.repository';
-import { UserEmailCodeDto } from './dto/user-email-code.dto';
+import { UserRecoveryGetEmailCodeDto } from './dto/user-email-code.dto';
 import { UserRecoveryChangePasswordDto } from './dto/user-recovery-change-password.dto';
 import { AUTH_ERROR } from '../auth/enum/auth-error.enum';
 import { USER_RECOVERY_ERROR } from '../user-recovery/enum/user-recovery-error.enum';
@@ -23,9 +23,9 @@ export class UserRecoveryService {
   ) {}
 
   async getEmailRecoveryCode(
-    userEmailCodeDto: UserEmailCodeDto,
+    userRecoveryGetEmailCodeDto: UserRecoveryGetEmailCodeDto,
   ): Promise<void> {
-    const { email } = userEmailCodeDto;
+    const { email } = userRecoveryGetEmailCodeDto;
 
     const user = await this.userRepository.findOne({
       where: [{ email: email }],

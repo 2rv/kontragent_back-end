@@ -1,6 +1,6 @@
 import { Controller, Post, Body, ValidationPipe } from '@nestjs/common';
 import { UserRecoveryService } from './user-recovery.service';
-import { UserRecoveryGetCodeDto } from './dto/user-email-code.dto';
+import { UserRecoveryGetEmailCodeDto } from './dto/user-email-code.dto';
 import { UserRecoveryChangePasswordDto } from './dto/user-recovery-change-password.dto';
 
 @Controller('user/recovery')
@@ -9,7 +9,7 @@ export class UserRecoveryController {
 
   @Post('/email')
   getEmailCode(
-    @Body(ValidationPipe) userEmailCodeDto: UserRecoveryGetCodeDto,
+    @Body(ValidationPipe) userEmailCodeDto: UserRecoveryGetEmailCodeDto,
   ): Promise<void> {
     return this.userRecoveryService.getEmailRecoveryCode(userEmailCodeDto);
   }
@@ -19,7 +19,7 @@ export class UserRecoveryController {
     @Body(ValidationPipe)
     userRecoveryChangePasswordDto: UserRecoveryChangePasswordDto,
   ): Promise<void> {
-    return this.userRecoveryService.updateUserPassoword(
+    return this.userRecoveryService.updateUserPassword(
       userRecoveryChangePasswordDto,
     );
   }

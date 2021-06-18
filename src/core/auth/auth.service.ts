@@ -51,11 +51,13 @@ export class AuthService {
   }
 
   async createJwt(user: UserEntity): Promise<string> {
-    const { id, role } = user;
+    const { id, role, email, phone } = user;
 
     const payload: JwtPayload = {
       id,
       role,
+      email,
+      phone,
     };
 
     return this.jwtService.sign(payload);

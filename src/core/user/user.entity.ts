@@ -20,6 +20,9 @@ export class UserEntity extends BaseEntity {
   @Column({ unique: true })
   login: string;
 
+  @Column({ unique: true })
+  phone: string;
+
   @Column({ unique: true, nullable: true })
   email: string;
 
@@ -39,6 +42,9 @@ export class UserEntity extends BaseEntity {
 
   @Column({ default: false })
   confirmEmail: boolean;
+
+  @Column({ default: false })
+  confirmPhone: boolean;
 
   static async hashPassword(password: string): Promise<string> {
     const salt = await generatePasswordSalt(password);

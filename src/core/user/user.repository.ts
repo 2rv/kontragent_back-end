@@ -10,12 +10,14 @@ import { UserCreateDto } from './dto/user-create.dto';
 
 @EntityRepository(UserEntity)
 export class UserRepository extends Repository<UserEntity> {
-  async createUser(userSignUpDto: UserCreateDto): Promise<UserEntity> {
-    const { login, password } = userSignUpDto;
+  async createUser(userCreateDto: UserCreateDto): Promise<UserEntity> {
+    const { login, password, phone, email } = userCreateDto;
 
     const user: UserEntity = new UserEntity();
     user.login = login;
     user.password = await UserEntity.hashPassword(password);
+    user.phone = phone;
+    user.email = email;
     try {
       await user.save();
       return user;
@@ -31,6 +33,14 @@ export class UserRepository extends Repository<UserEntity> {
   async confirmEmailById(userId: number): Promise<void> {
     try {
       this.update(userId, { confirmEmail: true });
+    } catch {
+      throw new BadRequestException();
+    }
+  }
+
+  async confirmPhoneById(userId: number): Promise<void> {
+    try {
+      this.update(userId, { confirmPhone: true });
     } catch {
       throw new BadRequestException();
     }
