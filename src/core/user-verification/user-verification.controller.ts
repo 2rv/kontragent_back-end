@@ -12,7 +12,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetAccount } from '../user/decorator/get-account.decorator';
 import { AccountGuard } from '../user/guard/account.guard';
 import { UserEntity } from '../user/user.entity';
-import { UserVerificationService } from './user-virifiaction.service';
+import { UserVerificationService } from './user-verification.service';
 
 @Controller('user/verification')
 export class UserVerificationController {
