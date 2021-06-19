@@ -1,13 +1,13 @@
-var createCanvas = require('canvas').createCanvas;
-var registerFont = require('canvas').registerFont;
-var generateText = require('./generateText');
-var path = require('path');
+const createCanvas = require('canvas').createCanvas;
+const registerFont = require('canvas').registerFont;
+const generateText = require('./generateText');
+const path = require('path');
 
 registerFont(path.join('./assets/fonts/customFont.ttf'), {
   family: 'Custom Font',
 });
 
-function Captcha(options) {
+function CaptchaFn(options) {
   // defaults
   this.options = options || {};
   if (!this.options.height) this.options.height = 100;
@@ -18,51 +18,51 @@ function Captcha(options) {
   this._middleware = [];
 }
 
-Captcha.prototype.use = function(fn) {
+CaptchaFn.prototype.use = function (fn) {
   this._middleware.push(fn);
   return this;
 };
 
-Captcha.prototype.reset = function() {
+CaptchaFn.prototype.reset = function () {
   this.canvas = createCanvas(this.options.width, this.options.height);
   return this;
 };
 
-Captcha.prototype.generate = function() {
+CaptchaFn.prototype.generate = function () {
   this.reset();
   this._middleware.forEach(
-    function(fn) {
+    function (fn) {
       this.canvas = fn(this.canvas, this.options);
     }.bind(this),
   );
   return this;
 };
 
-Captcha.prototype.text = function() {
+CaptchaFn.prototype.text = function () {
   return this.options.text;
 };
 
-Captcha.prototype.font = function() {
+CaptchaFn.prototype.font = function () {
   return this.options.font;
 };
 
-Captcha.prototype.height = function() {
+CaptchaFn.prototype.height = function () {
   return this.options.height;
 };
 
-Captcha.prototype.width = function() {
+CaptchaFn.prototype.width = function () {
   return this.options.width;
 };
 
-Captcha.prototype.uri = function() {
+CaptchaFn.prototype.uri = function () {
   return this.canvas.toDataURL.apply(this.canvas, arguments);
 };
 
-Captcha.prototype.buffer = function() {
+CaptchaFn.prototype.buffer = function () {
   return this.canvas.toBuffer.apply(this.canvas, arguments);
 };
 
-Captcha.prototype.stream = function(type) {
+CaptchaFn.prototype.stream = function (type) {
   if (!type) type = 'png';
   type = type.toLowerCase();
 
@@ -75,4 +75,4 @@ Captcha.prototype.stream = function(type) {
   }
 };
 
-module.exports = Captcha;
+module.exports = CaptchaFn;

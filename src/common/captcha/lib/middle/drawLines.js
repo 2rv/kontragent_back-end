@@ -1,11 +1,11 @@
-var getColors = require('../getColors');
-var randomBetween = require('../randomBetween');
+const getColors = require('../getColors');
+const randomBetween = require('../randomBetween');
 
-module.exports = function(canvas, opt) {
-  var ctx = canvas.getContext('2d');
-  var colors = getColors(randomBetween(1, 4));
+module.exports = function (canvas, opt) {
+  const ctx = canvas.getContext('2d');
+  const colors = getColors(randomBetween(1, 4));
 
-  colors.forEach(function(color) {
+  colors.forEach(function (color) {
     ctx.beginPath();
     ctx.moveTo(randomBetween(0, opt.width), randomBetween(0, opt.height));
     ctx.bezierCurveTo(

@@ -1,13 +1,13 @@
-var randomBetween = require('./randomBetween');
+const randomBetween = require('./randomBetween');
 
-var randomColor = function () {
+const randomColor = function () {
   return randomBetween(0, 255);
 };
 
 module.exports = function (count) {
-  var colors = [];
-  for (var i = 0; i < count; i++) {
-    var color = {
+  const colors = [];
+  for (let i = 0; i < count; i++) {
+    const color = {
       r: randomColor(),
       g: randomColor(),
       b: randomColor(),
