@@ -6,6 +6,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { UserEntity } from '../user/user.entity';
+import { UserVerificationPhonePayload } from './type/user-verification-phone-payload.type';
 import { UserVerificationEmailPayload } from './type/user-verification-email-payload.type';
 import { randomUUID } from 'src/common/utils/hash';
 import { USER_VERIFICATION_ERROR } from './enum/user-verification-error.enum';
@@ -56,6 +57,47 @@ export class UserVerificationService {
 
     await this.userRepository.confirmEmailById(
       userVerificationEmailPayload.userId,
+    );
+
+    this.cacheManager.del(code);
+  }
+
+  async getPhoneVerificationCode(user: UserEntity): Promise<void> {
+    if (user.confirmPhone) {
+      throw new BadRequestException(
+        USER_VERIFICATION_ERROR.USER_USER_VERIFICATION_PHONE_ALLREADY_CONFIRM,
+      );
+    }
+
+    const userVerificationPhonePayload: UserVerificationPhonePayload = {
+      phone: user.phone,
+      userId: user.id,
+    };
+
+    const code = randomUUID();
+
+    await this.cacheManager.set(
+      code,
+      JSON.stringify(userVerificationPhonePayload),
+    );
+
+    console.log(`PHONE CODE: ${code}`);
+  }
+
+  async confirmUserVerificationPhone(code: string): Promise<void> {
+    const rawUserVerificationPhonePayload = await this.cacheManager.get(code);
+
+    if (!rawUserVerificationPhonePayload) {
+      throw new BadRequestException(
+        USER_VERIFICATION_ERROR.USER_USER_VERIFICATION_PHONE_UNCORRECT_CODE,
+      );
+    }
+
+    const userVerificationPhonePayload: UserVerificationPhonePayload =
+      JSON.parse(rawUserVerificationPhonePayload);
+
+    await this.userRepository.confirmPhoneById(
+      userVerificationPhonePayload.userId,
     );
 
     this.cacheManager.del(code);

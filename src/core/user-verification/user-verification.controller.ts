@@ -1,4 +1,13 @@
-import { Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+  ValidationPipe,
+  Body,
+} from '@nestjs/common';
+
 import { AuthGuard } from '@nestjs/passport';
 import { GetAccount } from '../user/decorator/get-account.decorator';
 import { AccountGuard } from '../user/guard/account.guard';
@@ -19,5 +28,17 @@ export class UserVerificationController {
   @UseGuards(AuthGuard(), AccountGuard)
   confirmEmailVerification(@Param('code') code: string): Promise<void> {
     return this.userVerificationService.confirmUserVerificationEmail(code);
+  }
+
+  @Get('/phone')
+  @UseGuards(AuthGuard(), AccountGuard)
+  getPhoneCode(@GetAccount() user: UserEntity): Promise<void> {
+    return this.userVerificationService.getPhoneVerificationCode(user);
+  }
+
+  @Post('/phone/:code')
+  @UseGuards(AuthGuard(), AccountGuard)
+  confirmPhoneVerification(@Param('code') code: string): Promise<void> {
+    return this.userVerificationService.confirmUserVerificationPhone(code);
   }
 }
