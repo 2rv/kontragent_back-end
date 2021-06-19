@@ -23,7 +23,7 @@ export class UserEntity extends BaseEntity {
   @Column({ unique: true })
   phone: string;
 
-  @Column({ unique: true, nullable: true })
+  @Column({ unique: true })
   email: string;
 
   @Column({ nullable: false })

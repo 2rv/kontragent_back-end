@@ -12,7 +12,6 @@ import { randomUUID } from 'src/common/utils/hash';
 import { USER_VERIFICATION_ERROR } from './enum/user-verification-error.enum';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from '../user/user.repository';
-import { UserVerificationConfirmPhoneDto } from './dto/user-verifcation-confirm-phone.dto';
 
 @Injectable()
 export class UserVerificationService {
@@ -85,10 +84,7 @@ export class UserVerificationService {
     console.log(`PHONE CODE: ${code}`);
   }
 
-  async confirmUserVerificationPhone(
-    userVerificationConfirmPhoneDto: UserVerificationConfirmPhoneDto,
-  ): Promise<void> {
-    const { code } = userVerificationConfirmPhoneDto;
+  async confirmUserVerificationPhone(code: string): Promise<void> {
     const rawUserVerificationPhonePayload = await this.cacheManager.get(code);
 
     if (!rawUserVerificationPhonePayload) {

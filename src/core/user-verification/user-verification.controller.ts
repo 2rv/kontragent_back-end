@@ -13,7 +13,6 @@ import { GetAccount } from '../user/decorator/get-account.decorator';
 import { AccountGuard } from '../user/guard/account.guard';
 import { UserEntity } from '../user/user.entity';
 import { UserVerificationService } from './user-virifiaction.service';
-import { UserVerificationConfirmPhoneDto } from './dto/user-verifcation-confirm-phone.dto';
 
 @Controller('user/verification')
 export class UserVerificationController {
@@ -37,14 +36,9 @@ export class UserVerificationController {
     return this.userVerificationService.getPhoneVerificationCode(user);
   }
 
-  @Post('/phoneCode')
+  @Post('/phone/:code')
   @UseGuards(AuthGuard(), AccountGuard)
-  confirmPhoneVerification(
-    @Body(ValidationPipe)
-    userVerificationConfirmPhoneDto: UserVerificationConfirmPhoneDto,
-  ): Promise<void> {
-    return this.userVerificationService.confirmUserVerificationPhone(
-      userVerificationConfirmPhoneDto,
-    );
+  confirmPhoneVerification(@Param('code') code: string): Promise<void> {
+    return this.userVerificationService.confirmUserVerificationPhone(code);
   }
 }
