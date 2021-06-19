@@ -6,6 +6,7 @@ import { UserSettingsModule } from './core/user-settings/user-settings.module';
 import { UserVerificationModule } from './core/user-verification/user-verification.module';
 import { UserModule } from './core/user/user.module';
 import { UserRecoveryModule } from './core/user-recovery/user-recovery.module';
+import { CaptchaModule } from './core/captcha/captcha.module';
 
 @Module({
   providers: [],
@@ -16,6 +17,7 @@ import { UserRecoveryModule } from './core/user-recovery/user-recovery.module';
     UserVerificationModule,
     UserModule,
     UserRecoveryModule,
+    CaptchaModule,
   ],
 })
 export class AppModule {}
