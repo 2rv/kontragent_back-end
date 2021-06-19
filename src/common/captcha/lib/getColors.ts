@@ -1,18 +1,19 @@
 var randomBetween = require('./randomBetween');
 
-var randomColor = function() {
+var randomColor = function () {
   return randomBetween(0, 255);
 };
 
-module.exports = function(count) {
+module.exports = function (count) {
   var colors = [];
   for (var i = 0; i < count; i++) {
     var color = {
       r: randomColor(),
       g: randomColor(),
-      b: randomColor()
+      b: randomColor(),
+      css: '',
     };
-    color.css = 'rgb('+color.r+','+color.g+','+color.b+')';
+    color.css = 'rgb(' + color.r + ',' + color.g + ',' + color.b + ')';
     colors.push(color);
   }
   return colors;

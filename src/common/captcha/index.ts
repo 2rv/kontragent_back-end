@@ -21,8 +21,8 @@ module.exports = {
   generateText: generateText,
 
   // use default settings
-  create: function(opt) {
-    var cap = new Captcha(opt);
+  create: function (opt) {
+    const cap = new Captcha(opt);
     cap.use(drawBackground);
     cap.use(drawLines);
     cap.use(drawText);
@@ -30,3 +30,5 @@ module.exports = {
     return cap;
   },
 };
+
+export { Captcha };

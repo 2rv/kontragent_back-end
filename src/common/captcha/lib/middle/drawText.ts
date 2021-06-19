@@ -1,13 +1,13 @@
 var getColors = require('../getColors');
 var getFontSize = require('../getFontSize');
 var getFontRotation = require('../getFontRotation');
-module.exports = function(canvas, opt) {
+module.exports = function (canvas, opt) {
   var ctx = canvas.getContext('2d');
   var colors = getColors(opt.text.length);
 
   var x = 3;
 
-  opt.text.split('').forEach(function(letter, idx) {
+  opt.text.split('').forEach(function (letter, idx) {
     var color = colors[idx];
 
     // set font

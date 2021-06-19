@@ -1,6 +1,6 @@
 import { Errors } from './enum/errors';
 import { Cache } from 'cache-manager';
-import { Captcha } from './captcha';
+import { Captcha } from '../../common/captcha';
 import {
   BadRequestException,
   CACHE_MANAGER,
