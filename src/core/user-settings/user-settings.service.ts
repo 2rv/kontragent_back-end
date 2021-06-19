@@ -1,16 +1,11 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../user/user.entity';
-import { UserRepository } from '../user/user.repository';
 import { UserSettingsUpdatePasswordDto } from './dto/user-settings-update-password.dto';
 import { UserSettingsUpdateEmailDto } from './dto/user-settings-update-email.dto';
+import { UserSettingsUpdatePhoneDto } from './dto/user-settings-update-phone.dto';
 
 @Injectable()
 export class UserSettingsService {
-  constructor(
-    @InjectRepository(UserRepository)
-    private userRepository: UserRepository,
-  ) {}
   async updatePassword(
     user: UserEntity,
     userSettingsUpdatePasswordDto: UserSettingsUpdatePasswordDto,
@@ -30,6 +25,23 @@ export class UserSettingsService {
   ): Promise<void> {
     const { email } = userSettingsUpdateEmailDto;
     user.email = email;
-    await user.save();
+    try {
+      await user.save();
+    } catch {
+      throw new BadRequestException();
+    }
+  }
+
+  async updatePhone(
+    user: UserEntity,
+    userSettingsUpdatePhoneDto: UserSettingsUpdatePhoneDto,
+  ): Promise<void> {
+    const { phone } = userSettingsUpdatePhoneDto;
+    user.phone = phone;
+    try {
+      await user.save();
+    } catch {
+      throw new BadRequestException();
+    }
   }
 }

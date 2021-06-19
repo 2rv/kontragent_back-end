@@ -12,6 +12,7 @@ import { GetAccount } from '../user/decorator/get-account.decorator';
 import { UserEntity } from '../user/user.entity';
 import { UserSettingsUpdatePasswordDto } from './dto/user-settings-update-password.dto';
 import { UserSettingsUpdateEmailDto } from './dto/user-settings-update-email.dto';
+import { UserSettingsUpdatePhoneDto } from './dto/user-settings-update-phone.dto';
 import { PasswordGuard } from './guard/password.guard';
 
 @Controller('user/settings')
@@ -41,6 +42,19 @@ export class UserSettingsController {
     return this.userSettingsService.updateEmail(
       user,
       userSettingsUpdateEmailDto,
+    );
+  }
+
+  @Patch('/phone')
+  @UseGuards(AuthGuard(), AccountGuard, PasswordGuard)
+  updatePhone(
+    @Body(ValidationPipe)
+    userSettingsUpdatePhoneDto: UserSettingsUpdatePhoneDto,
+    @GetAccount() user: UserEntity,
+  ): Promise<void> {
+    return this.userSettingsService.updatePhone(
+      user,
+      userSettingsUpdatePhoneDto,
     );
   }
 }
