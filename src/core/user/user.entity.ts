@@ -20,7 +20,7 @@ export class UserEntity extends BaseEntity {
   @Column({ unique: true })
   login: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   phone: string;
 
   @Column({ unique: true })
@@ -28,6 +28,9 @@ export class UserEntity extends BaseEntity {
 
   @Column({ nullable: false })
   password: string;
+
+  @Column({ nullable: true })
+  fullname: string;
 
   @Column({
     type: 'enum',
