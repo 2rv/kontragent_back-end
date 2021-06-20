@@ -15,6 +15,10 @@ export class CaptchaGuard implements CanActivate {
     const { body }: { body: { captchaCode: string } } = request;
     if (!body) return false;
     const { captchaCode } = body;
-    await this.captchaService.validateCaptcha(captchaCode);
+    const capthcaCodeCorrect = await this.captchaService.validateCaptcha(
+      captchaCode,
+    );
+
+    if (capthcaCodeCorrect) return true;
   }
 }
