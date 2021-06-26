@@ -18,8 +18,9 @@ import { CompanyCreateDto } from './dto/company-create.dto';
 import { CompanyUpdateDto } from './dto/company-update.dto';
 import { CompanyGuard } from './guard/company.guard';
 import { AccountGetInfoDto } from './dto/account-get-info.dto';
-import { CompanyUserGuard } from '../company-user/guard/company.guard';
-import { CompanyUserCreateDto } from '../company-user/dto/company-user-create.dto';
+import { CompanyUserRoles } from '../company-user/decorator/company-user-role.decorator';
+import { COMPANY_USER_ROLE } from '../company-user/enum/company-user-role.enum';
+import { CompanyUserGuard } from '../company-user/guard/company-user.guard';
 
 @Controller('company')
 export class CompanyController {
@@ -30,13 +31,8 @@ export class CompanyController {
   createCompany(
     @Body(ValidationPipe) companyCreateDto: CompanyCreateDto,
     @GetAccount() user: UserEntity,
-    @Body(ValidationPipe) companyUserCreateDto: CompanyUserCreateDto,
   ): Promise<void> {
-    return this.companyService.createCompany(
-      companyCreateDto,
-      user,
-      companyUserCreateDto,
-    );
+    return this.companyService.createCompany(companyCreateDto, user);
   }
 
   @Get('/get/:companyId')
@@ -46,7 +42,8 @@ export class CompanyController {
   }
 
   @Patch('/:companyId')
-  @UseGuards(AuthGuard(), AccountGuard, CompanyGuard)
+  @CompanyUserRoles(COMPANY_USER_ROLE.OWNER)
+  @UseGuards(AuthGuard(), AccountGuard, CompanyGuard, CompanyUserGuard)
   updateCompanyInfo(
     @Body(ValidationPipe) companyUpdateDto: CompanyUpdateDto,
     @GetCompany() company: CompanyEntity,
@@ -56,5 +53,7 @@ export class CompanyController {
 
   @Get('/account/company-list')
   @UseGuards(AuthGuard(), AccountGuard)
-  getAccountCompanyList() {}
+  getAccountCompanyList(@GetAccount() user: UserEntity) {
+    return this.companyService.getAccountCompanyList(user);
+  }
 }

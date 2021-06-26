@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CompanyEntity } from '../company/company.entity';
 import { CompanyUserRepository } from '../company-user/company-user.repository';
-import { UserEntity } from '../user/user.entity';
+import { CompanyUserGetUserListDto } from './dto/get-company-user-list.dto';
+import { CompanyUserCreateDto } from './dto/company-user-create.dto';
+import { CompanyUserEntity } from './company-user.entity';
+import { UpdateCompanyUserDto } from './dto/update-company-user.dto';
 
 @Injectable()
 export class CompanyUserService {
@@ -10,11 +13,35 @@ export class CompanyUserService {
     @InjectRepository(CompanyUserRepository)
     private companyUserRepository: CompanyUserRepository,
   ) {}
-
   async getCompanyUserList(
     company: CompanyEntity,
-    user: UserEntity,
+  ): Promise<CompanyUserGetUserListDto[]> {
+    return this.companyUserRepository.getCompanyUserList(company);
+  }
+
+  async addCompanyUser(
+    company: CompanyEntity,
+    companyUserCreateDto: CompanyUserCreateDto,
   ): Promise<void> {
-    this.companyUserRepository.getCompanyUserList(company, user);
+    await this.companyUserRepository.createCompanyUser(
+      company,
+      companyUserCreateDto.userId,
+      companyUserCreateDto.role,
+    );
+  }
+
+  async deleteCompanyUser(companyUser: CompanyUserEntity): Promise<void> {
+    await this.companyUserRepository.remove(companyUser);
+  }
+
+  async updateCompanyUser(
+    companyUser: CompanyUserEntity,
+    updateCompanyUserDto: UpdateCompanyUserDto,
+  ): Promise<void> {
+    const { position, role } = updateCompanyUserDto;
+    await this.companyUserRepository.update(companyUser.id, {
+      position: position,
+      role: role,
+    });
   }
 }

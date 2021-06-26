@@ -1,45 +1,78 @@
 import { Repository, EntityRepository } from 'typeorm';
 import { CompanyUserEntity } from './company-user.entity';
-import { AUTH_ERROR } from '../auth/enum/auth-error.enum';
+import { CompanyEntity } from '../company/company.entity';
 import {
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { CompanyEntity } from '../company/company.entity';
 import { UserEntity } from '../user/user.entity';
-import { CompanyUserCreateDto } from './dto/company-user-create.dto';
+import { CompanyUserGetUserListDto } from './dto/get-company-user-list.dto';
+import { COMPANY_USER_ERROR } from './enum/company-user-error.enum';
 import { COMPANY_USER_ROLE } from './enum/company-user-role.enum';
 
 @EntityRepository(CompanyUserEntity)
 export class CompanyUserRepository extends Repository<CompanyUserEntity> {
   async createCompanyUser(
-    companyEntity: CompanyEntity,
-    userEntity: UserEntity,
-    companyUserCreateDto?: CompanyUserCreateDto,
+    company: CompanyEntity,
+    userId: number,
+    userCompanyRole: number,
   ): Promise<void> {
-    const companyUser: CompanyUserEntity = new CompanyUserEntity();
-    const { position, role = COMPANY_USER_ROLE.MANAGER } = companyUserCreateDto;
+    const query = UserEntity.createQueryBuilder('user');
+    query.leftJoinAndSelect('user.companyUser', 'companyUser');
+    query.leftJoinAndSelect('companyUser.company', 'company');
+    query.where('user.id = :id', { id: userId });
+    const user = await query.getOne();
+    const presentCompanyUser = !!user.companyUser.filter(
+      (user) => user.company.id === company.id,
+    ).length;
+    if (presentCompanyUser)
+      throw new ConflictException(
+        COMPANY_USER_ERROR.USER_ALREADY_HAS_COMPANY_ACCOUNT,
+      );
 
-    companyUser.company = companyEntity;
-    companyUser.user = userEntity;
-    if (position) companyUser.position = position;
-    if (role) companyUser.role = role;
+    const companyUser: CompanyUserEntity = new CompanyUserEntity();
+    companyUser.company = company;
+    companyUser.user = user;
+    companyUser.role = userCompanyRole;
 
     try {
       await companyUser.save();
     } catch (error) {
       if (error.code === '23505') {
-        throw new ConflictException(AUTH_ERROR.USER_ALREADY_EXISTS);
+        throw new ConflictException(
+          COMPANY_USER_ERROR.USER_ALREADY_HAS_COMPANY_ACCOUNT,
+        );
       } else {
         throw new InternalServerErrorException();
       }
     }
   }
 
-  async getCompanyUserList(company: CompanyEntity, user: UserEntity) {
-    console.log(company, user);
-    // const { id, name } = user;
-    // const { position, role, id } = company;
-    // const query = this.createQueryBuilder('company_user');
+  async getCompanyUserList(company: CompanyEntity): Promise<any[]> {
+    const query = this.createQueryBuilder('companyUser');
+    query.leftJoinAndSelect('companyUser.user', 'user');
+    query.leftJoinAndSelect('companyUser.company', 'company');
+    query.where('company.id = :id', { id: company.id });
+    query.select([
+      'companyUser.id',
+      'companyUser.position',
+      'companyUser.role',
+      'user.id',
+      'user.login',
+    ]);
+
+    const companyUserList = await query.getRawMany();
+    const companyUserGetUserListDto: CompanyUserGetUserListDto[] =
+      companyUserList.map((companyUser) => {
+        return {
+          companyUserId: companyUser.companyUser_id,
+          position: companyUser.companyUser_position,
+          role: companyUser.companyUser_role,
+          userId: companyUser.user_id,
+          name: companyUser.user_login,
+        };
+      });
+
+    return companyUserGetUserListDto;
   }
 }

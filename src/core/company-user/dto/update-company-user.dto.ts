@@ -1,6 +1,6 @@
 import { COMPANY_USER_ROLE } from '../enum/company-user-role.enum';
 
-export interface CompanyUserCreateDto {
-  userId: number;
+export interface UpdateCompanyUserDto {
+  position: string;
   role: COMPANY_USER_ROLE;
 }

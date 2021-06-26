@@ -1,27 +1,26 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CompanyEntity } from './company.entity';
-import { CompanyRepository } from './company.repository';
-import { CompanyController } from './company.controller';
 import { AuthModule } from '../auth/auth.module';
-import { CompanyService } from './company.service';
 import { CompanyUserRepository } from '../company-user/company-user.repository';
 import { UserEntity } from '../user/user.entity';
 import { CompanyUserEntity } from '../company-user/company-user.entity';
-import { UserRepository } from '../user/user.repository';
+import { CompanyEntity } from '../company/company.entity';
+import { CompanyUserController } from './company-user.controller';
+import { CompanyUserService } from './company-user.service';
+import { CompanyRepository } from '../company/company.repository';
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       CompanyEntity,
-      UserEntity,
-      UserRepository,
-      CompanyUserEntity,
       CompanyRepository,
+      UserEntity,
+      CompanyUserEntity,
       CompanyUserRepository,
     ]),
     AuthModule,
   ],
-  controllers: [CompanyController],
-  providers: [CompanyService],
+  controllers: [CompanyUserController],
+  providers: [CompanyUserService],
 })
-export class CompanyModule {}
+export class CompanyUserModule {}

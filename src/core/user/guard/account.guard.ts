@@ -37,8 +37,6 @@ export class AccountGuard implements CanActivate {
 
     request.userAccount = user;
 
-    console.log(request.userAccount);
-
     return true;
   }
 }

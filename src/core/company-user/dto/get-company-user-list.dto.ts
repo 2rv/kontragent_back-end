@@ -1,5 +1,5 @@
 export class CompanyUserGetUserListDto {
-  id: number;
+  userId: number;
   name: string;
   position: string;
   role: string;

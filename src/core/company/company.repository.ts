@@ -17,9 +17,9 @@ export class CompanyRepository extends Repository<CompanyEntity> {
     const company: CompanyEntity = new CompanyEntity();
     company.name = name;
     company.inn = inn;
+
     try {
       await company.save();
-      return company;
     } catch (error) {
       if (error.code === '23505') {
         throw new ConflictException(AUTH_ERROR.COMPANY_ALREADY_EXISTS);
@@ -27,5 +27,15 @@ export class CompanyRepository extends Repository<CompanyEntity> {
         throw new InternalServerErrorException();
       }
     }
+
+    return company;
+  }
+
+  async getCompanyList(user: UserEntity) {
+    const query = this.createQueryBuilder('company');
+    query.leftJoinAndSelect('company.companyUser', 'companyUser');
+    query.leftJoinAndSelect('companyUser.user', 'user');
+    query.where('user.id = :id', { id: user.id });
+    return await query.getMany();
   }
 }

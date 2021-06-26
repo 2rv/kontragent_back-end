@@ -39,7 +39,7 @@ export class UserEntity extends BaseEntity {
   role: USER_ROLE;
 
   @OneToMany(() => CompanyUserEntity, (companyUser) => companyUser.user)
-  companyUser: CompanyUserEntity;
+  companyUser: CompanyUserEntity[];
 
   @CreateDateColumn()
   createDate: string;

@@ -7,6 +7,7 @@ import { UserVerificationModule } from './core/user-verification/user-verificati
 import { UserModule } from './core/user/user.module';
 import { UserRecoveryModule } from './core/user-recovery/user-recovery.module';
 import { CompanyModule } from './core/company/company.module';
+import { CompanyUserModule } from './core/company-user/company-user.module';
 
 @Module({
   providers: [],
@@ -18,6 +19,7 @@ import { CompanyModule } from './core/company/company.module';
     UserModule,
     UserRecoveryModule,
     CompanyModule,
+    CompanyUserModule,
   ],
 })
 export class AppModule {}

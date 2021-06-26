@@ -1,13 +1,12 @@
-import { createParamDecorator } from '@nestjs/common';
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { CompanyEntity } from '../company.entity';
 
-interface RequestData extends Request {
-  companyAccount: CompanyEntity;
-}
-
 export const GetCompany = createParamDecorator(
-  (data: string, request: RequestData) => {
-    const company: CompanyEntity = request.companyAccount;
+  (data: string, context: ExecutionContext) => {
+    const request = context.switchToHttp().getRequest();
+    const { companyAccount }: { companyAccount: CompanyEntity } = request;
+
+    const company: CompanyEntity = companyAccount;
 
     return data ? company && company[data] : company;
   },

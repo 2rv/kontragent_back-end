@@ -24,7 +24,7 @@ export class CompanyGuard implements CanActivate {
     }
 
     const company = await this.companyRepository.findOne({
-      where: { id: params.companyId },
+      where: { id: Number(params.companyId) },
     });
 
     if (!company) {

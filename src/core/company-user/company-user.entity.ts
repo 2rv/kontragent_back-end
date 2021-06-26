@@ -18,13 +18,10 @@ export class CompanyUserEntity extends BaseEntity {
   @ManyToOne(() => CompanyEntity, (company) => company.companyUser)
   company: CompanyEntity;
 
-  @JoinColumn()
-  @ManyToOne(() => UserEntity, (user) => user.companyUser, {
-    cascade: true,
-  })
+  @ManyToOne(() => UserEntity, (user) => user.companyUser)
   user: UserEntity;
 
-  @Column()
+  @Column({ nullable: true })
   position: string;
 
   @Column({

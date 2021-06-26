@@ -7,7 +7,7 @@ import { CompanyEntity } from './company.entity';
 import { CompanyUserRepository } from '../company-user/company-user.repository';
 import { AccountGetInfoDto } from './dto/account-get-info.dto';
 import { CompanyUpdateDto } from './dto/company-update.dto';
-import { CompanyUserCreateDto } from '../company-user/dto/company-user-create.dto';
+import { COMPANY_USER_ROLE } from '../company-user/enum/company-user-role.enum';
 
 @Injectable()
 export class CompanyService {
@@ -21,15 +21,14 @@ export class CompanyService {
   async createCompany(
     companyCreateDto: CompanyCreateDto,
     user: UserEntity,
-    companyUserCreateDto: CompanyUserCreateDto,
   ): Promise<void> {
     const company = await this.companyRepository.createCompany(
       companyCreateDto,
     );
     await this.companyUserRepository.createCompanyUser(
       company,
-      user,
-      companyUserCreateDto,
+      user.id,
+      COMPANY_USER_ROLE.OWNER,
     );
   }
 
@@ -54,5 +53,9 @@ export class CompanyService {
     } catch {
       throw new BadRequestException();
     }
+  }
+
+  async getAccountCompanyList(user: UserEntity) {
+    return this.companyRepository.getCompanyList(user);
   }
 }

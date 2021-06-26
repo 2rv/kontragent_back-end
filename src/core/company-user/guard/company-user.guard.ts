@@ -28,31 +28,34 @@ export class CompanyUserGuard implements CanActivate {
       companyAccount,
     }: { userAccount: UserEntity; companyAccount: CompanyEntity } = request;
 
-    if (userAccount) throw new BadRequestException();
-    if (companyAccount) throw new BadRequestException();
+    if (!userAccount) throw new BadRequestException();
+    if (!companyAccount) throw new BadRequestException();
 
     const companyUser = await this.companyUserRepository.findOne({
-      where: { user: userAccount, company: companyAccount },
+      where: {
+        user: { id: userAccount.id },
+        company: { id: companyAccount.id },
+      },
     });
 
     if (!companyUser) {
-      throw new BadRequestException(COMPANY_USER_ERROR.USER_NOT_EMPLOYEE);
+      throw new BadRequestException(COMPANY_USER_ERROR.ACCESS_DENIED);
     }
-
     const { role = null }: { role: COMPANY_USER_ROLE } = companyUser;
 
     if (role === null) {
       return false;
     }
 
-    const roles: number[] = this.reflector.get<number[]>(
+    const roles: COMPANY_USER_ROLE[] = this.reflector.get<COMPANY_USER_ROLE[]>(
       'companyUserRoles',
       context.getHandler(),
     );
 
     if (roles) {
       const index = roles.indexOf(role);
-      return index !== -1;
+      if (index === -1)
+        throw new BadRequestException(COMPANY_USER_ERROR.NO_ACCESS);
     }
 
     return true;
