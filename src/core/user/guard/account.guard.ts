@@ -9,9 +9,9 @@ export class AccountGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
-    const { user = null }: { user: UserEntity } = request;
+    const { user }: { user: UserEntity } = request;
 
-    if (user === null) {
+    if (!user) {
       return false;
     }
 
@@ -34,6 +34,10 @@ export class AccountGuard implements CanActivate {
       const index = roles.indexOf(role);
       return index !== -1;
     }
+
+    request.userAccount = user;
+
+    console.log(request.userAccount);
 
     return true;
   }
