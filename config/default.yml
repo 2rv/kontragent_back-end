@@ -6,8 +6,8 @@ DATABASE:
   SYNCHRONIZE: true
 
 CACHE:
-  HOST: 'ec2-34-236-43-44.compute-1.amazonaws.com'
-  PORT: 12189
+  HOST: 'ec2-44-195-73-200.compute-1.amazonaws.com'
+  PORT: 27779
   PASSWORD: 'pdeb811685305cf8c1bb28d6541d08d8b84190ca075f7189558595b5848891508'
   TTL: 6000000
 
