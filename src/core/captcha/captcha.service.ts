@@ -1,6 +1,6 @@
 import { Errors } from './enum/errors';
 import { Cache } from 'cache-manager';
-const Captcha = require('../../common/captcha');
+import Captcha from '../../common/captcha';
 
 import {
   BadRequestException,

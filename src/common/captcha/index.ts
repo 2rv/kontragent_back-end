@@ -1,13 +1,13 @@
-const Captcha = require('./lib/Captcha');
-const drawBackground = require('./lib/middle/drawBackground');
-const drawText = require('./lib/middle/drawText');
-const drawLines = require('./lib/middle/drawLines');
+import Captcha from './lib/Captcha';
+import drawBackground from './lib/middle/drawBackground';
+import drawText from './lib/middle/drawText';
+import drawLines from './lib/middle/drawLines';
 
-const getColors = require('./lib/getColors');
-const getFontSize = require('./lib/getFontSize');
-const generateText = require('./lib/generateText');
+import getColors from './lib/getColors';
+import getFontSize from './lib/getFontSize';
+import generateText from './lib/generateText';
 
-module.exports = {
+export default {
   Captcha: Captcha,
 
   // stock middleware

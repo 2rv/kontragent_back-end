@@ -1,7 +1,7 @@
-const getColors = require('../getColors');
-const randomBetween = require('../randomBetween');
+import getColors from '../getColors';
+import randomBetween from '../randomBetween';
 
-module.exports = function (canvas, opt) {
+export default function (canvas, opt) {
   const ctx = canvas.getContext('2d');
   const colors = getColors(randomBetween(1, 4));
 
@@ -22,4 +22,4 @@ module.exports = function (canvas, opt) {
     return ctx.stroke();
   });
   return canvas;
-};
+}

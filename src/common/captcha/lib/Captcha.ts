@@ -1,7 +1,7 @@
 const createCanvas = require('canvas').createCanvas;
 const registerFont = require('canvas').registerFont;
-const generateText = require('./generateText');
 const path = require('path');
+import generateText from './generateText';
 
 registerFont(path.join('./assets/fonts/customFont.ttf'), {
   family: 'Custom Font',
@@ -75,4 +75,4 @@ CaptchaFn.prototype.stream = function (type) {
   }
 };
 
-module.exports = CaptchaFn;
+export default CaptchaFn;

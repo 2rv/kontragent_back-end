@@ -1,7 +1,7 @@
-var getColors = require('../getColors');
-var getFontSize = require('../getFontSize');
-var getFontRotation = require('../getFontRotation');
-module.exports = function (canvas, opt) {
+import getColors from '../getColors';
+import getFontSize from '../getFontSize';
+import getFontRotation from '../getFontRotation';
+export default function (canvas, opt) {
   var ctx = canvas.getContext('2d');
   var colors = getColors(opt.text.length);
 
@@ -34,4 +34,4 @@ module.exports = function (canvas, opt) {
     x += te.width + 1;
   });
   return canvas;
-};
+}

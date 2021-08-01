@@ -1,10 +1,10 @@
-const randomBetween = require('./randomBetween');
+import randomBetween from './randomBetween';
 
 const randomColor = function () {
   return randomBetween(0, 255);
 };
 
-module.exports = function (count) {
+export default function (count) {
   const colors = [];
   for (let i = 0; i < count; i++) {
     const color = {
@@ -17,4 +17,4 @@ module.exports = function (count) {
     colors.push(color);
   }
   return colors;
-};
+}
