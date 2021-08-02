@@ -7,6 +7,8 @@ import { UserVerificationModule } from './core/user-verification/user-verificati
 import { UserModule } from './core/user/user.module';
 import { UserRecoveryModule } from './core/user-recovery/user-recovery.module';
 import { CaptchaModule } from './core/captcha/captcha.module';
+import { CompanyModule } from './core/company/company.module';
+import { CompanyUserModule } from './core/company-user/company-user.module';
 
 @Module({
   providers: [],
@@ -18,6 +20,8 @@ import { CaptchaModule } from './core/captcha/captcha.module';
     UserModule,
     UserRecoveryModule,
     CaptchaModule,
+    CompanyModule,
+    CompanyUserModule,
   ],
 })
 export class AppModule {}

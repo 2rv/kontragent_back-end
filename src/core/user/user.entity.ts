@@ -1,16 +1,17 @@
 import {
   Entity,
-  Unique,
   BaseEntity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import {
   generatePasswordSalt,
   generateBcryptHash,
 } from '../../common/utils/hash';
 import { USER_ROLE } from './enum/user-role.enum';
+import { CompanyUserEntity } from '../company-user/company-user.entity';
 
 @Entity({ name: 'user' })
 export class UserEntity extends BaseEntity {
@@ -36,6 +37,9 @@ export class UserEntity extends BaseEntity {
     nullable: false,
   })
   role: USER_ROLE;
+
+  @OneToMany(() => CompanyUserEntity, (companyUser) => companyUser.user)
+  companyUser: CompanyUserEntity[];
 
   @CreateDateColumn()
   createDate: string;
