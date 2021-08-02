@@ -26,6 +26,7 @@ export class AuthController {
   }
 
   @Post('/login')
+  @UseGuards(CaptchaGuard)
   logIn(
     @Body(ValidationPipe) userLoginDto: UserLoginDto,
   ): Promise<LoginInfoDto> {

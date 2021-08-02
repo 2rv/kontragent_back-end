@@ -21,7 +21,7 @@ export class UserVerificationService {
     private userRepository: UserRepository,
   ) {}
 
-  async getEmailVerificationCode(user: UserEntity): Promise<void> {
+  async getEmailVerificationCode(user: UserEntity): Promise<any> {
     if (user.confirmEmail) {
       throw new BadRequestException(
         USER_VERIFICATION_ERROR.USER_USER_VERIFICATION_EMAIL_ALLDREADY_CONFIRM,
@@ -41,6 +41,7 @@ export class UserVerificationService {
     );
 
     console.log(code);
+    return { email: user.email };
   }
 
   async confirmUserVerificationEmail(code: string): Promise<void> {
