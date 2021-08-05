@@ -30,7 +30,7 @@ export class CaptchaService {
     if (!captchaCode) {
       throw new BadRequestException(Errors.CAPTCHA_VALUE_IS_UNCORRECT);
     }
-    const data = await this.cacheManager.get(captchaCode);
+    const data = await this.cacheManager.get(captchaCode.toUpperCase());
     if (!data) {
       throw new BadRequestException(Errors.CAPTCHA_VALUE_IS_UNCORRECT);
     }

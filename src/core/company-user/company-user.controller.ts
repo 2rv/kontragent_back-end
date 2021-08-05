@@ -29,7 +29,7 @@ export class CompanyUserController {
   constructor(private companyUserService: CompanyUserService) {}
 
   @Get('/company/:companyId/user/list')
-  // @CompanyUserRoles(COMPANY_USER_ROLE.OWNER)
+  @CompanyUserRoles(COMPANY_USER_ROLE.OWNER)
   @UseGuards(AuthGuard(), AccountGuard, CompanyGuard, CompanyUserGuard)
   getCompanyUserList(
     @GetCompany() company: CompanyEntity,
