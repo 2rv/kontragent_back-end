@@ -3,10 +3,16 @@ import * as config from 'config';
 import { UserEntity } from '../core/user/user.entity';
 import { CompanyUserEntity } from '../core/company-user/company-user.entity';
 import { CompanyEntity } from '../core/company/company.entity';
+import { SupportEntity } from 'src/core/support/support.entity';
 
 const DATABASE_CONFIG = config.get('DATABASE');
 
-export const ApiEntities = [UserEntity, CompanyUserEntity, CompanyEntity];
+export const ApiEntities = [
+  UserEntity,
+  CompanyUserEntity,
+  CompanyEntity,
+  SupportEntity,
+];
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: DATABASE_CONFIG.TYPE,

@@ -25,7 +25,7 @@ export class UserVerificationController {
   }
 
   @Post('/email/:code')
-  //   @UseGuards(AuthGuard(), AccountGuard)
+  @UseGuards(AuthGuard(), AccountGuard)
   confirmEmailVerification(@Param('code') code: string): Promise<void> {
     return this.userVerificationService.confirmUserVerificationEmail(code);
   }

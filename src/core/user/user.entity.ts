@@ -12,6 +12,7 @@ import {
 } from '../../common/utils/hash';
 import { USER_ROLE } from './enum/user-role.enum';
 import { CompanyUserEntity } from '../company-user/company-user.entity';
+import { SupportEntity } from '../support/support.entity';
 
 @Entity({ name: 'user' })
 export class UserEntity extends BaseEntity {
@@ -38,9 +39,6 @@ export class UserEntity extends BaseEntity {
   })
   role: USER_ROLE;
 
-  @OneToMany(() => CompanyUserEntity, (companyUser) => companyUser.user)
-  companyUser: CompanyUserEntity[];
-
   @CreateDateColumn()
   createDate: string;
 
@@ -64,4 +62,10 @@ export class UserEntity extends BaseEntity {
   async updatePassword(password): Promise<void> {
     this.password = await UserEntity.hashPassword(password);
   }
+
+  @OneToMany(() => CompanyUserEntity, (companyUser) => companyUser.user)
+  companyUser: CompanyUserEntity[];
+
+  @OneToMany(() => SupportEntity, (support) => support.creator)
+  myRequestsInSupport: SupportEntity[];
 }

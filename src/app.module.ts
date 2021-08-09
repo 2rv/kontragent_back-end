@@ -9,6 +9,7 @@ import { UserRecoveryModule } from './core/user-recovery/user-recovery.module';
 import { CaptchaModule } from './core/captcha/captcha.module';
 import { CompanyModule } from './core/company/company.module';
 import { CompanyUserModule } from './core/company-user/company-user.module';
+import { SupportModule } from './core/support/support.module';
 
 @Module({
   providers: [],
@@ -22,6 +23,7 @@ import { CompanyUserModule } from './core/company-user/company-user.module';
     CaptchaModule,
     CompanyModule,
     CompanyUserModule,
+    SupportModule,
   ],
 })
 export class AppModule {}
