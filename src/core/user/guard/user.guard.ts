@@ -14,7 +14,7 @@ import { USER_ERROR } from '../enum/user-error.enum';
 export class UserGuard implements CanActivate {
   constructor(
     @InjectRepository(UserEntity)
-    private productRepository: Repository<UserEntity>,
+    private userRepository: Repository<UserEntity>,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -25,7 +25,7 @@ export class UserGuard implements CanActivate {
       throw new BadRequestException();
     }
 
-    const user = await this.productRepository.findOne({
+    const user = await this.userRepository.findOne({
       where: { id: params.userId },
     });
 
@@ -37,7 +37,7 @@ export class UserGuard implements CanActivate {
       return false;
     }
 
-    request.userParam = user;
+    request.user = user;
 
     return true;
   }

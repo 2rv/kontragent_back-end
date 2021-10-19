@@ -1,6 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import * as stringHash from 'string-hash';
 import * as uuid from 'uuid-random';
+import * as rn from 'random-number';
 
 export const generateSaltFromString = async (
   value: string,
@@ -16,7 +17,8 @@ export const generateSaltFromString = async (
   return saltStart + saltEnd;
 };
 
-export const generatePasswordSalt = value => generateSaltFromString(value, 22);
+export const generatePasswordSalt = (value) =>
+  generateSaltFromString(value, 22);
 
 export const generateBcryptHash = (value: string, salt: string): string => {
   return bcrypt.hashSync(value, salt);
@@ -27,3 +29,11 @@ export const compareBcryptHash = (value: string, hash: string): boolean => {
 };
 
 export const randomUUID = () => uuid();
+
+const options = {
+  min: 10000,
+  max: 99999,
+  integer: true,
+};
+
+export const randomNumberCode = () => rn(options);

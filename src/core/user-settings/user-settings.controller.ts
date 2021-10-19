@@ -11,13 +11,15 @@ import { AccountGuard } from '../user/guard/account.guard';
 import { GetAccount } from '../user/decorator/get-account.decorator';
 import { UserEntity } from '../user/user.entity';
 import { UserSettingsUpdatePasswordDto } from './dto/user-settings-update-password.dto';
+import { UserSettingsUpdateEmailDto } from './dto/user-settings-update-email.dto';
+import { PasswordGuard } from './guard/password.guard';
 
-@Controller('user-setting')
+@Controller('user-settings')
 export class UserSettingsController {
   constructor(private userSettingsService: UserSettingsService) {}
 
-  @Patch('/password/:adminId')
-  @UseGuards(AuthGuard(), AccountGuard)
+  @Patch('/password')
+  @UseGuards(AuthGuard(), AccountGuard, PasswordGuard)
   updatePassword(
     @Body(ValidationPipe)
     userSettingsUpdatePasswordDto: UserSettingsUpdatePasswordDto,
@@ -26,6 +28,19 @@ export class UserSettingsController {
     return this.userSettingsService.updatePassword(
       user,
       userSettingsUpdatePasswordDto,
+    );
+  }
+
+  @Patch('/email')
+  @UseGuards(AuthGuard(), AccountGuard, PasswordGuard)
+  updateEmail(
+    @Body(ValidationPipe)
+    userSettingsUpdateEmailDto: UserSettingsUpdateEmailDto,
+    @GetAccount() user: UserEntity,
+  ): Promise<void> {
+    return this.userSettingsService.updateEmail(
+      user,
+      userSettingsUpdateEmailDto,
     );
   }
 }

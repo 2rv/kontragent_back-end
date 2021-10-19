@@ -5,6 +5,35 @@ DATABASE:
   TYPE: 'postgres'
   SYNCHRONIZE: true
 
+CACHE:
+  HOST: 'ec2-44-194-122-143.compute-1.amazonaws.com'
+  PORT: 27889
+  PASSWORD: 'pdeb811685305cf8c1bb28d6541d08d8b84190ca075f7189558595b5848891508'
+  TTL: 6000000
+
 JWT:
   EXPIRES_IN: '99999h'
   SECRET: 'FKdksk12l3ldlsfdlLlsdll123l05kgjgk04jdkgn6kk2d0fkgsdk32ldovyjkxg'
+
+MAIL:
+  MAIL_LOGIN: 'teskakaskasdkaksd@mail.ua'
+  MAIL_PASSWORD: 'cHFSnvcMtsixUtt9ncL2'
+  MAIL_HOST: 'smtp.mail.ru'
+  MAIL_PORT: 465
+  MAIL_SERVICE: 'Mail.ru'
+
+AWS:
+  SECRET_ACCESS_KEY: '37T4L1AKRY0tAtJXC7b+FmOCEUFVOoyeMSCx0TGr'
+  ACCESS_KEY_ID: 'AKIAIE6IJHPEO346SJ7Q'
+  REGION: 'us-east-2'
+  BUCKET_NAME: 'testdownloadimagesbucket'
+  ACL: 'public-read'
+
+UNITPAY:
+  PAYMENT_SIGNATURE: '195491-152f657aa68fc45b302b4bd46f8ec856'
+  PAYMENT_ID: '195491-6dc9D'
+
+TWILIO:
+  ACCOUNT_SID: 'AC8b88bba543faa79b30737180ce72376c'
+  SERVICE_SID: 'MG18a4b28a7d5ef40b9ace017a7c52f1cd'
+  AUTH_TOKEN: '828d59a50471e07301c4c17622023f1f'
