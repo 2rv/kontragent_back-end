@@ -7,3 +7,7 @@ export class UserGetAccountDataDto {
   confirmEmail: boolean;
   confirmPhone: boolean;
 }
+
+export class UserGetAccountAllDataDto {
+  list: UserGetAccountDataDto[]
+}

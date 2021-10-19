@@ -48,4 +48,25 @@ export class UserRepository extends Repository<UserEntity> {
       throw new BadRequestException();
     }
   }
+
+  async getAdminUserList(user: UserEntity){
+    const query = this.createQueryBuilder("user");
+
+    query.select([
+      'user.id',
+      'user.login',
+      'user.firstname',
+      'user.lastname',
+      'user.phone',
+      'user.email',
+      'user.confirmEmail',
+      'user.confirmPhone',
+      'user.role',
+    ])
+
+    return query.getMany()
+
+  }
+
+
 }
