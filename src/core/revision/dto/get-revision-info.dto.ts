@@ -18,3 +18,7 @@ export interface GetRevisionInfoDto {
 
   fileReview?: FileEntity[];
 }
+
+export interface GetRevisionListInfoDto {
+  list: GetRevisionInfoDto[];
+}
