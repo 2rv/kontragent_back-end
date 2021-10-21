@@ -49,8 +49,11 @@ export class UserRepository extends Repository<UserEntity> {
     }
   }
 
-  async getAdminUserList(user: UserEntity){
+  async getAdminUserList(){
     const query = this.createQueryBuilder("user");
+
+    query.where('user.role = :role', {role : 0 || 1})
+   
 
     query.select([
       'user.id',

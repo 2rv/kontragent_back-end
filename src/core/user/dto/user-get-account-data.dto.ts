@@ -1,3 +1,5 @@
+import { UserEntity } from "../user.entity";
+
 export class UserGetAccountDataDto {
   login: string;
   firstname: string;
@@ -9,5 +11,5 @@ export class UserGetAccountDataDto {
 }
 
 export class UserGetAccountAllDataDto {
-  list: UserGetAccountDataDto[]
+  list: UserEntity[];
 }

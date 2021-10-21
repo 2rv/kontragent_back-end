@@ -33,7 +33,7 @@ export class UserController {
   @Get('/admin')
   @Roles(USER_ROLE.ADMIN)
   @UseGuards(AuthGuard(), AccountGuard)
-  getAdminUserList(user: UserEntity): Promise<UserGetAccountAllDataDto> {
-      return this.userService.getAdminUserList(user)
+  getAdminUserList(): Promise<UserGetAccountAllDataDto> {
+      return this.userService.getAdminUserList()
   }
 }

@@ -33,9 +33,9 @@ export class UserService {
     return userGetAccountDataDto;
   }
 
-  async getAdminUserList(user : UserEntity): Promise<UserGetAccountAllDataDto> {
-    const list: UserGetAccountDataDto[] = 
-    await this.userRepository.getAdminUserList(user);
+  async getAdminUserList(): Promise<UserGetAccountAllDataDto> {
+    const list: UserEntity[] = 
+    await this.userRepository.getAdminUserList();
 
     return {list};
   }
