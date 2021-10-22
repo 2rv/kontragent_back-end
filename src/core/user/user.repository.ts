@@ -7,6 +7,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { UserCreateDto } from './dto/user-create.dto';
+import { USER_ROLE } from '../user/enum/user-role.enum';
 
 @EntityRepository(UserEntity)
 export class UserRepository extends Repository<UserEntity> {
@@ -49,11 +50,10 @@ export class UserRepository extends Repository<UserEntity> {
     }
   }
 
-  async getAdminUserList(){
-    const query = this.createQueryBuilder("user");
+  async getAdminUserList() {
+    const query = this.createQueryBuilder('user');
 
-    query.where('user.role = :role', {role : 0 || 1})
-   
+    query.where('user.role = :role', { role: USER_ROLE.USER });
 
     query.select([
       'user.id',
@@ -65,11 +65,8 @@ export class UserRepository extends Repository<UserEntity> {
       'user.confirmEmail',
       'user.confirmPhone',
       'user.role',
-    ])
+    ]);
 
-    return query.getMany()
-
+    return query.getMany();
   }
-
-
 }

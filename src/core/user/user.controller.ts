@@ -9,7 +9,8 @@ import { UserGuard } from './guard/user.guard';
 import { Roles } from './decorator/role.decorator';
 import { USER_ROLE } from './enum/user-role.enum';
 import { GetUser } from './decorator/get-user.decorator';
-import { UserGetAccountDataDto, UserGetAdminUserListDto } from './dto/user-get-account-data.dto';
+import { UserGetAccountDataDto } from './dto/user-get-account-data.dto';
+import { UserGetAdminUserListDto } from './dto/user-get-admin-user-list.dto';
 
 @Controller('user')
 export class UserController {
@@ -34,6 +35,6 @@ export class UserController {
   @Roles(USER_ROLE.ADMIN)
   @UseGuards(AuthGuard(), AccountGuard)
   getAdminUserList(): Promise<UserGetAdminUserListDto> {
-      return this.userService.getAdminUserList()
+    return this.userService.getAdminUserList();
   }
 }

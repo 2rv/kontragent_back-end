@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { UserEntity } from '../user/user.entity';
-import { UserGetAccountDataDto, UserGetAccountAllDataDto } from './dto/user-get-account-data.dto';
+import { UserGetAccountDataDto } from './dto/user-get-account-data.dto';
 import { UserGetAdminUserListDto } from './dto/user-get-admin-user-list.dto';
+import { UserGetAccountEmailDto } from './dto/user-get-account-email.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import {UserRepository} from './user.repository'
+import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UserService {
-
   constructor(
     @InjectRepository(UserRepository)
-    private userRepository: UserRepository
-  ){}
+    private userRepository: UserRepository,
+  ) {}
 
   async getAccountEmail(user: UserEntity): Promise<UserGetAccountEmailDto> {
     const userGetAccountEmailDto: UserGetAccountEmailDto = {
@@ -34,10 +34,8 @@ export class UserService {
   }
 
   async getAdminUserList(): Promise<UserGetAdminUserListDto> {
-    const list: UserEntity[] = 
-    await this.userRepository.getAdminUserList();
+    const list: UserEntity[] = await this.userRepository.getAdminUserList();
 
-    return {list};
+    return { list };
   }
-
 }
