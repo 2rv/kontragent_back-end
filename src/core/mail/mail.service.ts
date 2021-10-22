@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import * as path from 'path';
 
-import { SendReferralLinkDto } from '../referral/dto/send-referral-link.dto';
-import { ReferrerEntity } from '../referrer/referrer.entity';
+import { SendReferalMemberLinkDto } from '../referal-member/dto/send-referal-member-link.dto';
+import { ReferalEntity } from '../referal/referal.entity';
 
 @Injectable()
 export class MailService {
@@ -26,21 +26,21 @@ export class MailService {
   }
 
   async sendReferralLinkEmailToNotRegisteredUser(
-    sendReferralLinkDto: SendReferralLinkDto,
-    referrer: ReferrerEntity,
+    sendReferalMemberLinkDto: SendReferalMemberLinkDto,
+    referal: ReferalEntity,
   ) {
     return await this.mailerService
       .sendMail({
-        to: sendReferralLinkDto.email,
-        subject: `${referrer.user.firstname} ${referrer.user.lastname} приглашает Вас!`,
+        to: sendReferalMemberLinkDto.email,
+        subject: `${referal.user.firstname} ${referal.user.lastname} приглашает Вас!`,
         template: this.getTemplateLink(
           'sendReferralLinkEmailToNotRegisteredUser',
         ),
         context: {
-          email: sendReferralLinkDto.email,
-          firstName: referrer.user.firstname,
-          lastName: referrer.user.lastname,
-          referrerId: referrer.id,
+          email: sendReferalMemberLinkDto.email,
+          firstName: referal.user.firstname,
+          lastName: referal.user.lastname,
+          referrerId: referal.id,
         },
       })
       .catch((e) => {
@@ -53,19 +53,19 @@ export class MailService {
   }
 
   async sendReferralLinkEmailToRegisteredUser(
-    sendReferralLinkDto: SendReferralLinkDto,
-    referrer: ReferrerEntity,
+    sendReferalMemberLinkDto: SendReferalMemberLinkDto,
+    referal: ReferalEntity,
   ) {
     return await this.mailerService
       .sendMail({
-        to: sendReferralLinkDto.email,
-        subject: `${referrer.user.firstname} ${referrer.user.lastname} приглашает Вас!`,
+        to: sendReferalMemberLinkDto.email,
+        subject: `${referal.user.firstname} ${referal.user.lastname} приглашает Вас!`,
         template: this.getTemplateLink('sendReferralLinkEmailToRegisteredUser'),
         context: {
-          email: sendReferralLinkDto.email,
-          firstName: referrer.user.firstname,
-          lastName: referrer.user.lastname,
-          referrerId: referrer.id,
+          email: sendReferalMemberLinkDto.email,
+          firstName: referal.user.firstname,
+          lastName: referal.user.lastname,
+          referrerId: referal.id,
         },
       })
       .catch((e) => {

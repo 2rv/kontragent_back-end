@@ -9,15 +9,15 @@ import { UserRepository } from '../user/user.repository';
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { UserSignUpDto } from './dto/user-sign-up.dto';
 
-import { ReferrerRepository } from '../referrer/referrer.repository';
+import { ReferalRepository } from '../referal/referal.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
-    @InjectRepository(ReferrerRepository)
-    private referrerRepository: ReferrerRepository,
+    @InjectRepository(ReferalRepository)
+    private referalRepository: ReferalRepository,
     private jwtService: JwtService,
   ) {}
 
@@ -26,7 +26,7 @@ export class AuthService {
       userSignUpDto,
     );
 
-    await this.referrerRepository.createReferrer(user);
+    await this.referalRepository.createReferal(user);
 
     const accessToken = await this.createJwt(user);
 

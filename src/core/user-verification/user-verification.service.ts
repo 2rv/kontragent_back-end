@@ -15,14 +15,13 @@ import { UserRepository } from '../user/user.repository';
 import { MailService } from '../mail/mail.service';
 import { TwilioSendSMS } from 'src/common/utils/twilio';
 
-import { ReferrerRepository } from '../referrer/referrer.repository';
-import { ReferralRepository } from '../referral/referral.repository';
-import { ReferrerAwardService } from '../referrer-award/referrer-award.service';
+import { ReferalMemberRepository } from '../referal-member/referal-member.repository';
+import { ReferalAchievementService } from '../referal-achievement/referal-achievement.service';
 
-import { ReferralEntity } from '../referral/referral.entity';
-import { ReferrerEntity } from '../referrer/referrer.entity';
+import { ReferalMemberEntity } from '../referal-member/referal-member.entity';
+import { ReferalEntity } from '../referal/referal.entity';
 
-import { REFERRER_AWARD_TYPE } from '../referrer-award/enum/referrer-award-type.enum';
+import { REFERAL_ACHIEVEMENT_TYPE } from '../referal-achievement/enum/referal-achievement-type.enum';
 
 @Injectable()
 export class UserVerificationService {
@@ -30,11 +29,9 @@ export class UserVerificationService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
-    @InjectRepository(ReferrerRepository)
-    private referrerRepository: ReferrerRepository,
-    @InjectRepository(ReferralRepository)
-    private referralRepository: ReferralRepository,
-    private referrerAwardService: ReferrerAwardService,
+    @InjectRepository(ReferalMemberRepository)
+    private referalMemberRepository: ReferalMemberRepository,
+    private referalAchievementService: ReferalAchievementService,
     private mailService: MailService,
   ) {}
 
@@ -120,9 +117,9 @@ export class UserVerificationService {
     this.cacheManager.del(code);
   }
 
-  async confirmUserVerificationPhoneWithReferrer(
+  async confirmUserVerificationPhoneWithReferal(
     code: string,
-    referrer: ReferrerEntity,
+    referal: ReferalEntity,
     user: UserEntity,
   ): Promise<void> {
     const rawUserVerificationPhonePayload = await this.cacheManager.get(code);
@@ -142,13 +139,13 @@ export class UserVerificationService {
 
     this.cacheManager.del(code);
 
-    const referral: ReferralEntity =
-      await this.referralRepository.createReferral(referrer, user);
+    const referalMember: ReferalMemberEntity =
+      await this.referalMemberRepository.createReferalMember(referal, user);
 
-    this.referrerAwardService.createReferrerAward(
+    this.referalAchievementService.createReferalAchievement(
       1000,
-      REFERRER_AWARD_TYPE.SIGNUP,
-      referral,
+      REFERAL_ACHIEVEMENT_TYPE.SIGNUP,
+      referalMember,
     );
   }
 }

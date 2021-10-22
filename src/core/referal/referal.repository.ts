@@ -5,17 +5,17 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 
-import { ReferrerEntity } from './referrer.entity';
+import { ReferalEntity } from './referal.entity';
 import { UserEntity } from '../user/user.entity';
 
-@EntityRepository(ReferrerEntity)
-export class ReferrerRepository extends Repository<ReferrerEntity> {
-  async createReferrer(user: UserEntity): Promise<ReferrerEntity> {
-    const referrer: ReferrerEntity = new ReferrerEntity();
-    referrer.user = user;
+@EntityRepository(ReferalEntity)
+export class ReferalRepository extends Repository<ReferalEntity> {
+  async createReferal(user: UserEntity): Promise<ReferalEntity> {
+    const referal: ReferalEntity = new ReferalEntity();
+    referal.user = user;
     try {
-      await referrer.save();
-      return referrer;
+      await referal.save();
+      return referal;
     } catch (error) {
       if (error.code === '23505') {
         throw new ConflictException();
@@ -25,13 +25,13 @@ export class ReferrerRepository extends Repository<ReferrerEntity> {
     }
   }
 
-  async updateReferrerBalance(
-    referrer: ReferrerEntity,
+  async updateReferalBalance(
+    referal: ReferalEntity,
     award: number,
   ): Promise<void> {
     try {
-      const currentBalance = referrer.balance;
-      this.update(referrer, { balance: currentBalance + award });
+      const currentBalance = referal.balance;
+      this.update(referal, { balance: currentBalance + award });
     } catch {
       throw new BadRequestException('CHANGE.COULDNT_UPDATE_REFERRER_BALANCE');
     }

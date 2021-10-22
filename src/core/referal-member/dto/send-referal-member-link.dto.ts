@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString } from 'class-validator';
-export class SendReferralLinkDto {
+export class SendReferalMemberLinkDto {
   @IsNotEmpty()
   @IsString()
   email: string;

@@ -14,9 +14,9 @@ import { PaymentModule } from './core/payment/payment.module';
 import { CompanyBalanceModule } from './core/company-balance/company-balance.module';
 import { FileModule } from './core/file/file.module';
 
-import { ReferrerModule } from './core/referrer/referrer.module';
-import { ReferralModule } from './core/referral/referral.module';
-import { ReferrerAwardModule } from './core/referrer-award/referrer-award.module';
+import { ReferalModule } from './core/referal/referal.module';
+import { ReferalMemberModule } from './core/referal-member/referal-member.module';
+import { ReferalAchievementModule } from './core/referal-achievement/referal-achievement.module';
 
 @Module({
   providers: [],
@@ -34,9 +34,9 @@ import { ReferrerAwardModule } from './core/referrer-award/referrer-award.module
     PaymentModule,
     CompanyBalanceModule,
     FileModule,
-    ReferrerModule,
-    ReferralModule,
-    ReferrerAwardModule,
+    ReferalModule,
+    ReferalMemberModule,
+    ReferalAchievementModule,
   ],
 })
 export class AppModule {}
