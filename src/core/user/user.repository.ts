@@ -7,6 +7,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { UserCreateDto } from './dto/user-create.dto';
+import { USER_ROLE } from '../user/enum/user-role.enum';
 
 @EntityRepository(UserEntity)
 export class UserRepository extends Repository<UserEntity> {
@@ -47,5 +48,25 @@ export class UserRepository extends Repository<UserEntity> {
     } catch {
       throw new BadRequestException();
     }
+  }
+
+  async getAdminUserList() {
+    const query = this.createQueryBuilder('user');
+
+    query.where('user.role = :role', { role: USER_ROLE.USER });
+
+    query.select([
+      'user.id',
+      'user.login',
+      'user.firstname',
+      'user.lastname',
+      'user.phone',
+      'user.email',
+      'user.confirmEmail',
+      'user.confirmPhone',
+      'user.role',
+    ]);
+
+    return query.getMany();
   }
 }
