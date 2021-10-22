@@ -17,7 +17,6 @@ import { UserEntity } from '../user/user.entity';
     TypeOrmModule.forFeature([
       CompanyEntity,
       CompanyRepository,
-      CompanyEntity,
       CompanyMemberRepository,
       CompanyBalanceRepository,
       CompanyBalanceEntity,

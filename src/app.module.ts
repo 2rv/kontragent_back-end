@@ -14,6 +14,10 @@ import { PaymentModule } from './core/payment/payment.module';
 import { CompanyBalanceModule } from './core/company-balance/company-balance.module';
 import { FileModule } from './core/file/file.module';
 
+import { ReferalModule } from './core/referal/referal.module';
+import { ReferalMemberModule } from './core/referal-member/referal-member.module';
+import { ReferalAchievementModule } from './core/referal-achievement/referal-achievement.module';
+
 @Module({
   providers: [],
   imports: [
@@ -30,6 +34,9 @@ import { FileModule } from './core/file/file.module';
     PaymentModule,
     CompanyBalanceModule,
     FileModule,
+    ReferalModule,
+    ReferalMemberModule,
+    ReferalAchievementModule,
   ],
 })
 export class AppModule {}

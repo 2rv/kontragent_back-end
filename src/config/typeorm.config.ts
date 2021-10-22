@@ -8,6 +8,10 @@ import { PaymentEntity } from 'src/core/payment/payment.entity';
 import { RevisionEntity } from 'src/core/revision/revision.entity';
 import { UserEntity } from '../core/user/user.entity';
 
+import { ReferalEntity } from '../core/referal/referal.entity';
+import { ReferalMemberEntity } from '../core/referal-member/referal-member.entity';
+import { ReferalAchievementEntity } from '../core/referal-achievement/referal-achievement.entity';
+
 const DATABASE_CONFIG = config.get('DATABASE');
 
 export const ApiEntities = [
@@ -18,6 +22,10 @@ export const ApiEntities = [
   RevisionEntity,
   CompanyBalanceEntity,
   PaymentEntity,
+
+  ReferalEntity,
+  ReferalMemberEntity,
+  ReferalAchievementEntity,
 ];
 
 export const typeOrmConfig: TypeOrmModuleOptions = {

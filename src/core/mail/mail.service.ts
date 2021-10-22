@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import * as path from 'path';
 
+import { SendReferalMemberLinkDto } from '../referal-member/dto/send-referal-member-link.dto';
+import { ReferalEntity } from '../referal/referal.entity';
+
 @Injectable()
 export class MailService {
   constructor(private readonly mailerService: MailerService) {}
@@ -19,6 +22,56 @@ export class MailService {
       })
       .catch((e) => {
         console.log(e);
+      });
+  }
+
+  async sendReferralLinkEmailToNotRegisteredUser(
+    sendReferalMemberLinkDto: SendReferalMemberLinkDto,
+    referal: ReferalEntity,
+  ) {
+    return await this.mailerService
+      .sendMail({
+        to: sendReferalMemberLinkDto.email,
+        subject: `${referal.user.firstname} ${referal.user.lastname} приглашает Вас!`,
+        template: this.getTemplateLink(
+          'sendReferralLinkEmailToNotRegisteredUser',
+        ),
+        context: {
+          email: sendReferalMemberLinkDto.email,
+          firstName: referal.user.firstname,
+          lastName: referal.user.lastname,
+          referrerId: referal.id,
+        },
+      })
+      .catch((e) => {
+        console.log(
+          `SEND REFERRAL LINK TO NOT REGISTERED USER ERROR: ${JSON.stringify(
+            e,
+          )}`,
+        );
+      });
+  }
+
+  async sendReferralLinkEmailToRegisteredUser(
+    sendReferalMemberLinkDto: SendReferalMemberLinkDto,
+    referal: ReferalEntity,
+  ) {
+    return await this.mailerService
+      .sendMail({
+        to: sendReferalMemberLinkDto.email,
+        subject: `${referal.user.firstname} ${referal.user.lastname} приглашает Вас!`,
+        template: this.getTemplateLink('sendReferralLinkEmailToRegisteredUser'),
+        context: {
+          email: sendReferalMemberLinkDto.email,
+          firstName: referal.user.firstname,
+          lastName: referal.user.lastname,
+          referrerId: referal.id,
+        },
+      })
+      .catch((e) => {
+        console.log(
+          `SEND REFERRAL LINK TO REGISTERED USER ERROR: ${JSON.stringify(e)}`,
+        );
       });
   }
 

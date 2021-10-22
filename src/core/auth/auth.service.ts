@@ -8,11 +8,16 @@ import { LoginInfoDto } from './dto/login-info.dto';
 import { UserRepository } from '../user/user.repository';
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { UserSignUpDto } from './dto/user-sign-up.dto';
+
+import { ReferalRepository } from '../referal/referal.repository';
+
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
+    @InjectRepository(ReferalRepository)
+    private referalRepository: ReferalRepository,
     private jwtService: JwtService,
   ) {}
 
@@ -20,6 +25,8 @@ export class AuthService {
     const user: UserEntity = await this.userRepository.createUser(
       userSignUpDto,
     );
+
+    await this.referalRepository.createReferal(user);
 
     const accessToken = await this.createJwt(user);
 
