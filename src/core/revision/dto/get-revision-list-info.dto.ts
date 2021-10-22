@@ -1,5 +1,5 @@
-import { GetRevisionInfoDto } from './get-revision-info.dto';
+import { RevisionEntity } from '../revision.entity';
 
 export interface GetRevisionListInfoDto {
-  list: GetRevisionInfoDto[];
+  list: RevisionEntity[];
 }
