@@ -36,4 +36,16 @@ export class ReferalRepository extends Repository<ReferalEntity> {
       throw new BadRequestException('CHANGE.COULDNT_UPDATE_REFERRER_BALANCE');
     }
   }
+
+  async getReferalInfoByUser(user: UserEntity): Promise<ReferalEntity> {
+    const query = this.createQueryBuilder('referal');
+
+    query.leftJoin('referal.referalMember', 'referalMember');
+    query.leftJoin('referal.user', 'user');
+    query.where('user.id = :id', { id: user.id });
+
+    query.select(['referal.balance', 'referalMember.id']);
+    query.getOne();
+    return await query.getOne();
+  }
 }

@@ -4,6 +4,7 @@ import {
   UseGuards,
   Body,
   ValidationPipe,
+  Get,
 } from '@nestjs/common';
 
 import { AuthGuard } from '@nestjs/passport';
@@ -17,7 +18,7 @@ import { GetReferal } from '../referal/decorator/get-referal.decorator';
 import { ReferalEntity } from '../referal/referal.entity';
 import { ReferalMemberEntity } from './referal-member.entity';
 
-@Controller('referal')
+@Controller('referal-member')
 export class ReferalMemberController {
   constructor(private referalMemberService: ReferalMemberService) {}
 
@@ -40,5 +41,13 @@ export class ReferalMemberController {
     @GetAccount() user: UserEntity,
   ): Promise<ReferalMemberEntity> {
     return this.referalMemberService.createReferalMember(referal, user);
+  }
+
+  @Get('/')
+  @UseGuards(AuthGuard(), AccountGuard)
+  getReferalMemberList(
+    @GetAccount() user: UserEntity,
+  ): Promise<ReferalMemberEntity[]> {
+    return this.referalMemberService.getUserReferalMemberList(user);
   }
 }
