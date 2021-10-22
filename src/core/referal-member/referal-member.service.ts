@@ -53,6 +53,12 @@ export class ReferalMemberService {
         );
   }
 
+  async getUserReferalMemberList(
+    user: UserEntity,
+  ): Promise<ReferalMemberEntity[]> {
+    return await this.referalMemberRepository.getReferalMemberList(user);
+  }
+
   async createReferalMember(
     referal: ReferalEntity,
     user: UserEntity,

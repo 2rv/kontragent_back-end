@@ -28,4 +28,19 @@ export class ReferalMemberRepository extends Repository<ReferalMemberEntity> {
       }
     }
   }
+
+  async getReferalMemberList(user: UserEntity): Promise<ReferalMemberEntity[]> {
+    const query = this.createQueryBuilder('referal-memeber');
+
+    query.leftJoin('referal-memeber.user', 'user');
+    query.where('user.id = :id', { id: user.id });
+
+    query.select([
+      'user.firstname',
+      'user.lastname',
+      'referal-memeber.createDate',
+    ]);
+
+    return query.getMany();
+  }
 }
