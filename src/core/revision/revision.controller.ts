@@ -18,10 +18,8 @@ import { AccountGuard } from '../user/guard/account.guard';
 import { GetRevision } from './decorator/get-revision.decorator';
 import { CreateRevisionDto } from './dto/create-revision.dto';
 import { GetCompanyRevisionListDto } from './dto/get-company-revision-list.dto';
-import {
-  GetRevisionInfoDto,
-  GetRevisionListInfoDto,
-} from './dto/get-revision-info.dto';
+import { GetRevisionInfoDto } from './dto/get-revision-info.dto';
+import { GetRevisionListInfoDto } from './dto/get-revision-list-info.dto';
 import { UpdateRevisionDto } from './dto/update-revision-info.dto';
 import { RevisionGuard } from './guard/revision.guard';
 import { RevisionEntity } from './revision.entity';

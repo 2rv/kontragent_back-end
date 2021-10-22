@@ -8,10 +8,8 @@ import {
   GetCompanyRevisionListDto,
   GetCompanyRevisionListItemDto,
 } from './dto/get-company-revision-list.dto';
-import {
-  GetRevisionInfoDto,
-  GetRevisionListInfoDto,
-} from './dto/get-revision-info.dto';
+import { GetRevisionInfoDto } from './dto/get-revision-info.dto';
+import { GetRevisionListInfoDto } from './dto/get-revision-list-info.dto';
 import { UpdateRevisionDto } from './dto/update-revision-info.dto';
 import { REVISION_ERROR } from './enum/revision-error.enum';
 import { REVISION_STATUS } from './enum/revision-status.enum';
