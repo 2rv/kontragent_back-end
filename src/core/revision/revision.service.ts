@@ -141,7 +141,7 @@ export class RevisionService {
   }
 
   async getRevisionList(): Promise<GetRevisionListInfoDto> {
-    const list: GetRevisionInfoDto[] =
+    const list: RevisionEntity[] =
       await this.revisionRepository.getRevisionList();
     return { list };
   }
