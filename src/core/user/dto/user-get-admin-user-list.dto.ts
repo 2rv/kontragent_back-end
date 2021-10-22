@@ -10,6 +10,6 @@ export class UserGetAccountDataDto {
   confirmPhone: boolean;
 }
 
-export class UserGetAccountAllDataDto {
+export class UserGetAdminUserListDto {
   list: UserEntity[];
 }
