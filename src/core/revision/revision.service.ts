@@ -9,6 +9,7 @@ import {
   GetCompanyRevisionListItemDto,
 } from './dto/get-company-revision-list.dto';
 import { GetRevisionInfoDto } from './dto/get-revision-info.dto';
+import { GetRevisionListInfoDto } from './dto/get-revision-list-info.dto';
 import { UpdateRevisionDto } from './dto/update-revision-info.dto';
 import { REVISION_ERROR } from './enum/revision-error.enum';
 import { REVISION_STATUS } from './enum/revision-status.enum';
@@ -137,5 +138,11 @@ export class RevisionService {
       company,
       revision.price,
     );
+  }
+
+  async getRevisionList(): Promise<GetRevisionListInfoDto> {
+    const list: RevisionEntity[] =
+      await this.revisionRepository.getRevisionList();
+    return { list };
   }
 }

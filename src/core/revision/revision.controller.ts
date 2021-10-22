@@ -19,6 +19,7 @@ import { GetRevision } from './decorator/get-revision.decorator';
 import { CreateRevisionDto } from './dto/create-revision.dto';
 import { GetCompanyRevisionListDto } from './dto/get-company-revision-list.dto';
 import { GetRevisionInfoDto } from './dto/get-revision-info.dto';
+import { GetRevisionListInfoDto } from './dto/get-revision-list-info.dto';
 import { UpdateRevisionDto } from './dto/update-revision-info.dto';
 import { RevisionGuard } from './guard/revision.guard';
 import { RevisionEntity } from './revision.entity';
@@ -67,6 +68,13 @@ export class RevisionController {
     @GetCompany() company: CompanyEntity,
   ): Promise<GetCompanyRevisionListDto> {
     return this.revisionService.getCompanyRevisionList(company);
+  }
+
+  @Get('/admin')
+  @Roles(USER_ROLE.ADMIN)
+  @UseGuards(AuthGuard(), AccountGuard)
+  getAdminRevisionList(): Promise<GetRevisionListInfoDto> {
+    return this.revisionService.getRevisionList();
   }
 
   @Get('/company/:companyId/revision/:revisionId/review')

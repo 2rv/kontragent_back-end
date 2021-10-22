@@ -69,4 +69,17 @@ export class RevisionRepository extends Repository<RevisionEntity> {
 
     return query.getMany();
   }
+
+  async getRevisionList() {
+    const query = this.createQueryBuilder('revision');
+
+    query.select([
+      'revision.id',
+      'revision.title',
+      'revision.status',
+      'revision.price',
+    ]);
+
+    return query.getMany();
+  }
 }
