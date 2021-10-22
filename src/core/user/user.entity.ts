@@ -3,8 +3,10 @@ import {
   BaseEntity,
   PrimaryGeneratedColumn,
   Column,
+  JoinColumn,
   CreateDateColumn,
   OneToMany,
+  OneToOne,
 } from 'typeorm';
 import {
   generatePasswordSalt,
@@ -14,6 +16,9 @@ import { CompanyMemberEntity } from '../company-member/company-memeber.entity';
 import { CompanyEntity } from '../company/company.entity';
 import { FileEntity } from '../file/file.entity';
 import { USER_ROLE } from './enum/user-role.enum';
+
+import { ReferrerEntity } from '../referrer/referrer.entity';
+import { ReferralEntity } from '../referral/referral.entity';
 
 @Entity({ name: 'user' })
 export class UserEntity extends BaseEntity {
@@ -56,13 +61,21 @@ export class UserEntity extends BaseEntity {
   confirmPhone: boolean;
 
   @OneToMany(() => CompanyEntity, (company) => company.user)
-  company: CompanyEntity;
+  company: CompanyEntity[];
 
   @OneToMany(() => CompanyMemberEntity, (companyMember) => companyMember.user)
   companyMember: CompanyMemberEntity[];
 
   @OneToMany(() => FileEntity, (file) => file.user)
   file: FileEntity[];
+
+  @OneToOne(() => ReferrerEntity, (referrer) => referrer.user)
+  @JoinColumn()
+  referrer: ReferrerEntity;
+
+  @OneToOne(() => ReferralEntity, (referrer) => referrer.user)
+  @JoinColumn()
+  referral: ReferralEntity;
 
   static async hashPassword(password: string): Promise<string> {
     const salt = await generatePasswordSalt(password);

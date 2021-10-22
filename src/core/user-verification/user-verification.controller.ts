@@ -5,6 +5,9 @@ import { GetAccount } from '../user/decorator/get-account.decorator';
 import { AccountGuard } from '../user/guard/account.guard';
 import { UserEntity } from '../user/user.entity';
 import { UserVerificationService } from './user-verification.service';
+import { ReferrerGuard } from '../referrer/guard/referrer.guard';
+import { GetReferrer } from '../referrer/decorator/get-referrer.decorator';
+import { ReferrerEntity } from '../referrer/referrer.entity';
 
 @Controller('user-verification')
 export class UserVerificationController {
@@ -32,5 +35,19 @@ export class UserVerificationController {
   @UseGuards(AuthGuard(), AccountGuard)
   confirmPhoneVerification(@Param('code') code: string): Promise<void> {
     return this.userVerificationService.confirmUserVerificationPhone(code);
+  }
+
+  @Post('/phone/:code/referrer/:referrerId')
+  @UseGuards(AuthGuard(), AccountGuard, ReferrerGuard)
+  confirmPhoneVerificationWithReferrer(
+    @Param('code') code: string,
+    @GetReferrer() referrer: ReferrerEntity,
+    @GetAccount() user: UserEntity,
+  ): Promise<void> {
+    return this.userVerificationService.confirmUserVerificationPhoneWithReferrer(
+      code,
+      referrer,
+      user,
+    );
   }
 }

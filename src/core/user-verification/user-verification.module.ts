@@ -8,12 +8,24 @@ import { UserRepository } from '../user/user.repository';
 import { UserVerificationController } from './user-verification.controller';
 import { UserVerificationService } from './user-verification.service';
 
+import { ReferrerRepository } from '../referrer/referrer.repository';
+import { ReferralRepository } from '../referral/referral.repository';
+import { ReferrerAwardRepository } from '../referrer-award/referrer-award.repository';
+import { ReferrerAwardModule } from '../referrer-award/referrer-award.module';
+
 @Module({
   imports: [
     CacheModule.register(CacheModuleConfig),
-    TypeOrmModule.forFeature([UserRepository, UserEntity]),
+    TypeOrmModule.forFeature([
+      UserRepository,
+      ReferrerRepository,
+      ReferralRepository,
+      ReferrerAwardRepository,
+      UserEntity,
+    ]),
     AuthModule,
     MailModule,
+    ReferrerAwardModule,
   ],
   controllers: [UserVerificationController],
   providers: [UserVerificationService],

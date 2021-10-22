@@ -8,12 +8,21 @@ import {
 import { UserEntity } from '../user/user.entity';
 import { UserVerificationPhonePayload } from './type/user-verification-phone-payload.type';
 import { UserVerificationEmailPayload } from './type/user-verification-email-payload.type';
-import { randomUUID, randomNumberCode } from 'src/common/utils/hash';
+import { randomNumberCode } from 'src/common/utils/hash';
 import { USER_VERIFICATION_ERROR } from './enum/user-verification-error.enum';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from '../user/user.repository';
 import { MailService } from '../mail/mail.service';
 import { TwilioSendSMS } from 'src/common/utils/twilio';
+
+import { ReferrerRepository } from '../referrer/referrer.repository';
+import { ReferralRepository } from '../referral/referral.repository';
+import { ReferrerAwardService } from '../referrer-award/referrer-award.service';
+
+import { ReferralEntity } from '../referral/referral.entity';
+import { ReferrerEntity } from '../referrer/referrer.entity';
+
+import { REFERRER_AWARD_TYPE } from '../referrer-award/enum/referrer-award-type.enum';
 
 @Injectable()
 export class UserVerificationService {
@@ -21,6 +30,11 @@ export class UserVerificationService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
+    @InjectRepository(ReferrerRepository)
+    private referrerRepository: ReferrerRepository,
+    @InjectRepository(ReferralRepository)
+    private referralRepository: ReferralRepository,
+    private referrerAwardService: ReferrerAwardService,
     private mailService: MailService,
   ) {}
 
@@ -104,5 +118,37 @@ export class UserVerificationService {
     );
 
     this.cacheManager.del(code);
+  }
+
+  async confirmUserVerificationPhoneWithReferrer(
+    code: string,
+    referrer: ReferrerEntity,
+    user: UserEntity,
+  ): Promise<void> {
+    const rawUserVerificationPhonePayload = await this.cacheManager.get(code);
+
+    if (!rawUserVerificationPhonePayload) {
+      throw new BadRequestException(
+        USER_VERIFICATION_ERROR.USER_USER_VERIFICATION_PHONE_UNCORRECT_CODE,
+      );
+    }
+
+    const userVerificationPhonePayload: UserVerificationPhonePayload =
+      JSON.parse(rawUserVerificationPhonePayload);
+
+    await this.userRepository.confirmPhoneById(
+      userVerificationPhonePayload.userId,
+    );
+
+    this.cacheManager.del(code);
+
+    const referral: ReferralEntity =
+      await this.referralRepository.createReferral(referrer, user);
+
+    this.referrerAwardService.createReferrerAward(
+      1000,
+      REFERRER_AWARD_TYPE.SIGNUP,
+      referral,
+    );
   }
 }

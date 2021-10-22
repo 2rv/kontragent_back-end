@@ -9,11 +9,13 @@ import { JwtConfig } from '../../config/jwt.config';
 import { JwtStrategy } from './jwt.strategy';
 import { UserEntity } from '../user/user.entity';
 
+import { ReferrerRepository } from '../referrer/referrer.repository';
+
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register(JwtConfig),
-    TypeOrmModule.forFeature([UserEntity, UserRepository]),
+    TypeOrmModule.forFeature([UserEntity, UserRepository, ReferrerRepository]),
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
