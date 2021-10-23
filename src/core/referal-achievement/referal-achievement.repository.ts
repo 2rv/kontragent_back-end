@@ -41,18 +41,21 @@ export class ReferalAchievementRepository extends Repository<ReferalAchievementE
   async getReferalAchievementList(
     user: UserEntity,
   ): Promise<ReferalAchievementEntity[]> {
-    const query = this.createQueryBuilder('referal-achievement');
-
-    query.leftJoin('referal-achievement.referal', 'referal');
-    query.leftJoin('referal.user', 'user');
-    query.where('user.id = :id', { id: user.id });
-
-    query.select([
-      'user.firstname',
-      'user.lastname',
-      'referal-achievement.award',
-      'referal-achievement.type',
-    ]);
-    return await query.getMany();
+    return await this.createQueryBuilder('referalAchievement')
+      .leftJoin('referalAchievement.referalMember', 'referalMember')
+      .leftJoin('referalMember.user', 'referalMemberUser')
+      .leftJoin('referalAchievement.referal', 'referal')
+      .leftJoin('referal.user', 'referalUser')
+      .select([
+        'referalAchievement.id',
+        'referalMember.id',
+        'referalMemberUser.id',
+        'referalMemberUser.firstname',
+        'referalMemberUser.lastname',
+        'referalAchievement.award',
+        'referalAchievement.type',
+      ])
+      .where('referalUser.id = :id', { id: user.id })
+      .getMany();
   }
 }

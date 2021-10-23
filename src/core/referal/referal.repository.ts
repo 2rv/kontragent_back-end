@@ -43,9 +43,11 @@ export class ReferalRepository extends Repository<ReferalEntity> {
     query.leftJoin('referal.referalMember', 'referalMember');
     query.leftJoin('referal.user', 'user');
     query.where('user.id = :id', { id: user.id });
+    query.loadRelationCountAndMap(
+      'referal.referalMemberCount',
+      'referal.referalMember',
+    );
 
-    query.select(['referal.balance', 'referalMember.id']);
-    query.getOne();
     return await query.getOne();
   }
 }
