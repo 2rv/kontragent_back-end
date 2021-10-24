@@ -49,6 +49,8 @@ export class UserVerificationService {
 
     const code = randomNumberCode();
 
+    console.log(`EMAIL VERIFICATION CODE: ${code}`);
+
     await this.cacheManager.set(
       code,
       JSON.stringify(userVerificationEmailPayload),
@@ -89,6 +91,8 @@ export class UserVerificationService {
     };
 
     const code = randomNumberCode();
+
+    console.log(`PHONE VERIFICATION CODE: ${code}`);
 
     await this.cacheManager.set(
       code,
