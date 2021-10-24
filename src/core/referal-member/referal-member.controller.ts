@@ -36,7 +36,7 @@ export class ReferalMemberController {
 
   @Post('/create/:referalId')
   @UseGuards(AuthGuard(), AccountGuard, ReferalGuard)
-  confirmPhoneVerificationWithReferrer(
+  createReferalMember(
     @GetReferal() referal: ReferalEntity,
     @GetAccount() user: UserEntity,
   ): Promise<ReferalMemberEntity> {

@@ -40,7 +40,7 @@ export class MailService {
           email: sendReferalMemberLinkDto.email,
           firstName: referal.user.firstname,
           lastName: referal.user.lastname,
-          referrerId: referal.id,
+          referalId: referal.id,
         },
       })
       .catch((e) => {
@@ -65,7 +65,7 @@ export class MailService {
           email: sendReferalMemberLinkDto.email,
           firstName: referal.user.firstname,
           lastName: referal.user.lastname,
-          referrerId: referal.id,
+          referalId: referal.id,
         },
       })
       .catch((e) => {
