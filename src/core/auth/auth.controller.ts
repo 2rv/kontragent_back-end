@@ -11,6 +11,9 @@ import { UserLoginDto } from './dto/user-login.dto';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { LoginInfoDto } from './dto/login-info.dto';
+import { AccountGuard } from '../user/guard/account.guard';
+import { GetAccount } from '../user/decorator/get-account.decorator';
+import { UserEntity } from '../user/user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -31,8 +34,8 @@ export class AuthController {
   }
 
   @Get('/token')
-  @UseGuards(AuthGuard())
-  checkToken(): void {
-    return null;
+  @UseGuards(AuthGuard(), AccountGuard)
+  checkToken(@GetAccount() user: UserEntity): Promise<LoginInfoDto> {
+    return this.authService.updateLogin(user);
   }
 }
