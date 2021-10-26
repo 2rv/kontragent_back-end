@@ -9,6 +9,7 @@ import { UserEntity } from '../user/user.entity';
 import { ReferalEntity } from '../referal/referal.entity';
 import { ReferalMemberEntity } from './referal-member.entity';
 import { ReferalMemberRepository } from './referal-member.repository';
+import { REFERAL_MEMBER_ERROR } from './enum/referal-member-enum';
 
 @Injectable()
 export class ReferalMemberService {
@@ -27,9 +28,16 @@ export class ReferalMemberService {
     sendReferalMemberLinkDto: SendReferalMemberLinkDto,
   ): Promise<void> {
     //DETERMINE WHETHER USER REGISTERED OR NOT TO SEND APPROPRIATE MAIL
-    const registered = await this.userRepository.findOne({
+    const invitedUser = await this.userRepository.findOne({
       where: { email: sendReferalMemberLinkDto.email },
     });
+
+    const referalMember =
+      await this.referalMemberRepository.getReferalMemberByUser(invitedUser);
+    if (referalMember)
+      throw new BadRequestException(
+        REFERAL_MEMBER_ERROR.USER_ALREADY_REFERAL_MEMBER,
+      );
 
     //DETERMINE WHETHER REGISTERED USER ALLOW TO BECOME REFERAL MEMBER
     const NotAllowedReferral = false;
@@ -42,7 +50,7 @@ export class ReferalMemberService {
     const referal = await referalQuery.getOne();
     console.log(`REFERAL: ${JSON.stringify(referal)}`);
 
-    registered
+    invitedUser
       ? this.mailService.sendReferralLinkEmailToRegisteredUser(
           sendReferalMemberLinkDto,
           referal,

@@ -42,4 +42,13 @@ export class ReferalMemberRepository extends Repository<ReferalMemberEntity> {
       .where('referalUser.id = :id', { id: user.id })
       .getMany();
   }
+
+  async getReferalMemberByUser(user: UserEntity): Promise<ReferalMemberEntity> {
+    const referalMemberQuery = this.createQueryBuilder('referal-member');
+    referalMemberQuery.leftJoin('referal-member.user', 'referal-member-user');
+    referalMemberQuery.where('referal-member-user.id = :id', {
+      id: user.id,
+    });
+    return await referalMemberQuery.getOne();
+  }
 }

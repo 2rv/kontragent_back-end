@@ -48,7 +48,7 @@ export class CompanyMemberController {
     CompanyGuard,
     CompanyMemberGuard,
   )
-  addcompanyMember(
+  addCompanyMember(
     @GetCompany() company: CompanyEntity,
     @GetUser() user: UserEntity,
   ): Promise<void> {
