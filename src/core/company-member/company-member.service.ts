@@ -23,7 +23,7 @@ export class CompanyMemberService {
     await this.companyMemberRepository.createCompanyMember(company, user, role);
   }
 
-  async deletecompanyMember(companyMember: CompanyMemberEntity): Promise<void> {
+  async deleteCompanyMember(companyMember: CompanyMemberEntity): Promise<void> {
     if (companyMember.role === COMPANY_MEMBER_ROLE.OWNER) {
       throw new MethodNotAllowedException(
         COMPANY_MEMBER_ERROR.CANNOT_REMOVE_COMPANY_MEMBER_OWNER,

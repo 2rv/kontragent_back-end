@@ -1,8 +1,17 @@
-import { Post, Controller, Get, UseGuards, Delete } from '@nestjs/common';
+import {
+  Post,
+  Controller,
+  Get,
+  UseGuards,
+  Delete,
+  Param,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CompanyEntity } from '../company/company.entity';
 import { GetCompany } from '../company/decorator/get-company.decorator';
 import { CompanyGuard } from '../company/guard/company.guard';
+import { CompanyMemberParametrGuard } from './guard/company-member-parametr.guard';
+import { CompanyMemberGuard } from './guard/company-member.guard';
 import { GetUser } from '../user/decorator/get-user.decorator';
 import { AccountGuard } from '../user/guard/account.guard';
 import { UserGuard } from '../user/guard/user.guard';
@@ -10,10 +19,9 @@ import { UserEntity } from '../user/user.entity';
 import { CompanyMemberService } from './company-member.service';
 import { CompanyMemberEntity } from './company-memeber.entity';
 import { CompanyMemberRoles } from './decorator/company-member-role.decorator';
-import { GetCompanyMember } from './decorator/get-company-member.decorator';
+import { GetParamCompanyMember } from './decorator/company-member-parametr.decorator';
 import { GetcompanyMemberListDto } from './dto/get-company-user-list.dto';
 import { COMPANY_MEMBER_ROLE } from './enum/company-member-role.enum';
-import { CompanyMemberGuard } from './guard/company-member.guard';
 
 import { Roles } from '../user/decorator/role.decorator';
 import { USER_ROLE } from '../user/enum/user-role.enum';
@@ -61,10 +69,16 @@ export class CompanyMemberController {
 
   @Delete('/company/:companyId/member/:companyMemberId')
   @CompanyMemberRoles(COMPANY_MEMBER_ROLE.OWNER)
-  @UseGuards(AuthGuard(), AccountGuard, CompanyGuard, CompanyMemberGuard)
+  @UseGuards(
+    AuthGuard(),
+    AccountGuard,
+    CompanyGuard,
+    CompanyMemberGuard,
+    CompanyMemberParametrGuard,
+  )
   deletecompanyMember(
-    @GetCompanyMember() companyMember: CompanyMemberEntity,
+    @GetParamCompanyMember() companyMember: CompanyMemberEntity,
   ): Promise<void> {
-    return this.companyMemberService.deletecompanyMember(companyMember);
+    return this.companyMemberService.deleteCompanyMember(companyMember);
   }
 }
