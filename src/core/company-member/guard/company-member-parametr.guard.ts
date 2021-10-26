@@ -31,7 +31,7 @@ export class CompanyMemberParametrGuard implements CanActivate {
 
     const companyMember = await this.companyMemberRepository.findOne({
       where: {
-        user: { id: params.companyMemberId },
+        id: params.companyMemberId,
         company: { id: company.id },
       },
     });

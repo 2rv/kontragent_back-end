@@ -16,7 +16,6 @@ export class CompanyMemberRepository extends Repository<CompanyMemberEntity> {
     userCompanyRole: number,
   ): Promise<void> {
     const companyMember: CompanyMemberEntity = new CompanyMemberEntity();
-    console.log(user);
     companyMember.company = company;
     companyMember.user = user;
     companyMember.role = userCompanyRole;

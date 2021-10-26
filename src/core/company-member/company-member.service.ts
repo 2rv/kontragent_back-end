@@ -1,4 +1,8 @@
-import { Injectable, MethodNotAllowedException } from '@nestjs/common';
+import {
+  Injectable,
+  MethodNotAllowedException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CompanyEntity } from '../company/company.entity';
 import { UserEntity } from '../user/user.entity';
@@ -20,6 +24,20 @@ export class CompanyMemberService {
     user: UserEntity,
     role: COMPANY_MEMBER_ROLE,
   ): Promise<void> {
+    const companyMember = await this.companyMemberRepository
+      .createQueryBuilder('company-member')
+      .leftJoin('company-member.company', 'company')
+      .leftJoin('company-member.user', 'user')
+      .where('company.id = :companyId', { companyId: company.id })
+      .andWhere('user.id = :userId', { userId: user.id })
+      .getOne();
+
+    if (companyMember) {
+      throw new BadRequestException(
+        COMPANY_MEMBER_ERROR.USER_ALREADY_HAS_COMPANY_ACCOUNT,
+      );
+    }
+
     await this.companyMemberRepository.createCompanyMember(company, user, role);
   }
 
