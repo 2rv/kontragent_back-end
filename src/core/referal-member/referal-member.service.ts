@@ -32,8 +32,11 @@ export class ReferalMemberService {
       where: { email: sendReferalMemberLinkDto.email },
     });
 
-    const referalMember =
-      await this.referalMemberRepository.getReferalMemberByUser(invitedUser);
+    //VALIDATE WHETHER USER HAS REFERAL MEMBER
+    const referalMember = invitedUser
+      ? await this.referalMemberRepository.getReferalMemberByUser(invitedUser)
+      : false;
+
     if (referalMember)
       throw new BadRequestException(
         REFERAL_MEMBER_ERROR.USER_ALREADY_REFERAL_MEMBER,
