@@ -11,6 +11,8 @@ import { ReferalMemberEntity } from './referal-member.entity';
 import { ReferalMemberRepository } from './referal-member.repository';
 import { REFERAL_MEMBER_ERROR } from './enum/referal-member-enum';
 
+import { CompanyRepository } from '../company/company.repository';
+
 @Injectable()
 export class ReferalMemberService {
   constructor(
@@ -20,6 +22,8 @@ export class ReferalMemberService {
     private referalRepository: ReferalRepository,
     @InjectRepository(ReferalMemberRepository)
     private referalMemberRepository: ReferalMemberRepository,
+    @InjectRepository(CompanyRepository)
+    private companyRepository: CompanyRepository,
     private mailService: MailService,
   ) {}
 
@@ -43,8 +47,12 @@ export class ReferalMemberService {
       );
 
     //DETERMINE WHETHER REGISTERED USER ALLOW TO BECOME REFERAL MEMBER
-    const NotAllowedReferral = false;
-    if (NotAllowedReferral) throw new BadRequestException();
+    // const commonCompanyQuery = this.companyRepository
+    //   .createQueryBuilder('company')
+    //   .leftJoin('company.companyMember', 'companyMember')
+    //   .leftJoin('companyMember.user', 'user');
+    // const commonCompany = await commonCompanyQuery.getOne();
+    // console.log(`COMMON COMPANY: ${commonCompany}`);
 
     //GET REFERAL ENTITY TO REPRESENT REFERAL INFORMATION TO REFERAL
     const referalQuery = this.referalRepository.createQueryBuilder('referal');
@@ -74,6 +82,17 @@ export class ReferalMemberService {
     referal: ReferalEntity,
     user: UserEntity,
   ): Promise<ReferalMemberEntity> {
+    //ПРОВЕРКА НЕ ПРИГЛАШ. САМОГО СЕБЯ
+
+    //VALIDATE WHETHER USER HAS REFERAL MEMBER
+    const referalMember =
+      await this.referalMemberRepository.getReferalMemberByUser(user);
+
+    if (referalMember)
+      throw new BadRequestException(
+        REFERAL_MEMBER_ERROR.USER_ALREADY_REFERAL_MEMBER,
+      );
+
     return await this.referalMemberRepository.createReferalMember(
       referal,
       user,
