@@ -13,7 +13,7 @@ export class MailService {
     return await this.mailerService
       .sendMail({
         to: email,
-        subject: 'Смена пароля',
+        subject: 'Верификация почты',
         template: this.getTemplateLink('userVerificationCodeEmail'),
         context: {
           mail: email,
