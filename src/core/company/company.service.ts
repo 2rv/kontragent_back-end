@@ -10,6 +10,7 @@ import { CreateCompanyDto } from './dto/create-company.dto';
 import { GetAccountCompanyListDto } from './dto/get-account-company-list.dto';
 import { GetAdminCompanyListDto } from './dto/get-admin-company-list.dto';
 import { GetCompanyInfoDto } from './dto/get-company-info.dto';
+import { CreateCompanyInfoDto } from './dto/create-company-info.dto';
 
 @Injectable()
 export class CompanyService {
@@ -25,7 +26,7 @@ export class CompanyService {
   async createCompany(
     createCompanyDto: CreateCompanyDto,
     user: UserEntity,
-  ): Promise<void> {
+  ): Promise<CreateCompanyInfoDto> {
     const company = await this.companyRepository.createCompany(
       createCompanyDto,
       user,
@@ -38,6 +39,9 @@ export class CompanyService {
     );
 
     await this.companyBalanceRepository.createCompanyBalance(company);
+
+    const createCompanyInfoDto: CreateCompanyInfoDto = { id: company.id };
+    return createCompanyInfoDto;
   }
 
   async getCompanyInfo(company: CompanyEntity): Promise<GetCompanyInfoDto> {
