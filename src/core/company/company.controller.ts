@@ -22,6 +22,7 @@ import { GetCompany } from './decorator/get-company.decorator';
 import { GetAccount } from '../user/decorator/get-account.decorator';
 
 import { CreateCompanyDto } from './dto/create-company.dto';
+import { CreateCompanyInfoDto } from './dto/create-company-info.dto';
 import { GetCompanyInfoDto } from './dto/get-company-info.dto';
 import { GetAdminCompanyListDto } from './dto/get-admin-company-list.dto';
 
@@ -40,7 +41,7 @@ export class CompanyController {
   createCompany(
     @Body(ValidationPipe) companyCreateDto: CreateCompanyDto,
     @GetAccount() user: UserEntity,
-  ): Promise<void> {
+  ): Promise<CreateCompanyInfoDto> {
     return this.companyService.createCompany(companyCreateDto, user);
   }
 
