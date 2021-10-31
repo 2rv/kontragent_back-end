@@ -8,14 +8,15 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtConfig } from '../../config/jwt.config';
 import { JwtStrategy } from './jwt.strategy';
 import { UserEntity } from '../user/user.entity';
-
+import { CompanyRepository } from '../company/company.repository';
+import { CompanyEntity } from '../company/company.entity';
 import { ReferalRepository } from '../referal/referal.repository';
 
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register(JwtConfig),
-    TypeOrmModule.forFeature([UserEntity, UserRepository, ReferalRepository]),
+    TypeOrmModule.forFeature([UserEntity, UserRepository, ReferalRepository, CompanyRepository, CompanyEntity]),
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
