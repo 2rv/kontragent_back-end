@@ -10,7 +10,7 @@ import { ReferalEntity } from '../referal/referal.entity';
 import { ReferalMemberEntity } from './referal-member.entity';
 import { ReferalMemberRepository } from './referal-member.repository';
 import { REFERAL_MEMBER_ERROR } from './enum/referal-member-enum';
-import {USER_ROLE} from '../user/enum/user-role.enum'
+import { USER_ROLE } from '../user/enum/user-role.enum'
 import { CompanyRepository } from '../company/company.repository';
 
 @Injectable()
@@ -25,7 +25,7 @@ export class ReferalMemberService {
     @InjectRepository(CompanyRepository)
     private companyRepository: CompanyRepository,
     private mailService: MailService,
-  ) {}
+  ) { }
 
   async sendReferalMemberLink(
     user: UserEntity,
@@ -37,38 +37,38 @@ export class ReferalMemberService {
     });
 
     //ПРОВЕРКА НA  ПРИГЛАШ. САМОГО СЕБЯ
-    if(invitedUser.id === user.id)
-    throw new BadRequestException(
-      REFERAL_MEMBER_ERROR.CANNOT_ADD_YOURSELF_AS_REFERAL_MEMEBER
-    )
+    if (invitedUser.id === user.id)
+      throw new BadRequestException(
+        REFERAL_MEMBER_ERROR.CANNOT_ADD_YOURSELF_AS_REFERAL_MEMEBER
+      )
 
     //ПРОВЕРКА НА АДМИНА
-    if(invitedUser.role === USER_ROLE.ADMIN)
-    throw new BadRequestException(
-      REFERAL_MEMBER_ERROR.CANNOT_ADD_ROLE_ADMIN
-    )
+    if (invitedUser.role === USER_ROLE.ADMIN)
+      throw new BadRequestException(
+        REFERAL_MEMBER_ERROR.CANNOT_ADD_ROLE_ADMIN
+      )
 
     //ПРОВЕРКА НА СОТРУДНИКА КОМПАНИИ
     if (invitedUser) {
 
       const invitedUserCompany =
         await this.companyRepository.getCompanyListByUser(invitedUser);
-  
-       const invitedUserCompanyIdList = invitedUserCompany.map((company) => {
+
+      const invitedUserCompanyIdList = invitedUserCompany.map((company) => {
         return company.id
-       })
+      })
 
       const commonCompany = await this.companyRepository.createQueryBuilder('company')
-      .leftJoin('company.companyMember', 'companyMember')
-      .leftJoin('companyMember.user', 'user')
-      .where("company.id IN (:...ids)", { ids: invitedUserCompanyIdList })
-      .andWhere("user.id = :id", { id: user.id })
-      .getOne()
+        .leftJoin('company.companyMember', 'companyMember')
+        .leftJoin('companyMember.user', 'user')
+        .where("company.id IN (:...ids)", { ids: invitedUserCompanyIdList })
+        .andWhere("user.id = :id", { id: user.id })
+        .getOne()
 
       if (commonCompany)
         throw new BadRequestException(
           REFERAL_MEMBER_ERROR.USER_IS_MEMBER_OF_YOUR_COMPANY,
-      );
+        );
 
     }
 
@@ -91,13 +91,13 @@ export class ReferalMemberService {
 
     invitedUser
       ? this.mailService.sendReferralLinkEmailToRegisteredUser(
-          sendReferalMemberLinkDto,
-          referal,
-        )
+        sendReferalMemberLinkDto,
+        referal,
+      )
       : this.mailService.sendReferralLinkEmailToNotRegisteredUser(
-          sendReferalMemberLinkDto,
-          referal,
-        );
+        sendReferalMemberLinkDto,
+        referal,
+      );
   }
 
   async getUserReferalMemberList(
@@ -110,7 +110,7 @@ export class ReferalMemberService {
     referal: ReferalEntity,
     user: UserEntity,
   ): Promise<ReferalMemberEntity> {
-    
+
 
     const query = this.userRepository
       .createQueryBuilder('user')
@@ -118,16 +118,16 @@ export class ReferalMemberService {
       .where('referal.id = :id', { id: referal.id });
     const referalUser = await query.getOne();
     //ПРОВЕРКА НA  ПРИГЛАШ. САМОГО СЕБЯ
-    if(referal.id === user.id)
-    throw new BadRequestException(
-      REFERAL_MEMBER_ERROR.CANNOT_ADD_YOURSELF_AS_REFERAL_MEMEBER
-    )
+    if (referal.id === user.id)
+      throw new BadRequestException(
+        REFERAL_MEMBER_ERROR.CANNOT_ADD_YOURSELF_AS_REFERAL_MEMEBER
+      )
 
     //ПРОВЕРКА НА АДМИНА
-    if(user.role === USER_ROLE.ADMIN)
-    throw new BadRequestException(
-      REFERAL_MEMBER_ERROR.CANNOT_ADD_ROLE_ADMIN
-    )
+    if (user.role === USER_ROLE.ADMIN)
+      throw new BadRequestException(
+        REFERAL_MEMBER_ERROR.CANNOT_ADD_ROLE_ADMIN
+      )
 
     //ПРОВЕРКА НА СОТРУДНИКА КОМПАНИИ
     const referalUserCompany =
@@ -135,21 +135,21 @@ export class ReferalMemberService {
 
     const referalUserCompanyIdList = referalUserCompany.map((company) => {
       return company.id
-      })
+    })
 
     const commonCompany = await this.companyRepository.createQueryBuilder('company')
-    .leftJoin('company.companyMember', 'companyMember')
-    .leftJoin('companyMember.user', 'user')
-    .where("company.id IN (:...ids)", { ids: referalUserCompanyIdList })
-    .andWhere("user.id = :id", { id: user.id })
-    .getOne()
+      .leftJoin('company.companyMember', 'companyMember')
+      .leftJoin('companyMember.user', 'user')
+      .where("company.id IN (:...ids)", { ids: referalUserCompanyIdList })
+      .andWhere("user.id = :id", { id: user.id })
+      .getOne()
 
     if (commonCompany)
-    throw new BadRequestException(
-      REFERAL_MEMBER_ERROR.USER_IS_MEMBER_OF_YOUR_COMPANY,
-    );
+      throw new BadRequestException(
+        REFERAL_MEMBER_ERROR.USER_IS_MEMBER_OF_YOUR_COMPANY,
+      );
 
-    
+
 
     //VALIDATE WHETHER USER HAS REFERAL MEMBER
     const referalMember =
