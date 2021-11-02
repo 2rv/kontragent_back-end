@@ -52,6 +52,7 @@ var referal_repository_1 = require("../referal/referal.repository");
 var user_repository_1 = require("../user/user.repository");
 var referal_member_repository_1 = require("./referal-member.repository");
 var referal_member_enum_1 = require("./enum/referal-member-enum");
+var user_role_enum_1 = require("../user/enum/user-role.enum");
 var company_repository_1 = require("../company/company.repository");
 var ReferalMemberService = /** @class */ (function () {
     function ReferalMemberService(userRepository, referalRepository, referalMemberRepository, companyRepository, mailService) {
@@ -71,6 +72,12 @@ var ReferalMemberService = /** @class */ (function () {
                         })];
                     case 1:
                         invitedUser = _b.sent();
+                        //ПРОВЕРКА НA  ПРИГЛАШ. САМОГО СЕБЯ
+                        if (invitedUser.id === user.id)
+                            throw new common_1.BadRequestException(referal_member_enum_1.REFERAL_MEMBER_ERROR.CANNOT_ADD_YOURSELF_AS_REFERAL_MEMEBER);
+                        //ПРОВЕРКА НА АДМИНА
+                        if (invitedUser.role === user_role_enum_1.USER_ROLE.ADMIN)
+                            throw new common_1.BadRequestException(referal_member_enum_1.REFERAL_MEMBER_ERROR.CANNOT_ADD_ROLE_ADMIN);
                         if (!invitedUser) return [3 /*break*/, 4];
                         return [4 /*yield*/, this.companyRepository.getCompanyListByUser(invitedUser)];
                     case 2:
@@ -108,7 +115,6 @@ var ReferalMemberService = /** @class */ (function () {
                         return [4 /*yield*/, referalQuery.getOne()];
                     case 8:
                         referal = _b.sent();
-                        console.log("REFERAL: " + JSON.stringify(referal));
                         invitedUser
                             ? this.mailService.sendReferralLinkEmailToRegisteredUser(sendReferalMemberLinkDto, referal)
                             : this.mailService.sendReferralLinkEmailToNotRegisteredUser(sendReferalMemberLinkDto, referal);
@@ -140,6 +146,12 @@ var ReferalMemberService = /** @class */ (function () {
                         return [4 /*yield*/, query.getOne()];
                     case 1:
                         referalUser = _a.sent();
+                        //ПРОВЕРКА НA  ПРИГЛАШ. САМОГО СЕБЯ
+                        if (referal.id === user.id)
+                            throw new common_1.BadRequestException(referal_member_enum_1.REFERAL_MEMBER_ERROR.CANNOT_ADD_YOURSELF_AS_REFERAL_MEMEBER);
+                        //ПРОВЕРКА НА АДМИНА
+                        if (user.role === user_role_enum_1.USER_ROLE.ADMIN)
+                            throw new common_1.BadRequestException(referal_member_enum_1.REFERAL_MEMBER_ERROR.CANNOT_ADD_ROLE_ADMIN);
                         return [4 /*yield*/, this.companyRepository.getCompanyListByUser(referalUser)];
                     case 2:
                         referalUserCompany = _a.sent();
