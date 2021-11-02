@@ -35,6 +35,28 @@ export class ReferalMemberService {
     const invitedUser = await this.userRepository.findOne({
       where: { email: sendReferalMemberLinkDto.email },
     });
+    if (invitedUser) {
+
+      const invitedUserCompany =
+        await this.companyRepository.getCompanyListByUser(invitedUser);
+  
+       const invitedUserCompanyIdList = invitedUserCompany.map((company) => {
+        return company.id
+       })
+
+      const commonCompany = await this.companyRepository.createQueryBuilder('company')
+      .leftJoin('company.companyMember', 'companyMember')
+      .leftJoin('companyMember.user', 'user')
+      .where("company.id IN (:...ids)", { ids: invitedUserCompanyIdList })
+      .andWhere("user.id = :id", { id: user.id })
+      .getOne()
+
+      if (commonCompany)
+        throw new BadRequestException(
+          REFERAL_MEMBER_ERROR.USER_IS_MEMBER_OF_YOUR_COMPANY,
+      );
+
+    }
 
     //VALIDATE WHETHER USER HAS REFERAL MEMBER
     const referalMember = invitedUser
@@ -82,7 +104,32 @@ export class ReferalMemberService {
     referal: ReferalEntity,
     user: UserEntity,
   ): Promise<ReferalMemberEntity> {
-    //ПРОВЕРКА НЕ ПРИГЛАШ. САМОГО СЕБЯ
+    //ПРОВЕРКА НA ПРИГЛАШ. САМОГО СЕБЯ
+
+    const query = this.userRepository
+      .createQueryBuilder('user')
+      .leftJoin('user.referal', 'referal')
+      .where('referal.id = :id', { id: referal.id });
+    const referalUser = await query.getOne();
+
+    const referalUserCompany =
+      await this.companyRepository.getCompanyListByUser(referalUser);
+
+    const referalUserCompanyIdList = referalUserCompany.map((company) => {
+      return company.id
+      })
+
+    const commonCompany = await this.companyRepository.createQueryBuilder('company')
+    .leftJoin('company.companyMember', 'companyMember')
+    .leftJoin('companyMember.user', 'user')
+    .where("company.id IN (:...ids)", { ids: referalUserCompanyIdList })
+    .andWhere("user.id = :id", { id: user.id })
+    .getOne()
+
+    if (commonCompany)
+    throw new BadRequestException(
+      REFERAL_MEMBER_ERROR.USER_IS_MEMBER_OF_YOUR_COMPANY,
+    );
 
     //VALIDATE WHETHER USER HAS REFERAL MEMBER
     const referalMember =
