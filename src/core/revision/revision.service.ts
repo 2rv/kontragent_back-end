@@ -28,33 +28,28 @@ export class RevisionService {
   ) {}
 
   async createRevision(
-    createRevisionDto: CreateRevisionDto,
+    createRevisionDtoList: CreateRevisionDto[],
     company: CompanyEntity,
-  ): Promise<GetRevisionInfoDto> {
-    await this.companyBalanceService.createCompanyBalancePayment(company, 1000);
+  ): Promise<void> {
+    // await this.companyBalanceService.createCompanyBalancePayment(company, 1000);
 
-    const revision = await this.revisionRepository.createRevision(
-      createRevisionDto,
-      company,
-    );
+    createRevisionDtoList.forEach(async (createRevisionDto) => {
+      const revision = await this.revisionRepository.createRevision(
+        createRevisionDto,
+        company,
+      );
 
-    const ids: number[] = createRevisionDto.fileIdList;
+      const ids: number[] = createRevisionDto.fileIdList;
 
-    if (ids && ids.length > 0) {
-      for (const i in ids) {
-        await this.fileRepository.assignFileToRevisionDescriptionById(
-          revision,
-          ids[i],
-        );
+      if (ids && ids.length > 0) {
+        for (const i in ids) {
+          await this.fileRepository.assignFileToRevisionDescriptionById(
+            revision,
+            ids[i],
+          );
+        }
       }
-    }
-
-    return {
-      id: revision.id,
-      title: revision.title,
-      description: revision.description,
-      status: revision.status,
-    };
+    });
   }
 
   async updateRevisionReview(
