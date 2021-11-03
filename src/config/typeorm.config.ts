@@ -33,6 +33,6 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   url: process.env.DATABASE_URL || DATABASE_CONFIG.URL,
   entities: ApiEntities,
   ssl: { rejectUnauthorized: false },
-  logging: ['query', 'error'],
+  // logging: ['query', 'error'],
   synchronize: process.env.TYPEORM_SYNC || DATABASE_CONFIG.SYNCHRONIZE,
 };
