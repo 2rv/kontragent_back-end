@@ -21,6 +21,9 @@ export class RevisionEntity extends BaseEntity {
   @Column({ nullable: false })
   description: string;
 
+  @Column({ nullable: false })
+  inn: string;
+
   @Column({
     type: 'enum',
     enum: REVISION_STATUS,
@@ -31,6 +34,9 @@ export class RevisionEntity extends BaseEntity {
 
   @Column({ nullable: true })
   review: string;
+
+  @Column('simple-json')
+  year: { name: string; period: boolean[] }[];
 
   @Column({ nullable: false, default: 0, type: 'decimal' })
   price: number;

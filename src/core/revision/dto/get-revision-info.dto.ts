@@ -17,4 +17,6 @@ export interface GetRevisionInfoDto {
   fileDescription?: FileEntity[];
 
   fileReview?: FileEntity[];
+
+  year?: { name: string; period: boolean[] }[];
 }

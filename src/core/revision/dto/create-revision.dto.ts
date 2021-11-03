@@ -15,6 +15,11 @@ export class CreateRevisionDto {
 
   @IsNotEmpty()
   @IsString()
+  @MaxLength(30)
+  inn: string;
+
+  @IsNotEmpty()
+  @IsString()
   @MaxLength(10000)
   description: string;
 
@@ -22,4 +27,10 @@ export class CreateRevisionDto {
   @IsNumber({}, { each: true })
   @ArrayMaxSize(10)
   fileIdList?: number[];
+
+  @IsNotEmpty()
+  year: { name: string; period: boolean[] }[];
+
+  @IsNumber()
+  price: number;
 }
