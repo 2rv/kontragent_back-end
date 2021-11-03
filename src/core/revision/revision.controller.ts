@@ -33,10 +33,10 @@ export class RevisionController {
   @Roles(USER_ROLE.USER)
   @UseGuards(AuthGuard(), AccountGuard, CompanyGuard, CompanyMemberGuard)
   async createRevision(
-    @Body(ValidationPipe) createRevisionDto: CreateRevisionDto,
+    @Body(ValidationPipe) createRevisionDtoList: CreateRevisionDto[],
     @GetCompany() company: CompanyEntity,
-  ): Promise<GetRevisionInfoDto> {
-    return this.revisionService.createRevision(createRevisionDto, company);
+  ): Promise<void> {
+    return this.revisionService.createRevision(createRevisionDtoList, company);
   }
 
   @Patch('/company/:companyId/revision/:revisionId/review')

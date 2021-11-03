@@ -19,6 +19,9 @@ export class RevisionRepository extends Repository<RevisionEntity> {
     revision.company = company;
     revision.description = createRevisionDto.description;
     revision.title = createRevisionDto.description;
+    revision.year = createRevisionDto.year;
+    revision.inn = createRevisionDto.inn;
+    revision.price = createRevisionDto.price;
 
     try {
       await revision.save();
