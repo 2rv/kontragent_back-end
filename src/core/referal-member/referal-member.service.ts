@@ -36,21 +36,24 @@ export class ReferalMemberService {
       where: { email: sendReferalMemberLinkDto.email },
     });
 
-    //ПРОВЕРКА НA  ПРИГЛАШ. САМОГО СЕБЯ
-    if (invitedUser.id === user.id)
-      throw new BadRequestException(
-        REFERAL_MEMBER_ERROR.CANNOT_ADD_YOURSELF_AS_REFERAL_MEMEBER
-      )
 
-    //ПРОВЕРКА НА АДМИНА
-    if (invitedUser.role === USER_ROLE.ADMIN)
-      throw new BadRequestException(
-        REFERAL_MEMBER_ERROR.CANNOT_ADD_ROLE_ADMIN
-      )
+    if (invitedUser) {
+      //ПРОВЕРКА НA  ПРИГЛАШ. САМОГО СЕБЯ
+      if (invitedUser.id === user.id)
+        throw new BadRequestException(
+          REFERAL_MEMBER_ERROR.CANNOT_ADD_YOURSELF_AS_REFERAL_MEMEBER
+        )
+
+      //ПРОВЕРКА НА АДМИНА
+      if (invitedUser.role === USER_ROLE.ADMIN)
+        throw new BadRequestException(
+          REFERAL_MEMBER_ERROR.CANNOT_ADD_ROLE_ADMIN
+        )
+    }
+
 
     //ПРОВЕРКА НА СОТРУДНИКА КОМПАНИИ
     if (invitedUser) {
-
       const invitedUserCompany =
         await this.companyRepository.getCompanyListByUser(invitedUser);
 
@@ -58,12 +61,14 @@ export class ReferalMemberService {
         return company.id
       })
 
-      const commonCompany = await this.companyRepository.createQueryBuilder('company')
-        .leftJoin('company.companyMember', 'companyMember')
-        .leftJoin('companyMember.user', 'user')
-        .where("company.id IN (:...ids)", { ids: invitedUserCompanyIdList })
-        .andWhere("user.id = :id", { id: user.id })
-        .getOne()
+      const commonCompany = invitedUserCompanyIdList.length ?
+        await this.companyRepository.createQueryBuilder('company')
+          .leftJoin('company.companyMember', 'companyMember')
+          .leftJoin('companyMember.user', 'user')
+          .where("company.id IN (:...ids)", { ids: invitedUserCompanyIdList })
+          .andWhere("user.id = :id", { id: user.id })
+          .getOne()
+        : false
 
       if (commonCompany)
         throw new BadRequestException(
