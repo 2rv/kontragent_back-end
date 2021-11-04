@@ -9,5 +9,4 @@ export interface JwtPayload {
   email: string;
   confirmPhone: boolean;
   confirmEmail: boolean;
-  companyIdArray: number[];
 }

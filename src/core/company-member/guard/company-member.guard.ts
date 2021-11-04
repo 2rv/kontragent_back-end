@@ -3,6 +3,7 @@ import {
   CanActivate,
   ExecutionContext,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -28,9 +29,6 @@ export class CompanyMemberGuard implements CanActivate {
       company,
     }: { userAccount: UserEntity; company: CompanyEntity } = request;
 
-    if (!userAccount) throw new BadRequestException();
-    if (!company) throw new BadRequestException();
-
     const companyMember = await this.companyMemberRepository.findOne({
       where: {
         user: { id: userAccount.id },
@@ -39,7 +37,7 @@ export class CompanyMemberGuard implements CanActivate {
     });
 
     if (!companyMember) {
-      throw new BadRequestException(COMPANY_MEMBER_ERROR.ACCESS_DENIED);
+      throw new ForbiddenException(COMPANY_MEMBER_ERROR.ACCESS_DENIED);
     }
     const { role = null }: { role: COMPANY_MEMBER_ROLE } = companyMember;
 

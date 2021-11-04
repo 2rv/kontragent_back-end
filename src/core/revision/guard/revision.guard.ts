@@ -2,10 +2,11 @@ import {
   Injectable,
   CanActivate,
   ExecutionContext,
-  BadRequestException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RevisionRepository } from '../revision.repository';
+import { CompanyEntity } from '../../company/company.entity';
 
 @Injectable()
 export class RevisionGuard implements CanActivate {
@@ -17,13 +18,14 @@ export class RevisionGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const { revisionId } = request.params;
+    const { company }: { company: CompanyEntity } = request;
 
     const revision = await this.revisionRepository.findOne({
-      where: { id: revisionId },
+      where: { id: revisionId, company: { id: company.id } },
     });
 
     if (!revision) {
-      throw new BadRequestException();
+      throw new NotFoundException();
     }
 
     request.revision = revision;
