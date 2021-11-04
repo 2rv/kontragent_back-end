@@ -17,9 +17,10 @@ export class RevisionGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const { revisionId } = request.params;
+    const { company } = request.company;
 
     const revision = await this.revisionRepository.findOne({
-      where: { id: revisionId },
+      where: { id: revisionId, company: { id: company.id } },
     });
 
     if (!revision) {
