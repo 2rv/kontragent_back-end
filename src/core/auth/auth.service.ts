@@ -8,10 +8,7 @@ import { LoginInfoDto } from './dto/login-info.dto';
 import { UserRepository } from '../user/user.repository';
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { UserSignUpDto } from './dto/user-sign-up.dto';
-import { CompanyEntity } from '../company/company.entity';
-import { CompanyRepository } from '../company/company.repository';
 import { ReferalRepository } from '../referal/referal.repository';
-import { CreateCompanyInfoDto } from '../company/dto/create-company-info.dto';
 
 @Injectable()
 export class AuthService {
@@ -20,8 +17,6 @@ export class AuthService {
     private userRepository: UserRepository,
     @InjectRepository(ReferalRepository)
     private referalRepository: ReferalRepository,
-    @InjectRepository(CompanyRepository)
-    private companyRepository: CompanyRepository,
     private jwtService: JwtService,
   ) {}
 
@@ -73,19 +68,7 @@ export class AuthService {
       lastname,
     } = user;
 
-    const userCompanies =  await this.companyRepository.createQueryBuilder('company')
-    .leftJoin('company.companyMember', 'companyMember')
-    .leftJoin('companyMember.user', 'user')
-    .where('user.id = :id', { id: user.id })
-
-    .select(['company.id'])
-    .getMany();
-
-  const companyIdArray = userCompanies.map((company) => {
-      return company.id
-    })
-
-    const payload: JwtPayload = { 
+    const payload: JwtPayload = {
       id,
       role,
       email,
@@ -94,7 +77,6 @@ export class AuthService {
       confirmPhone,
       firstname,
       lastname,
-      companyIdArray,
     };
 
     return this.jwtService.sign(payload);
