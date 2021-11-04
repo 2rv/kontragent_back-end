@@ -2,13 +2,13 @@ import {
   Injectable,
   CanActivate,
   ExecutionContext,
+  NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
 import { UserEntity } from '../user.entity';
 import { USER_ROLE } from '../enum/user-role.enum';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { USER_ERROR } from '../enum/user-error.enum';
 
 @Injectable()
 export class UserGuard implements CanActivate {
@@ -30,7 +30,7 @@ export class UserGuard implements CanActivate {
     });
 
     if (!user) {
-      throw new BadRequestException(USER_ERROR.USER_WITH_THIS_ID_NOT_FOUND);
+      throw new NotFoundException();
     }
 
     if (String(user.role) === String(USER_ROLE.BLOCKED)) {

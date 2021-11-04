@@ -2,7 +2,7 @@ import {
   Injectable,
   CanActivate,
   ExecutionContext,
-  BadRequestException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RevisionRepository } from '../revision.repository';
@@ -23,7 +23,7 @@ export class RevisionGuard implements CanActivate {
     });
 
     if (!revision) {
-      throw new BadRequestException();
+      throw new NotFoundException();
     }
 
     request.revision = revision;
