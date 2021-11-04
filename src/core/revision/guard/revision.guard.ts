@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RevisionRepository } from '../revision.repository';
+import { CompanyEntity } from '../../company/company.entity';
 
 @Injectable()
 export class RevisionGuard implements CanActivate {
@@ -17,7 +18,8 @@ export class RevisionGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const { revisionId } = request.params;
-    const { company } = request.company;
+    const { company }: { company: CompanyEntity } = request.company;
+    console.log(JSON.stringify(company));
 
     const revision = await this.revisionRepository.findOne({
       where: { id: revisionId, company: { id: company.id } },
