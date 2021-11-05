@@ -92,6 +92,7 @@ export class RevisionController {
     return this.revisionService.getRevisionReview(revision);
   }
 
+  //СДЕЛАТЬ ОПЛАТУ
   @Post('/company/:companyId/revision/:revisionId/review/payment')
   @Roles(USER_ROLE.USER, USER_ROLE.ADMIN)
   @UseGuards(

@@ -31,6 +31,8 @@ export class RevisionService {
     createRevisionDtoList: CreateRevisionDto[],
     company: CompanyEntity,
   ): Promise<void> {
+    //CALCULATE PRICE
+    const price = 1;
     // await this.companyBalanceService.createCompanyBalancePayment(company, 1000);
 
     createRevisionDtoList.forEach(async (createRevisionDto) => {
@@ -120,19 +122,19 @@ export class RevisionService {
     revision: RevisionEntity,
     company: CompanyEntity,
   ): Promise<void> {
-    if (revision.status !== REVISION_STATUS.PAYMENT) {
+    if (revision.status !== REVISION_STATUS.PAY) {
       throw new BadRequestException(
         REVISION_ERROR.REVISION_STATUS_IS_NOT_PAYMENT,
       );
     }
 
-    revision.status = REVISION_STATUS.DONE;
-    await revision.save();
-
     await this.companyBalanceService.createCompanyBalancePayment(
       company,
       revision.price,
     );
+
+    revision.status = REVISION_STATUS.PAID;
+    await revision.save();
   }
 
   async getRevisionList(): Promise<GetRevisionListInfoDto> {

@@ -21,7 +21,6 @@ export class RevisionRepository extends Repository<RevisionEntity> {
     revision.title = createRevisionDto.description;
     revision.year = createRevisionDto.year;
     revision.inn = createRevisionDto.inn;
-    revision.price = createRevisionDto.price;
 
     try {
       await revision.save();
@@ -47,8 +46,8 @@ export class RevisionRepository extends Repository<RevisionEntity> {
       revision.status = updateRevisionDto.status;
     }
 
-    if (updateRevisionDto.price) {
-      revision.price = updateRevisionDto.price;
+    if (updateRevisionDto.additionPrice) {
+      revision.additionPrice = updateRevisionDto.additionPrice;
     }
 
     await revision.save();

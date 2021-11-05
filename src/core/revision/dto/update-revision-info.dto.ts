@@ -18,7 +18,7 @@ export class UpdateRevisionDto {
 
   @IsOptional()
   @IsNumber()
-  price?: number;
+  additionPrice?: number;
 
   @IsOptional()
   @IsNumber({}, { each: true })

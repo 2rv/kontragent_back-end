@@ -41,6 +41,9 @@ export class RevisionEntity extends BaseEntity {
   @Column({ nullable: false, default: 0, type: 'decimal' })
   price: number;
 
+  @Column({ nullable: false, default: 0, type: 'decimal' })
+  additionPrice: number;
+
   @OneToMany(() => FileEntity, (file) => file.revisionDescription)
   fileDescription: FileEntity[];
 
