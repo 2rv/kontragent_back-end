@@ -30,7 +30,4 @@ export class CreateRevisionDto {
 
   @IsNotEmpty()
   year: { name: string; period: boolean[] }[];
-
-  @IsNumber()
-  price: number;
 }
