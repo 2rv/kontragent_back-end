@@ -20,9 +20,13 @@ export class RevisionGuard implements CanActivate {
     const { revisionId } = request.params;
     const { company }: { company: CompanyEntity } = request;
 
-    const revision = await this.revisionRepository.findOne({
-      where: { id: revisionId, company: { id: company.id } },
-    });
+    const revision = company
+      ? await this.revisionRepository.findOne({
+          where: { id: revisionId, company: { id: company.id } },
+        })
+      : await this.revisionRepository.findOne({
+          where: { id: revisionId },
+        });
 
     if (!revision) {
       throw new NotFoundException();
