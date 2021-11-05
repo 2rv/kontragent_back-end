@@ -39,9 +39,9 @@ export class RevisionController {
     return this.revisionService.createRevision(createRevisionDtoList, company);
   }
 
-  @Patch('/company/:companyId/revision/:revisionId/review')
+  @Patch('/review/:revisionId')
   @Roles(USER_ROLE.ADMIN)
-  @UseGuards(AuthGuard(), AccountGuard, CompanyGuard, RevisionGuard)
+  @UseGuards(AuthGuard(), AccountGuard, RevisionGuard)
   async updateRevisionReview(
     @Body(ValidationPipe) updateRevisionDto: UpdateRevisionDto,
     @GetRevision() revision: RevisionEntity,
