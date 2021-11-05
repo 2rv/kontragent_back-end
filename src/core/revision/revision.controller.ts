@@ -78,7 +78,7 @@ export class RevisionController {
   }
 
   @Get('/company/:companyId/revision/:revisionId/review')
-  @Roles(USER_ROLE.USER, USER_ROLE.ADMIN)
+  @Roles(USER_ROLE.USER)
   @UseGuards(
     AuthGuard(),
     AccountGuard,
@@ -92,7 +92,15 @@ export class RevisionController {
     return this.revisionService.getRevisionReview(revision);
   }
 
-  //СДЕЛАТЬ ОПЛАТУ
+  @Get('/admin/company/:companyId/revision/:revisionId/review')
+  @Roles(USER_ROLE.ADMIN)
+  @UseGuards(AuthGuard(), AccountGuard, CompanyGuard, RevisionGuard)
+  async getAdminRevisionReview(
+    @GetRevision() revision: RevisionEntity,
+  ): Promise<GetRevisionInfoDto> {
+    return this.revisionService.getRevisionReview(revision);
+  }
+
   @Post('/company/:companyId/revision/:revisionId/review/payment')
   @Roles(USER_ROLE.USER, USER_ROLE.ADMIN)
   @UseGuards(

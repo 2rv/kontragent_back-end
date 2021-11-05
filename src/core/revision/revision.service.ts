@@ -31,9 +31,23 @@ export class RevisionService {
     createRevisionDtoList: CreateRevisionDto[],
     company: CompanyEntity,
   ): Promise<void> {
-    //CALCULATE PRICE
-    const price = 1;
-    // await this.companyBalanceService.createCompanyBalancePayment(company, 1000);
+    let price = 0;
+    const onePeriodRevisionPrice = 500;
+    const addPrice = (add: number) => {
+      price += add;
+    };
+    createRevisionDtoList.forEach((revision) => {
+      revision.year.forEach((year) => {
+        year.period.forEach((period) => {
+          if (period) addPrice(onePeriodRevisionPrice);
+        });
+      });
+    });
+
+    await this.companyBalanceService.createCompanyBalancePayment(
+      company,
+      price,
+    );
 
     createRevisionDtoList.forEach(async (createRevisionDto) => {
       const revision = await this.revisionRepository.createRevision(
@@ -99,7 +113,7 @@ export class RevisionService {
       title: revision.title,
       description: revision.description,
       status: revision.status,
-      price: revision.price || null,
+      price: revision.additionPrice || null,
     };
 
     const fileDescriptionList =
@@ -107,13 +121,12 @@ export class RevisionService {
 
     getRevisionInfoDto.fileDescription = fileDescriptionList;
 
-    if (revision.status === REVISION_STATUS.DONE) {
-      getRevisionInfoDto.review = revision.review;
+    getRevisionInfoDto.review = revision.review;
 
-      const fileReviewList =
-        await this.fileRepository.getRevisionReviewFileList(revision);
-      getRevisionInfoDto.fileReview = fileReviewList;
-    }
+    const fileReviewList = await this.fileRepository.getRevisionReviewFileList(
+      revision,
+    );
+    getRevisionInfoDto.fileReview = fileReviewList;
 
     return getRevisionInfoDto;
   }
