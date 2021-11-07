@@ -143,7 +143,7 @@ export class RevisionService {
 
     await this.companyBalanceService.createCompanyBalancePayment(
       company,
-      revision.price,
+      revision.additionPrice,
     );
 
     revision.status = REVISION_STATUS.PAID;
