@@ -4,6 +4,7 @@ import { UserEntity } from '../user/user.entity';
 import { UserRepository } from '../user/user.repository';
 import { UserSettingsUpdatePasswordDto } from './dto/user-settings-update-password.dto';
 import { UserSettingsUpdateEmailDto } from './dto/user-settings-update-email.dto';
+import { USER_SETTINGS_ERROR } from './enum/user-settings-error.enum';
 
 @Injectable()
 export class UserSettingsService {
@@ -29,7 +30,14 @@ export class UserSettingsService {
     userSettingsUpdateEmailDto: UserSettingsUpdateEmailDto,
   ): Promise<void> {
     const { email } = userSettingsUpdateEmailDto;
-    user.email = email;
-    await user.save();
+    if (user.email === email) {
+      throw new BadRequestException(USER_SETTINGS_ERROR.SAME_NEW_EMAIL);
+    } else {
+      try {
+        await user.save();
+      } catch {
+        new BadRequestException();
+      }
+    }
   }
 }
