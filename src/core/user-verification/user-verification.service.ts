@@ -16,12 +16,9 @@ import { MailService } from '../mail/mail.service';
 import { TwilioSendSMS } from 'src/common/utils/twilio';
 
 import { ReferalMemberRepository } from '../referal-member/referal-member.repository';
-import { ReferalAchievementService } from '../referal-achievement/referal-achievement.service';
+import { ReferalMemberService } from '../referal-member/referal-member.service';
 
-import { ReferalMemberEntity } from '../referal-member/referal-member.entity';
 import { ReferalEntity } from '../referal/referal.entity';
-
-import { REFERAL_ACHIEVEMENT_TYPE } from '../referal-achievement/enum/referal-achievement-type.enum';
 
 @Injectable()
 export class UserVerificationService {
@@ -30,8 +27,7 @@ export class UserVerificationService {
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
     @InjectRepository(ReferalMemberRepository)
-    private referalMemberRepository: ReferalMemberRepository,
-    private referalAchievementService: ReferalAchievementService,
+    private referalMemberService: ReferalMemberService,
     private mailService: MailService,
   ) {}
 
@@ -136,20 +132,11 @@ export class UserVerificationService {
 
     const userVerificationPhonePayload: UserVerificationPhonePayload =
       JSON.parse(rawUserVerificationPhonePayload);
-
     await this.userRepository.confirmPhoneById(
       userVerificationPhonePayload.userId,
     );
-
     this.cacheManager.del(code);
 
-    const referalMember: ReferalMemberEntity =
-      await this.referalMemberRepository.createReferalMember(referal, user);
-
-    this.referalAchievementService.createReferalAchievement(
-      1000,
-      REFERAL_ACHIEVEMENT_TYPE.SIGNUP,
-      referalMember,
-    );
+    this.referalMemberService.createReferalMember(referal, user);
   }
 }

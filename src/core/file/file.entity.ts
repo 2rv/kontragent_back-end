@@ -19,6 +19,13 @@ export class FileEntity extends BaseEntity {
 
   @Column({
     type: 'varchar',
+    name: 'original_name',
+    nullable: false,
+  })
+  originalName: string;
+
+  @Column({
+    type: 'varchar',
     name: 'file_url',
     nullable: false,
   })

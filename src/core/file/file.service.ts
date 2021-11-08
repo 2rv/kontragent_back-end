@@ -14,7 +14,11 @@ export class FileService {
   async create(file: any, user: UserEntity): Promise<FileEntity> {
     const uploadedFile = await AwsUploadFile(file);
 
-    return await this.fileRepository.createUploadedFile(uploadedFile.url, user);
+    return await this.fileRepository.createUploadedFile(
+      uploadedFile.url,
+      user,
+      file.originalname,
+    );
   }
 
   // async update(id: string, body) {
