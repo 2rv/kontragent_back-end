@@ -10,8 +10,10 @@ import { ReferalEntity } from '../referal/referal.entity';
 import { ReferalMemberEntity } from './referal-member.entity';
 import { ReferalMemberRepository } from './referal-member.repository';
 import { REFERAL_MEMBER_ERROR } from './enum/referal-member-enum';
-import { USER_ROLE } from '../user/enum/user-role.enum'
+import { USER_ROLE } from '../user/enum/user-role.enum';
 import { CompanyRepository } from '../company/company.repository';
+import { REFERAL_ACHIEVEMENT_TYPE } from '../referal-achievement/enum/referal-achievement-type.enum';
+import { ReferalAchievementService } from '../referal-achievement/referal-achievement.service';
 
 @Injectable()
 export class ReferalMemberService {
@@ -24,8 +26,9 @@ export class ReferalMemberService {
     private referalMemberRepository: ReferalMemberRepository,
     @InjectRepository(CompanyRepository)
     private companyRepository: CompanyRepository,
+    private referalAchievementService: ReferalAchievementService,
     private mailService: MailService,
-  ) { }
+  ) {}
 
   async sendReferalMemberLink(
     user: UserEntity,
@@ -36,45 +39,41 @@ export class ReferalMemberService {
       where: { email: sendReferalMemberLinkDto.email },
     });
 
-
     if (invitedUser) {
       //ПРОВЕРКА НA  ПРИГЛАШ. САМОГО СЕБЯ
       if (invitedUser.id === user.id)
         throw new BadRequestException(
-          REFERAL_MEMBER_ERROR.CANNOT_ADD_YOURSELF_AS_REFERAL_MEMEBER
-        )
+          REFERAL_MEMBER_ERROR.CANNOT_ADD_YOURSELF_AS_REFERAL_MEMEBER,
+        );
 
       //ПРОВЕРКА НА АДМИНА
       if (invitedUser.role === USER_ROLE.ADMIN)
         throw new BadRequestException(
-          REFERAL_MEMBER_ERROR.CANNOT_ADD_ROLE_ADMIN
-        )
-    }
+          REFERAL_MEMBER_ERROR.CANNOT_ADD_ROLE_ADMIN,
+        );
 
-
-    //ПРОВЕРКА НА СОТРУДНИКА КОМПАНИИ
-    if (invitedUser) {
+      //ПРОВЕРКА НА СОТРУДНИКА КОМПАНИИ
       const invitedUserCompany =
         await this.companyRepository.getCompanyListByUser(invitedUser);
 
       const invitedUserCompanyIdList = invitedUserCompany.map((company) => {
-        return company.id
-      })
+        return company.id;
+      });
 
-      const commonCompany = invitedUserCompanyIdList.length ?
-        await this.companyRepository.createQueryBuilder('company')
-          .leftJoin('company.companyMember', 'companyMember')
-          .leftJoin('companyMember.user', 'user')
-          .where("company.id IN (:...ids)", { ids: invitedUserCompanyIdList })
-          .andWhere("user.id = :id", { id: user.id })
-          .getOne()
-        : false
+      const commonCompany = invitedUserCompanyIdList.length
+        ? await this.companyRepository
+            .createQueryBuilder('company')
+            .leftJoin('company.companyMember', 'companyMember')
+            .leftJoin('companyMember.user', 'user')
+            .where('company.id IN (:...ids)', { ids: invitedUserCompanyIdList })
+            .andWhere('user.id = :id', { id: user.id })
+            .getOne()
+        : false;
 
       if (commonCompany)
         throw new BadRequestException(
           REFERAL_MEMBER_ERROR.USER_IS_MEMBER_OF_YOUR_COMPANY,
         );
-
     }
 
     //VALIDATE WHETHER USER HAS REFERAL MEMBER
@@ -87,7 +86,6 @@ export class ReferalMemberService {
         REFERAL_MEMBER_ERROR.USER_ALREADY_REFERAL_MEMBER,
       );
 
-
     //GET REFERAL ENTITY TO REPRESENT REFERAL INFORMATION TO REFERAL
     const referalQuery = this.referalRepository.createQueryBuilder('referal');
     referalQuery.leftJoinAndSelect('referal.user', 'user');
@@ -96,13 +94,13 @@ export class ReferalMemberService {
 
     invitedUser
       ? this.mailService.sendReferralLinkEmailToRegisteredUser(
-        sendReferalMemberLinkDto,
-        referal,
-      )
+          sendReferalMemberLinkDto,
+          referal,
+        )
       : this.mailService.sendReferralLinkEmailToNotRegisteredUser(
-        sendReferalMemberLinkDto,
-        referal,
-      );
+          sendReferalMemberLinkDto,
+          referal,
+        );
   }
 
   async getUserReferalMemberList(
@@ -115,46 +113,43 @@ export class ReferalMemberService {
     referal: ReferalEntity,
     user: UserEntity,
   ): Promise<ReferalMemberEntity> {
-
-
     const query = this.userRepository
       .createQueryBuilder('user')
       .leftJoin('user.referal', 'referal')
       .where('referal.id = :id', { id: referal.id });
     const referalUser = await query.getOne();
     //ПРОВЕРКА НA  ПРИГЛАШ. САМОГО СЕБЯ
-    if (referal.id === user.id)
+    if (referalUser.id === user.id)
       throw new BadRequestException(
-        REFERAL_MEMBER_ERROR.CANNOT_ADD_YOURSELF_AS_REFERAL_MEMEBER
-      )
+        REFERAL_MEMBER_ERROR.CANNOT_ADD_YOURSELF_AS_REFERAL_MEMEBER,
+      );
 
     //ПРОВЕРКА НА АДМИНА
     if (user.role === USER_ROLE.ADMIN)
-      throw new BadRequestException(
-        REFERAL_MEMBER_ERROR.CANNOT_ADD_ROLE_ADMIN
-      )
+      throw new BadRequestException(REFERAL_MEMBER_ERROR.CANNOT_JOIN_AS_ADMIN);
 
     //ПРОВЕРКА НА СОТРУДНИКА КОМПАНИИ
     const referalUserCompany =
       await this.companyRepository.getCompanyListByUser(referalUser);
 
     const referalUserCompanyIdList = referalUserCompany.map((company) => {
-      return company.id
-    })
+      return company.id;
+    });
 
-    const commonCompany = await this.companyRepository.createQueryBuilder('company')
-      .leftJoin('company.companyMember', 'companyMember')
-      .leftJoin('companyMember.user', 'user')
-      .where("company.id IN (:...ids)", { ids: referalUserCompanyIdList })
-      .andWhere("user.id = :id", { id: user.id })
-      .getOne()
+    const commonCompany = referalUserCompanyIdList.length
+      ? await this.companyRepository
+          .createQueryBuilder('company')
+          .leftJoin('company.companyMember', 'companyMember')
+          .leftJoin('companyMember.user', 'user')
+          .where('company.id IN (:...ids)', { ids: referalUserCompanyIdList })
+          .andWhere('user.id = :id', { id: user.id })
+          .getOne()
+      : false;
 
     if (commonCompany)
       throw new BadRequestException(
-        REFERAL_MEMBER_ERROR.USER_IS_MEMBER_OF_YOUR_COMPANY,
+        REFERAL_MEMBER_ERROR.REFERAL_IS_MEMBER_OF_YOUR_COMPANY,
       );
-
-
 
     //VALIDATE WHETHER USER HAS REFERAL MEMBER
     const referalMember =
@@ -162,12 +157,18 @@ export class ReferalMemberService {
 
     if (referalMember)
       throw new BadRequestException(
-        REFERAL_MEMBER_ERROR.USER_ALREADY_REFERAL_MEMBER,
+        REFERAL_MEMBER_ERROR.YOU_ALREADT_REFERAL_MEMBER,
       );
 
-    return await this.referalMemberRepository.createReferalMember(
-      referal,
-      user,
+    const newReferalMember =
+      await this.referalMemberRepository.createReferalMember(referal, user);
+
+    this.referalAchievementService.createReferalAchievement(
+      1500,
+      REFERAL_ACHIEVEMENT_TYPE.SIGNUP,
+      referalMember,
     );
+
+    return newReferalMember;
   }
 }

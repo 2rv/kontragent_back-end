@@ -12,6 +12,8 @@ import { UserRepository } from '../user/user.repository';
 import { ReferalRepository } from '../referal/referal.repository';
 import { CompanyRepository } from '../company/company.repository';
 import { ReferalMemberRepository } from './referal-member.repository';
+import { ReferalAchievementModule } from '../referal-achievement/referal-achievement.module';
+import { ReferalAchievementRepository } from '../referal-achievement/referal-achievement.repository';
 
 @Module({
   imports: [
@@ -23,9 +25,11 @@ import { ReferalMemberRepository } from './referal-member.repository';
       UserRepository,
       ReferalRepository,
       CompanyRepository,
+      ReferalAchievementRepository,
     ]),
     AuthModule,
     MailModule,
+    ReferalAchievementModule,
   ],
   controllers: [ReferalMemberController],
   providers: [ReferalMemberService],

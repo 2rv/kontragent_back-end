@@ -11,11 +11,16 @@ import { RevisionEntity } from '../revision/revision.entity';
 
 @EntityRepository(FileEntity)
 export class FileRepository extends Repository<FileEntity> {
-  async createUploadedFile(url: string, user: UserEntity): Promise<FileEntity> {
+  async createUploadedFile(
+    url: string,
+    user: UserEntity,
+    originalName: string,
+  ): Promise<FileEntity> {
     const file: FileEntity = new FileEntity();
 
     console.log(user);
 
+    file.originalName = originalName;
     file.user = user;
     file.url = url;
 

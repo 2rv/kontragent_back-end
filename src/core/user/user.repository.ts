@@ -53,8 +53,9 @@ export class UserRepository extends Repository<UserEntity> {
   async getAdminUserList() {
     const query = this.createQueryBuilder('user');
 
-    query.where('user.role IN (:...roles)', { roles: [USER_ROLE.USER , USER_ROLE.BLOCKED ]});
-   
+    query.where('user.role IN (:...roles)', {
+      roles: [USER_ROLE.USER, USER_ROLE.BLOCKED],
+    });
 
     query.select([
       'user.id',
