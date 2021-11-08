@@ -10,8 +10,10 @@ import { UserVerificationService } from './user-verification.service';
 
 import { ReferalRepository } from '../referal/referal.repository';
 import { ReferalMemberRepository } from '../referal-member/referal-member.repository';
+import { ReferalMemberService } from '../referal-member/referal-member.service';
 import { ReferalAchievementRepository } from '../referal-achievement/referal-achievement.repository';
 import { ReferalAchievementModule } from '../referal-achievement/referal-achievement.module';
+import { CompanyRepository } from '../company/company.repository';
 
 @Module({
   imports: [
@@ -22,12 +24,13 @@ import { ReferalAchievementModule } from '../referal-achievement/referal-achieve
       ReferalMemberRepository,
       ReferalAchievementRepository,
       UserEntity,
+      CompanyRepository,
     ]),
     AuthModule,
     MailModule,
     ReferalAchievementModule,
   ],
   controllers: [UserVerificationController],
-  providers: [UserVerificationService],
+  providers: [UserVerificationService, ReferalMemberService],
 })
 export class UserVerificationModule {}

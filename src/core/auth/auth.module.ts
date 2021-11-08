@@ -16,7 +16,13 @@ import { ReferalRepository } from '../referal/referal.repository';
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register(JwtConfig),
-    TypeOrmModule.forFeature([UserEntity, UserRepository, ReferalRepository, CompanyRepository, CompanyEntity]),
+    TypeOrmModule.forFeature([
+      UserEntity,
+      UserRepository,
+      ReferalRepository,
+      CompanyRepository,
+      CompanyEntity,
+    ]),
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
