@@ -31,7 +31,7 @@ export class ReferalRepository extends Repository<ReferalEntity> {
   ): Promise<void> {
     try {
       const currentBalance = referal.balance;
-      this.update(referal, { balance: currentBalance + award });
+      this.update(referal, { balance: Number(currentBalance) + award });
     } catch {
       throw new BadRequestException('CHANGE.COULDNT_UPDATE_REFERRER_BALANCE');
     }

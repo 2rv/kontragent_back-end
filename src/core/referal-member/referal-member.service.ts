@@ -163,10 +163,10 @@ export class ReferalMemberService {
     const newReferalMember =
       await this.referalMemberRepository.createReferalMember(referal, user);
 
-    this.referalAchievementService.createReferalAchievement(
+    await this.referalAchievementService.createReferalAchievement(
       1500,
       REFERAL_ACHIEVEMENT_TYPE.SIGNUP,
-      referalMember,
+      newReferalMember,
     );
 
     return newReferalMember;

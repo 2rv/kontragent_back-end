@@ -15,7 +15,6 @@ import { UserRepository } from '../user/user.repository';
 import { MailService } from '../mail/mail.service';
 import { TwilioSendSMS } from 'src/common/utils/twilio';
 
-import { ReferalMemberRepository } from '../referal-member/referal-member.repository';
 import { ReferalMemberService } from '../referal-member/referal-member.service';
 
 import { ReferalEntity } from '../referal/referal.entity';
@@ -26,7 +25,6 @@ export class UserVerificationService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
-    @InjectRepository(ReferalMemberRepository)
     private referalMemberService: ReferalMemberService,
     private mailService: MailService,
   ) {}
