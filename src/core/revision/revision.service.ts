@@ -114,6 +114,7 @@ export class RevisionService {
       description: revision.description,
       status: revision.status,
       price: revision.additionPrice || null,
+      year: revision.year
     };
 
     const fileDescriptionList =
