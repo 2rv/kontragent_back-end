@@ -43,9 +43,7 @@ export class UserService {
 
 
   async changeUserRole(user: UserEntity, changeUserRoleDto: ChangeUserRoleDto): Promise<void> {
-
    await this.userRepository.changeUserRole(user, changeUserRoleDto);
-
   }
 
 }

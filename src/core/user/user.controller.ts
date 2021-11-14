@@ -28,7 +28,7 @@ export class UserController {
 
   @Get('/admin/:userId')
   @Roles(USER_ROLE.ADMIN)
-  @UseGuards(AuthGuard(), AccountGuard, UserGuard)
+  @UseGuards(AuthGuard(), AccountGuard, AllUserGuard)
   getUserData(@GetUser() user: UserEntity): Promise<UserGetAccountDataDto> {
     return this.userService.getUserData(user);
   }
