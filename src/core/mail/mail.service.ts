@@ -31,13 +31,13 @@ export class MailService {
   ) {
     return await this.mailerService
       .sendMail({
-        to: sendReferalMemberLinkDto.email,
+        to: sendReferalMemberLinkDto.credential,
         subject: `${referal.user.firstname} ${referal.user.lastname} приглашает Вас!`,
         template: this.getTemplateLink(
           'sendReferralLinkEmailToNotRegisteredUser',
         ),
         context: {
-          email: sendReferalMemberLinkDto.email,
+          email: sendReferalMemberLinkDto.credential,
           firstName: referal.user.firstname,
           lastName: referal.user.lastname,
           referalId: referal.id,
@@ -58,11 +58,11 @@ export class MailService {
   ) {
     return await this.mailerService
       .sendMail({
-        to: sendReferalMemberLinkDto.email,
+        to: sendReferalMemberLinkDto.credential,
         subject: `${referal.user.firstname} ${referal.user.lastname} приглашает Вас!`,
         template: this.getTemplateLink('sendReferralLinkEmailToRegisteredUser'),
         context: {
-          email: sendReferalMemberLinkDto.email,
+          email: sendReferalMemberLinkDto.credential,
           firstName: referal.user.firstname,
           lastName: referal.user.lastname,
           referalId: referal.id,
