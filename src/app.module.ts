@@ -13,7 +13,7 @@ import { RevisionModule } from './core/revision/revision.module';
 import { PaymentModule } from './core/payment/payment.module';
 import { CompanyBalanceModule } from './core/company-balance/company-balance.module';
 import { FileModule } from './core/file/file.module';
-
+import { InviteModule } from './core/invite/invite.module';
 import { ReferalModule } from './core/referal/referal.module';
 import { ReferalMemberModule } from './core/referal-member/referal-member.module';
 import { ReferalAchievementModule } from './core/referal-achievement/referal-achievement.module';
@@ -37,6 +37,7 @@ import { ReferalAchievementModule } from './core/referal-achievement/referal-ach
     ReferalModule,
     ReferalMemberModule,
     ReferalAchievementModule,
+    InviteModule,
   ],
 })
 export class AppModule {}
