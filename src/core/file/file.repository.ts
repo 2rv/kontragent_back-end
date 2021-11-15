@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { FILE_ERROR } from './enum/file-error.enum';
 import { RevisionEntity } from '../revision/revision.entity';
+import { RevisionCompanyEntity } from '../revision-company/revision-company.entity';
 
 @EntityRepository(FileEntity)
 export class FileRepository extends Repository<FileEntity> {
@@ -38,8 +39,8 @@ export class FileRepository extends Repository<FileEntity> {
     }
   }
 
-  async assignFileToRevisionDescriptionById(
-    revision: RevisionEntity,
+  async assignFileToRevisionCompanyDescriptionById(
+    revisionCompany: RevisionCompanyEntity,
     fileId: number,
   ): Promise<void> {
     const file = await this.findOne({ where: { id: fileId } });
@@ -48,7 +49,7 @@ export class FileRepository extends Repository<FileEntity> {
       throw new BadRequestException(FILE_ERROR.FILE_NOT_FOUND);
     }
 
-    file.revisionDescription = revision;
+    file.revisionDescription = revisionCompany;
 
     await file.save();
   }
