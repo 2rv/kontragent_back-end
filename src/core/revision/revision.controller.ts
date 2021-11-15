@@ -16,6 +16,7 @@ import { Roles } from '../user/decorator/role.decorator';
 import { USER_ROLE } from '../user/enum/user-role.enum';
 import { AccountGuard } from '../user/guard/account.guard';
 import { GetRevision } from './decorator/get-revision.decorator';
+import { GetAccount } from '../user/decorator/get-account.decorator';
 import { CreateRevisionCompanyDto } from '../revision-company/dto/create-revision-company.dto';
 import { GetCompanyRevisionListDto } from './dto/get-company-revision-list.dto';
 import { GetRevisionListInfoDto } from './dto/get-revision-list-info.dto';
@@ -23,6 +24,7 @@ import { UpdateRevisionDto } from './dto/update-revision-info.dto';
 import { RevisionGuard } from './guard/revision.guard';
 import { RevisionEntity } from './revision.entity';
 import { RevisionService } from './revision.service';
+import { UserEntity } from '../user/user.entity';
 
 @Controller('revision')
 export class RevisionController {
@@ -34,10 +36,12 @@ export class RevisionController {
   async createRevision(
     @Body(ValidationPipe) createRevisionCompanyDto: CreateRevisionCompanyDto[],
     @GetCompany() company: CompanyEntity,
+    @GetAccount() creator: UserEntity,
   ): Promise<void> {
     return this.revisionService.createRevision(
       createRevisionCompanyDto,
       company,
+      creator,
     );
   }
 
@@ -91,7 +95,7 @@ export class RevisionController {
   async getRevisionReview(
     @GetRevision() revision: RevisionEntity,
   ): Promise<RevisionEntity> {
-    return this.revisionService.getRevisionReview(revision);
+    return this.revisionService.getAccountRevisionReview(revision);
   }
 
   @Get('/admin/revision/:revisionId/review')
@@ -100,7 +104,7 @@ export class RevisionController {
   async getAdminRevisionReview(
     @GetRevision() revision: RevisionEntity,
   ): Promise<RevisionEntity> {
-    return this.revisionService.getRevisionReview(revision);
+    return this.revisionService.getAdminRevisionReview(revision);
   }
 
   @Post('/company/:companyId/revision/:revisionId/review/payment')

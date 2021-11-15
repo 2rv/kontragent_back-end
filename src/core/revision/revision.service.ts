@@ -15,6 +15,7 @@ import { REVISION_STATUS } from './enum/revision-status.enum';
 import { RevisionEntity } from './revision.entity';
 import { RevisionRepository } from './revision.repository';
 import { RevisionCompanyService } from '../revision-company/revision-company.service';
+import { UserEntity } from '../user/user.entity';
 
 @Injectable()
 export class RevisionService {
@@ -30,6 +31,7 @@ export class RevisionService {
   async createRevision(
     createRevisionCompaniesDto: CreateRevisionCompanyDto[],
     company: CompanyEntity,
+    creator: UserEntity,
   ): Promise<void> {
     let price = 0;
     const onePeriodRevisionPrice = 500;
@@ -47,6 +49,7 @@ export class RevisionService {
 
     const revision: RevisionEntity = new RevisionEntity();
     revision.company = company;
+    revision.creator = creator;
     revision.status = REVISION_STATUS.NEW;
     revision.save();
 
@@ -85,14 +88,51 @@ export class RevisionService {
     return { list };
   }
 
-  async getRevisionReview(revision: RevisionEntity): Promise<RevisionEntity> {
+  async getAccountRevisionReview(
+    revision: RevisionEntity,
+  ): Promise<RevisionEntity> {
+    const fullRevison = await this.revisionRepository
+      .createQueryBuilder('revision')
+      .leftJoin('revision.fileReview', 'fileReview')
+      .leftJoin('revision.revisionCompanies', 'revisionCompanies')
+      .leftJoin('revisionCompanies.fileDescription', 'fileDescription')
+      .where('revision.id = :id', { id: revision.id })
+      .select([
+        'revision.id',
+        'revision.status',
+        'revision.review',
+        'revision.additionPrice',
+        'fileReview',
+        'revisionCompanies',
+        'fileDescription',
+      ])
+      .getOne();
+
+    return fullRevison;
+  }
+
+  async getAdminRevisionReview(
+    revision: RevisionEntity,
+  ): Promise<RevisionEntity> {
     const fullRevison = await this.revisionRepository
       .createQueryBuilder('revision')
       .leftJoin('revision.fileReview', 'fileReview')
       .leftJoin('revision.company', 'company')
+      .leftJoin('revision.creator', 'creator')
       .leftJoin('revision.revisionCompanies', 'revisionCompanies')
       .leftJoin('revisionCompanies.fileDescription', 'fileDescription')
       .where('revision.id = :id', { id: revision.id })
+      .select([
+        'revision.id',
+        'revision.status',
+        'revision.review',
+        'revision.additionPrice',
+        'fileReview',
+        'company',
+        'creator',
+        'revisionCompanies',
+        'fileDescription',
+      ])
       .getOne();
 
     return fullRevison;

@@ -12,6 +12,7 @@ import { REVISION_STATUS } from './enum/revision-status.enum';
 import { CompanyEntity } from '../company/company.entity';
 import { RevisionCompanyEntity } from '../revision-company/revision-company.entity';
 import { FileEntity } from '../file/file.entity';
+import { UserEntity } from '../user/user.entity';
 
 @Entity({ name: 'revision' })
 export class RevisionEntity extends BaseEntity {
@@ -43,4 +44,7 @@ export class RevisionEntity extends BaseEntity {
 
   @ManyToOne(() => CompanyEntity, (company) => company.revision)
   company: CompanyEntity;
+
+  @ManyToOne(() => UserEntity, (user) => user.revision)
+  creator: UserEntity;
 }
