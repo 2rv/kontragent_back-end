@@ -5,6 +5,7 @@ import {
   Column,
   OneToMany,
   ManyToOne,
+  CreateDateColumn,
 } from 'typeorm';
 
 import { REVISION_STATUS } from './enum/revision-status.enum';
@@ -47,4 +48,7 @@ export class RevisionEntity extends BaseEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.revision)
   creator: UserEntity;
+
+  @CreateDateColumn()
+  createDate: string;
 }
