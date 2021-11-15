@@ -6,8 +6,10 @@ import {
   BaseEntity,
   JoinColumn,
 } from 'typeorm';
-import { RevisionEntity } from '../revision/revision.entity';
+
 import { UserEntity } from '../user/user.entity';
+import { RevisionEntity } from '../revision/revision.entity';
+import { RevisionCompanyEntity } from '../revision-company/revision-company.entity';
 
 @Entity({ name: 'file' })
 export class FileEntity extends BaseEntity {
@@ -36,10 +38,10 @@ export class FileEntity extends BaseEntity {
   user: UserEntity;
 
   @ManyToOne(
-    () => RevisionEntity,
-    (revision: RevisionEntity) => revision.fileDescription,
+    () => RevisionCompanyEntity,
+    (revisionCompany: RevisionCompanyEntity) => revisionCompany.fileDescription,
   )
-  revisionDescription: RevisionEntity;
+  revisionDescription: RevisionCompanyEntity;
 
   @ManyToOne(
     () => RevisionEntity,

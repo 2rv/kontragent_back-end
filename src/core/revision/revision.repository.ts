@@ -1,36 +1,23 @@
 import { Repository, EntityRepository } from 'typeorm';
 import { CompanyEntity } from '../company/company.entity';
-import {
-  ConflictException,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { InternalServerErrorException } from '@nestjs/common';
 import { RevisionEntity } from './revision.entity';
-import { CreateRevisionDto } from './dto/create-revision.dto';
 import { UpdateRevisionDto } from './dto/update-revision-info.dto';
+import { REVISION_STATUS } from './enum/revision-status.enum';
 
 @EntityRepository(RevisionEntity)
 export class RevisionRepository extends Repository<RevisionEntity> {
-  async createRevision(
-    createRevisionDto: CreateRevisionDto,
-    company: CompanyEntity,
-  ): Promise<RevisionEntity> {
+  async createRevision(company: CompanyEntity): Promise<RevisionEntity> {
     const revision: RevisionEntity = new RevisionEntity();
 
     revision.company = company;
-    revision.description = createRevisionDto.description;
-    revision.title = createRevisionDto.description;
-    revision.year = createRevisionDto.year;
-    revision.inn = createRevisionDto.inn;
+    revision.status = REVISION_STATUS.NEW;
 
     try {
       await revision.save();
       return revision;
     } catch (error) {
-      if (error.code === '23505') {
-        throw new ConflictException();
-      } else {
-        throw new InternalServerErrorException();
-      }
+      throw new InternalServerErrorException();
     }
   }
 
@@ -57,31 +44,15 @@ export class RevisionRepository extends Repository<RevisionEntity> {
 
   async getRevisionListByCompany(company: CompanyEntity) {
     const query = this.createQueryBuilder('revision');
-
     query.leftJoin('revision.company', 'company');
-
     query.where('company.id = :id', { id: company.id });
-
-    query.select([
-      'revision.id',
-      'revision.title',
-      'revision.status',
-      'revision.price',
-    ]);
-
+    query.select(['revision.id', 'revision.status']);
     return query.getMany();
   }
 
   async getRevisionList() {
     const query = this.createQueryBuilder('revision');
-
-    query.select([
-      'revision.id',
-      'revision.title',
-      'revision.status',
-      'revision.price',
-    ]);
-
+    query.select(['revision.id', 'revision.status']);
     return query.getMany();
   }
 }

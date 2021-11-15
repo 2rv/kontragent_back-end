@@ -5,7 +5,8 @@ import { CompanyMemberEntity } from 'src/core/company-member/company-memeber.ent
 import { CompanyEntity } from 'src/core/company/company.entity';
 import { FileEntity } from 'src/core/file/file.entity';
 import { PaymentEntity } from 'src/core/payment/payment.entity';
-import { RevisionEntity } from 'src/core/revision/revision.entity';
+import { RevisionEntity } from '../core/revision/revision.entity';
+import { RevisionCompanyEntity } from 'src/core/revision-company/revision-company.entity';
 import { UserEntity } from '../core/user/user.entity';
 
 import { ReferalEntity } from '../core/referal/referal.entity';
@@ -20,6 +21,7 @@ export const ApiEntities = [
   CompanyMemberEntity,
   FileEntity,
   RevisionEntity,
+  RevisionCompanyEntity,
   CompanyBalanceEntity,
   PaymentEntity,
 

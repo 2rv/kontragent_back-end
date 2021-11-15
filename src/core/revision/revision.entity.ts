@@ -5,24 +5,20 @@ import {
   Column,
   OneToMany,
   ManyToOne,
+  CreateDateColumn,
 } from 'typeorm';
-import { CompanyEntity } from '../company/company.entity';
-import { FileEntity } from '../file/file.entity';
+
 import { REVISION_STATUS } from './enum/revision-status.enum';
+
+import { CompanyEntity } from '../company/company.entity';
+import { RevisionCompanyEntity } from '../revision-company/revision-company.entity';
+import { FileEntity } from '../file/file.entity';
+import { UserEntity } from '../user/user.entity';
 
 @Entity({ name: 'revision' })
 export class RevisionEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column({ nullable: false })
-  title: string;
-
-  @Column({ nullable: false })
-  description: string;
-
-  @Column({ nullable: false })
-  inn: string;
 
   @Column({
     type: 'enum',
@@ -35,21 +31,24 @@ export class RevisionEntity extends BaseEntity {
   @Column({ nullable: true })
   review: string;
 
-  @Column('simple-json')
-  year: { name: string; period: boolean[] }[];
-
-  @Column({ nullable: false, default: 0, type: 'decimal' })
-  price: number;
-
   @Column({ nullable: false, default: 0, type: 'decimal' })
   additionPrice: number;
-
-  @OneToMany(() => FileEntity, (file) => file.revisionDescription)
-  fileDescription: FileEntity[];
 
   @OneToMany(() => FileEntity, (file) => file.revisionReview)
   fileReview: FileEntity[];
 
+  @OneToMany(
+    () => RevisionCompanyEntity,
+    (revisionCompany) => revisionCompany.revision,
+  )
+  revisionCompanies: RevisionCompanyEntity[];
+
   @ManyToOne(() => CompanyEntity, (company) => company.revision)
   company: CompanyEntity;
+
+  @ManyToOne(() => UserEntity, (user) => user.revision)
+  creator: UserEntity;
+
+  @CreateDateColumn()
+  createDate: string;
 }
