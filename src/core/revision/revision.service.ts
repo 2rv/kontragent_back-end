@@ -106,6 +106,7 @@ export class RevisionService {
       .where('revision.id = :id', { id: revision.id })
       .select([
         'revision.id',
+        'revision.additionPrice',
         'revision.createDate',
         'revision.status',
         'revision.review',
@@ -135,6 +136,7 @@ export class RevisionService {
       .select([
         'revision.id',
         'revision.createDate',
+        'revision.additionPrice',
         'revision.status',
         'revision.review',
         'revision.additionPrice',
