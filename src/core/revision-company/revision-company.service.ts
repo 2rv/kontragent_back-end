@@ -4,12 +4,16 @@ import { RevisionEntity } from '../revision/revision.entity';
 import { FileRepository } from '../file/file.repository';
 import { RevisionCompanyRepository } from './revision-company.repository';
 import { CreateRevisionCompanyDto } from './dto/create-revision-company.dto';
+import { RevisionCompanyYearRepository } from '../revision-company-year/revision-company-year.repository';
+import { CreateRevisionYearDto } from '../revision-company-year/dto/create-revision-company-year.dto';
 
 @Injectable()
 export class RevisionCompanyService {
   constructor(
     @InjectRepository(RevisionCompanyRepository)
     private revisionCompanyRepository: RevisionCompanyRepository,
+    @InjectRepository(RevisionCompanyYearRepository)
+    private revisionCompanyYearRepository: RevisionCompanyYearRepository,
     @InjectRepository(FileRepository)
     private fileRepository: FileRepository,
   ) {}
@@ -24,6 +28,14 @@ export class RevisionCompanyService {
           createRevisionCompanyDto,
           revision,
         );
+
+      const years: CreateRevisionYearDto[] = createRevisionCompanyDto.year;
+      years.forEach((year) => {
+        this.revisionCompanyYearRepository.createRevisionCompanyYears(
+          year,
+          revisionCompany,
+        );
+      });
 
       const ids: number[] = createRevisionCompanyDto.fileIdList;
 

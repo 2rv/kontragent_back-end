@@ -17,6 +17,7 @@ import { RevisionRepository } from './revision.repository';
 import { RevisionService } from './revision.service';
 import { RevisionCompanyService } from '../revision-company/revision-company.service';
 import { RevisionCompanyRepository } from '../revision-company/revision-company.repository';
+import { RevisionCompanyYearRepository } from '../revision-company-year/revision-company-year.repository';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { RevisionCompanyRepository } from '../revision-company/revision-company.
       CompanyBalanceEntity,
       PaymentRepository,
       RevisionCompanyRepository,
+      RevisionCompanyYearRepository,
     ]),
   ],
   controllers: [RevisionController],

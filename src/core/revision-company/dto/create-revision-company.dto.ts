@@ -8,6 +8,8 @@ import {
   MaxLength,
 } from 'class-validator';
 
+import { CreateRevisionYearDto } from '../../revision-company-year/dto/create-revision-company-year.dto';
+
 export class CreateRevisionCompanyDto {
   @IsNotEmpty()
   @IsString()
@@ -29,18 +31,5 @@ export class CreateRevisionCompanyDto {
   @ArrayMaxSize(10)
   fileIdList?: number[];
 
-  @IsNotEmpty()
-  year: string;
-
-  @IsBoolean()
-  firstPeriod: boolean;
-
-  @IsBoolean()
-  secondPeriod: boolean;
-
-  @IsBoolean()
-  thirdPeriod: boolean;
-
-  @IsBoolean()
-  fourthPeriod: boolean;
+  year: CreateRevisionYearDto[];
 }
