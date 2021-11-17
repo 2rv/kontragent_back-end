@@ -139,7 +139,6 @@ export class RevisionService {
         'revision.additionPrice',
         'revision.status',
         'revision.review',
-        'revision.additionPrice',
         'fileReview',
         'company',
         'creator',
