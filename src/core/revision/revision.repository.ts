@@ -46,13 +46,13 @@ export class RevisionRepository extends Repository<RevisionEntity> {
     const query = this.createQueryBuilder('revision');
     query.leftJoin('revision.company', 'company');
     query.where('company.id = :id', { id: company.id });
-    query.select(['revision.id', 'revision.status']);
+    query.select(['revision.id', 'revision.createDate', 'revision.status']);
     return query.getMany();
   }
 
   async getRevisionList() {
     const query = this.createQueryBuilder('revision');
-    query.select(['revision.id', 'revision.status']);
+    query.select(['revision.id', 'revision.createDate', 'revision.status']);
     return query.getMany();
   }
 }
