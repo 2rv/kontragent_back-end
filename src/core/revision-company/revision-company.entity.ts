@@ -9,6 +9,7 @@ import {
 
 import { FileEntity } from '../file/file.entity';
 import { RevisionEntity } from '../revision/revision.entity';
+import { RevisionCompanyYearEntity } from '../revision-company-year/revision-company-year.entity';
 
 @Entity({ name: 'revision-company' })
 export class RevisionCompanyEntity extends BaseEntity {
@@ -24,20 +25,11 @@ export class RevisionCompanyEntity extends BaseEntity {
   @Column({ nullable: false })
   inn: string;
 
-  @Column()
-  year: string;
-
-  @Column()
-  firstPeriod: boolean;
-
-  @Column()
-  secondPeriod: boolean;
-
-  @Column()
-  thirdPeriod: boolean;
-
-  @Column()
-  fourthPeriod: boolean;
+  @OneToMany(
+    () => RevisionCompanyYearEntity,
+    (revisionCompanyYear) => revisionCompanyYear.revisionCompany,
+  )
+  year: RevisionCompanyYearEntity[];
 
   @ManyToOne(() => RevisionEntity, (revision) => revision.revisionCompanies)
   revision: RevisionEntity;

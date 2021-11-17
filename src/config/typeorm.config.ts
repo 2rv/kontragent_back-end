@@ -7,6 +7,7 @@ import { FileEntity } from 'src/core/file/file.entity';
 import { PaymentEntity } from 'src/core/payment/payment.entity';
 import { RevisionEntity } from '../core/revision/revision.entity';
 import { RevisionCompanyEntity } from 'src/core/revision-company/revision-company.entity';
+import { RevisionCompanyYearEntity } from '../core/revision-company-year/revision-company-year.entity';
 import { UserEntity } from '../core/user/user.entity';
 
 import { ReferalEntity } from '../core/referal/referal.entity';
@@ -22,6 +23,7 @@ export const ApiEntities = [
   FileEntity,
   RevisionEntity,
   RevisionCompanyEntity,
+  RevisionCompanyYearEntity,
   CompanyBalanceEntity,
   PaymentEntity,
 

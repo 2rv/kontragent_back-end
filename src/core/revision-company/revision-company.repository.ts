@@ -16,14 +16,8 @@ export class RevisionCompanyRepository extends Repository<RevisionCompanyEntity>
     const revisionCompany: RevisionCompanyEntity = new RevisionCompanyEntity();
 
     revisionCompany.name = createRevisionCompanyDto.name;
-    revisionCompany.year = createRevisionCompanyDto.year;
     revisionCompany.inn = createRevisionCompanyDto.inn;
     revisionCompany.description = createRevisionCompanyDto.description;
-    revisionCompany.firstPeriod = createRevisionCompanyDto.firstPeriod;
-    revisionCompany.secondPeriod = createRevisionCompanyDto.secondPeriod;
-    revisionCompany.thirdPeriod = createRevisionCompanyDto.thirdPeriod;
-    revisionCompany.fourthPeriod = createRevisionCompanyDto.fourthPeriod;
-
     revisionCompany.revision = revision;
 
     try {

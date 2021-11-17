@@ -16,6 +16,7 @@ import { RevisionEntity } from './revision.entity';
 import { RevisionRepository } from './revision.repository';
 import { RevisionCompanyService } from '../revision-company/revision-company.service';
 import { UserEntity } from '../user/user.entity';
+import { CreateRevisionYearDto } from '../revision-company-year/dto/create-revision-company-year.dto';
 
 @Injectable()
 export class RevisionService {
@@ -36,11 +37,16 @@ export class RevisionService {
     let price = 0;
     const onePeriodRevisionPrice = 500;
     const addPrice = (add: number) => (price += add);
+    const culcRevisionPrice = (years: CreateRevisionYearDto[]) => {
+      years.forEach((year) => {
+        year.firstPeriod && addPrice(onePeriodRevisionPrice);
+        year.secondPeriod && addPrice(onePeriodRevisionPrice);
+        year.thirdPeriod && addPrice(onePeriodRevisionPrice);
+        year.fourthPeriod && addPrice(onePeriodRevisionPrice);
+      });
+    };
     createRevisionCompaniesDto.forEach((revisionCompany) => {
-      revisionCompany.firstPeriod && addPrice(onePeriodRevisionPrice);
-      revisionCompany.secondPeriod && addPrice(onePeriodRevisionPrice);
-      revisionCompany.thirdPeriod && addPrice(onePeriodRevisionPrice);
-      revisionCompany.fourthPeriod && addPrice(onePeriodRevisionPrice);
+      culcRevisionPrice(revisionCompany.year);
     });
     await this.companyBalanceService.createCompanyBalancePayment(
       company,
@@ -96,6 +102,7 @@ export class RevisionService {
       .leftJoin('revision.fileReview', 'fileReview')
       .leftJoin('revision.revisionCompanies', 'revisionCompanies')
       .leftJoin('revisionCompanies.fileDescription', 'fileDescription')
+      .leftJoin('revisionCompanies.year', 'year')
       .where('revision.id = :id', { id: revision.id })
       .select([
         'revision.id',
@@ -104,6 +111,7 @@ export class RevisionService {
         'revision.additionPrice',
         'fileReview',
         'revisionCompanies',
+        'year',
         'fileDescription',
       ])
       .getOne();
@@ -114,13 +122,14 @@ export class RevisionService {
   async getAdminRevisionReview(
     revision: RevisionEntity,
   ): Promise<RevisionEntity> {
-    const fullRevison = await this.revisionRepository
+    const adminRevison = await this.revisionRepository
       .createQueryBuilder('revision')
       .leftJoin('revision.fileReview', 'fileReview')
       .leftJoin('revision.company', 'company')
       .leftJoin('revision.creator', 'creator')
       .leftJoin('revision.revisionCompanies', 'revisionCompanies')
       .leftJoin('revisionCompanies.fileDescription', 'fileDescription')
+      .leftJoin('revisionCompanies.year', 'year')
       .where('revision.id = :id', { id: revision.id })
       .select([
         'revision.id',
@@ -131,11 +140,12 @@ export class RevisionService {
         'company',
         'creator',
         'revisionCompanies',
+        'year',
         'fileDescription',
       ])
       .getOne();
 
-    return fullRevison;
+    return adminRevison;
   }
 
   async createRevisionReviewPayment(
