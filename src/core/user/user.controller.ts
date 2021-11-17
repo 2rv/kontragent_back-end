@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Body,Controller, Get, Patch, UseGuards, ValidationPipe, } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetAccount } from '../user/decorator/get-account.decorator';
 import { AccountGuard } from '../user/guard/account.guard';
@@ -11,6 +11,8 @@ import { USER_ROLE } from './enum/user-role.enum';
 import { GetUser } from './decorator/get-user.decorator';
 import { UserGetAccountDataDto } from './dto/user-get-account-data.dto';
 import { UserGetAdminUserListDto } from './dto/user-get-admin-user-list.dto';
+import {ChangeUserRoleDto} from './dto/change-user-role.dto'
+import { AllUserGuard } from './guard/all-user.guard';
 
 @Controller('user')
 export class UserController {
@@ -26,7 +28,7 @@ export class UserController {
 
   @Get('/admin/:userId')
   @Roles(USER_ROLE.ADMIN)
-  @UseGuards(AuthGuard(), AccountGuard, UserGuard)
+  @UseGuards(AuthGuard(), AccountGuard, AllUserGuard)
   getUserData(@GetUser() user: UserEntity): Promise<UserGetAccountDataDto> {
     return this.userService.getUserData(user);
   }
@@ -36,5 +38,14 @@ export class UserController {
   @UseGuards(AuthGuard(), AccountGuard)
   getAdminUserList(): Promise<UserGetAdminUserListDto> {
     return this.userService.getAdminUserList();
+  }
+
+  @Patch('/admin/:userId/role')
+  @Roles(USER_ROLE.ADMIN)
+  @UseGuards(AuthGuard(), AccountGuard, AllUserGuard)
+  async changeUserRole(
+    @Body(ValidationPipe) changeUserRoleDto: ChangeUserRoleDto,
+    @GetUser() user: UserEntity): Promise<void> {
+    return this.userService.changeUserRole(user, changeUserRoleDto);
   }
 }

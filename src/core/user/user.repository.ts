@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { UserCreateDto } from './dto/user-create.dto';
 import { USER_ROLE } from '../user/enum/user-role.enum';
+import { ChangeUserRoleDto } from './dto/change-user-role.dto';
 
 @EntityRepository(UserEntity)
 export class UserRepository extends Repository<UserEntity> {
@@ -54,7 +55,7 @@ export class UserRepository extends Repository<UserEntity> {
     const query = this.createQueryBuilder('user');
 
     query.where('user.role IN (:...roles)', {
-      roles: [USER_ROLE.USER, USER_ROLE.BLOCKED],
+      roles: [USER_ROLE.USER, USER_ROLE.BLOCKED, USER_ROLE.ADMIN],
     });
 
     query.select([
@@ -70,5 +71,12 @@ export class UserRepository extends Repository<UserEntity> {
     ]);
 
     return query.getMany();
+  }
+
+
+  async changeUserRole(user: UserEntity, changeUserRoleDto: ChangeUserRoleDto): Promise<void> {
+
+    user.role = changeUserRoleDto.role 
+    await user.save() 
   }
 }
