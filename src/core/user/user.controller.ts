@@ -47,7 +47,8 @@ export class UserController {
   @UseGuards(AuthGuard(), AccountGuard, AllUserGuard)
   async changeUserRole(
     @Body(ValidationPipe) changeUserRoleDto: ChangeUserRoleDto,
+    @GetAccount() account: UserEntity,
     @GetUser() user: UserEntity): Promise<void> {
-    return this.userService.changeUserRole(user, changeUserRoleDto);
+    return this.userService.changeUserRole(user, changeUserRoleDto, account);
   }
 }
