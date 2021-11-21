@@ -30,7 +30,7 @@ export class UserService {
       confirmEmail: user.confirmEmail,
       confirmPhone: user.confirmPhone,
       phone: user.phone,
-      role: user.role
+      role: user.role,
     };
     return userGetAccountDataDto;
   }
@@ -41,9 +41,10 @@ export class UserService {
     return { list };
   }
 
-
-  async changeUserRole(user: UserEntity, changeUserRoleDto: ChangeUserRoleDto): Promise<void> {
-   await this.userRepository.changeUserRole(user, changeUserRoleDto);
+  async changeUserRole(
+    user: UserEntity,
+    changeUserRoleDto: ChangeUserRoleDto,
+  ): Promise<void> {
+    await this.userRepository.changeUserRole(user, changeUserRoleDto);
   }
-
 }
