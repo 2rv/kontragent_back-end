@@ -37,6 +37,8 @@ export class RevisionRepository extends Repository<RevisionEntity> {
       revision.additionPrice = updateRevisionDto.additionPrice;
     }
 
+    revision.fileReview = []
+
     await revision.save();
 
     return revision;
