@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CompanyEntity } from '../company/company.entity';
+import { USER_ROLE } from '../user/enum/user-role.enum';
 import { UserEntity } from '../user/user.entity';
 import { CompanyMemberRepository } from './company-member.repository';
 import { CompanyMemberEntity } from './company-memeber.entity';
@@ -35,6 +36,13 @@ export class CompanyMemberService {
     if (companyMember) {
       throw new BadRequestException(
         COMPANY_MEMBER_ERROR.USER_ALREADY_HAS_COMPANY_ACCOUNT,
+      );
+    }
+
+    if(user.role === USER_ROLE.ADMIN)
+    {
+      throw new BadRequestException(
+        COMPANY_MEMBER_ERROR.CANNOT_ADD_SUCH_A_USER,
       );
     }
 
