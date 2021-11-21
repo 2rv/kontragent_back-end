@@ -36,8 +36,10 @@ export class UserController {
   @Get('/admin')
   @Roles(USER_ROLE.ADMIN)
   @UseGuards(AuthGuard(), AccountGuard)
-  getAdminUserList(): Promise<UserGetAdminUserListDto> {
-    return this.userService.getAdminUserList();
+  getAdminUserList(
+    @GetAccount() account: UserEntity
+  ): Promise<UserGetAdminUserListDto> {
+    return this.userService.getAdminUserList(account);
   }
 
   @Patch('/admin/:userId/role')

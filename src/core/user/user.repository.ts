@@ -51,14 +51,10 @@ export class UserRepository extends Repository<UserEntity> {
     }
   }
 
-  async getAdminUserList() {
-    const query = this.createQueryBuilder('user');
-
-    query.where('user.role IN (:...roles)', {
-      roles: [USER_ROLE.USER, USER_ROLE.BLOCKED, USER_ROLE.ADMIN],
-    });
-
-    query.select([
+  async getAdminUserList(account: UserEntity) {
+   return  this.createQueryBuilder('user')
+    .where("user.id != :id", {id:account.id})
+    .select([
       'user.id',
       'user.login',
       'user.firstname',
@@ -68,9 +64,8 @@ export class UserRepository extends Repository<UserEntity> {
       'user.confirmEmail',
       'user.confirmPhone',
       'user.role',
-    ]);
-
-    return query.getMany();
+    ])
+    .getMany();
   }
 
 
