@@ -1,5 +1,4 @@
 import { PostEntity } from './post.entity';
-import { UserEntity } from '../user/user.entity';
 
 import { EntityRepository, Repository } from 'typeorm';
 import { UserEntity } from '../user/user.entity';
