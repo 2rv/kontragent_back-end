@@ -4,6 +4,7 @@ import {
   CanActivate,
   ExecutionContext,
   BadRequestException,
+  NotFoundException,
 } from '@nestjs/common';
 import { POST_ERROR } from '../enum/post.enum';
 
@@ -24,7 +25,7 @@ export class PostParametrGuard implements CanActivate {
     });
 
     if (!post) {
-      throw new BadRequestException(POST_ERROR.POST_NOT_FOUND);
+      throw new NotFoundException(POST_ERROR.POST_NOT_FOUND);
     }
     return true;
   }
