@@ -31,8 +31,11 @@ export class PostController {
 
   @Post('/create')
   @UseGuards(AuthGuard(), AccountGuard)
-  async save(@Body(ValidationPipe) createPostDto: CreatePostDto) {
-    return await this.postService.create(createPostDto);
+  async save(
+    @Body(ValidationPipe) createPostDto: CreatePostDto,
+    @GetAccount() creator: UserEntity,
+  ) {
+    return await this.postService.create(createPostDto, creator);
   }
 
   @Get('/get')

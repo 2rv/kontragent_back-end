@@ -5,6 +5,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { PostRepository } from './post.repository';
 import { FileService } from '../file/file.service';
 import { FileRepository } from '../file/file.repository';
+import { UserEntity } from '../user/user.entity';
 
 @Injectable()
 export class PostService {
@@ -14,8 +15,11 @@ export class PostService {
     private fileService: FileService,
   ) {}
 
-  async create(body: CreatePostDto): Promise<PostEntity> {
-    return await this.postRepository.save(body);
+  async create(
+    createPostDto: CreatePostDto,
+    creator: UserEntity,
+  ): Promise<PostEntity> {
+    return this.postRepository.createPost(createPostDto, creator);
   }
 
   async getOne(id: string): Promise<PostEntity> {

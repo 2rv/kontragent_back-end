@@ -3,6 +3,7 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  BaseEntity,
   OneToMany,
   OneToOne,
   ManyToOne,
@@ -12,7 +13,7 @@ import { FileEntity } from '../file/file.entity';
 import { UserEntity } from '../user/user.entity';
 
 @Entity({ name: 'post' })
-export class PostEntity {
+export class PostEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
