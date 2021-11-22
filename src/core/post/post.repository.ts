@@ -2,21 +2,22 @@ import { PostEntity } from './post.entity';
 import { UserEntity } from '../user/user.entity';
 
 import { EntityRepository, Repository } from 'typeorm';
+import { UserEntity } from '../user/user.entity';
 
 import { CreatePostDto } from './dto/create-post.dto';
 
 @EntityRepository(PostEntity)
 export class PostRepository extends Repository<PostEntity> {
-  async getAll(): Promise<[PostEntity[], number]> {
+  async getAll(): Promise<PostEntity[]> {
     return await this.createQueryBuilder('post')
-      .leftJoin('post.image', 'image')
-      .select(['post.id', 'post.title', 'post.createDate', 'image'])
-      .getManyAndCount();
+      //.leftJoin('post.image', 'image')
+      .select(['post.id', 'post.title', 'post.createDate'])
+      .getMany();
   }
-  async findAllCreated(userId: number): Promise<[PostEntity[], number]> {
+  async findAllCreated(creator: UserEntity): Promise<[PostEntity[], number]> {
     return await this.createQueryBuilder('post')
       .leftJoin('post.image', 'image')
-      .leftJoin('post.creator', 'creator', 'creator.id = :userId', { userId })
+      .leftJoin('post.creator', 'creator', 'creator.id = :id', { id: creator.id })
       .select(['post.id', 'post.title', 'post.createDate', 'image'])
       .getManyAndCount();
   }

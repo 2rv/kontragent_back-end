@@ -26,12 +26,12 @@ export class PostService {
     return await this.postRepository.findOneById(id);
   }
 
-  async getAll(): Promise<[PostEntity[], number]> {
+  async getAll(): Promise<PostEntity[]> {
     return await this.postRepository.getAll();
   }
 
-  async getAllCreated(userId: number): Promise<[PostEntity[], number]> {
-    return await this.postRepository.findAllCreated(userId);
+  async getAllCreated(creator: UserEntity): Promise<[PostEntity[], number]> {
+    return await this.postRepository.findAllCreated(creator);
   }
 
   async update(id: string, updatePostDto: UpdatePostDto) {

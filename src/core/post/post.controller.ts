@@ -45,8 +45,8 @@ export class PostController {
 
   @Get('/created/get')
   @UseGuards(AuthGuard(), AccountGuard)
-  async getAllCreated(@GetAccount() user: UserEntity) {
-    return await this.postService.getAllCreated(user.id);
+  async getAllCreated(@GetAccount() creator: UserEntity) {
+    return await this.postService.getAllCreated(creator);
   }
 
   @Get('get/:postId')
