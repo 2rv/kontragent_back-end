@@ -5,6 +5,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { PostRepository } from './post.repository';
 import { FileService } from '../file/file.service';
 import { FileRepository } from '../file/file.repository';
+import { UserEntity } from '../user/user.entity';
 
 @Injectable()
 export class PostService {
@@ -22,12 +23,12 @@ export class PostService {
     return await this.postRepository.findOneById(id);
   }
 
-  async getAll(): Promise<[PostEntity[], number]> {
+  async getAll(): Promise<PostEntity[]> {
     return await this.postRepository.getAll();
   }
 
-  async getAllCreated(userId: number): Promise<[PostEntity[], number]> {
-    return await this.postRepository.findAllCreated(userId);
+  async getAllCreated(creator: UserEntity): Promise<[PostEntity[], number]> {
+    return await this.postRepository.findAllCreated(creator);
   }
 
   async update(id: string, updatePostDto: UpdatePostDto) {
