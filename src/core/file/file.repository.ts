@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { FILE_ERROR } from './enum/file-error.enum';
 import { RevisionEntity } from '../revision/revision.entity';
+import { PostEntity } from '../post/post.entity';
 import { RevisionCompanyEntity } from '../revision-company/revision-company.entity';
 
 @EntityRepository(FileEntity)
@@ -87,5 +88,15 @@ export class FileRepository extends Repository<FileEntity> {
     query.where('revision.id = :id', { id: revision.id });
 
     return query.getMany();
+  }
+
+  async assignFileToPostById(post: PostEntity, fileId: number): Promise<void> {
+    const file = await this.findOne({ where: { id: fileId } });
+    if (!file) {
+      throw new BadRequestException(FILE_ERROR.FILE_NOT_FOUND);
+    }
+
+    file.post = post;
+    await file.save();
   }
 }

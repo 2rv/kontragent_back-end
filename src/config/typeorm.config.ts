@@ -13,6 +13,8 @@ import { InviteEntity } from '../core/invite/invite.entity';
 import { ReferalEntity } from '../core/referal/referal.entity';
 import { ReferalMemberEntity } from '../core/referal-member/referal-member.entity';
 import { ReferalAchievementEntity } from '../core/referal-achievement/referal-achievement.entity';
+import { PostEntity } from '../core/post/post.entity';
+import { CommentEntity } from '../core/comment/comment.entity';
 
 const DATABASE_CONFIG = config.get('DATABASE');
 
@@ -30,6 +32,8 @@ export const ApiEntities = [
   ReferalEntity,
   ReferalMemberEntity,
   ReferalAchievementEntity,
+  PostEntity,
+  CommentEntity,
 ];
 
 export const typeOrmConfig: TypeOrmModuleOptions = {

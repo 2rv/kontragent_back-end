@@ -17,6 +17,8 @@ import { FileModule } from './core/file/file.module';
 import { ReferalModule } from './core/referal/referal.module';
 import { ReferalMemberModule } from './core/referal-member/referal-member.module';
 import { ReferalAchievementModule } from './core/referal-achievement/referal-achievement.module';
+import { PostModule } from './core/post/post.module';
+import { CommentModule } from './core/comment/comment.module';
 import { InviteModule } from './core/invite/invite.module';
 
 @Module({
@@ -39,6 +41,8 @@ import { InviteModule } from './core/invite/invite.module';
     ReferalModule,
     ReferalMemberModule,
     ReferalAchievementModule,
+    PostModule,
+    CommentModule,
   ],
 })
 export class AppModule {}
