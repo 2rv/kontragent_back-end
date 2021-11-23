@@ -10,7 +10,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { AccountGuard } from '../user/guard/account.guard';
 import { InviteService } from './invite.service';
 
-import { InviteEmailsDto } from './invite-emails.dto';
 import { InviteDto } from './dto/invite.dto';
 
 @Controller('invite')
@@ -20,9 +19,9 @@ export class InviteController {
   @Post('/admin')
   @UseGuards(AuthGuard(), AccountGuard)
   sendInvite(
-    @Body(ValidationPipe) inviteEmailsDto: InviteEmailsDto,
+    @Body(ValidationPipe) emails: Array<string>,
   ): Promise<void> {
-    return this.inviteService.sendInvite(inviteEmailsDto);
+    return this.inviteService.sendInvite(emails);
   }
 
   @Post('/')
