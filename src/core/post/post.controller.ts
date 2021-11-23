@@ -63,7 +63,6 @@ export class PostController {
   }
 
   @Delete('/delete/:postId')
-  @Roles(USER_ROLE.ADMIN)
   @UseGuards(AuthGuard(), AccountGuard, PostGuard)
   async delete(@Param('postId') id: string) {
     return await this.postService.delete(id);
