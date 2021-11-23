@@ -1,22 +1,31 @@
 import {
-    Controller,
-    Post,
-    Body,
-    ValidationPipe,
-  } from '@nestjs/common';
-import {InviteDto} from './dto/invite.dto'
-import {InviteServise} from './invite.service'
+  Body,
+  Controller,
+  Post,
+  UseGuards,
+  ValidationPipe,
+} from '@nestjs/common';
+
+import { AuthGuard } from '@nestjs/passport';
+import { AccountGuard } from '../user/guard/account.guard';
+import { InviteService } from './invite.service';
+
+import { InviteDto } from './dto/invite.dto';
 
 @Controller('invite')
 export class InviteController {
+  constructor(private inviteService: InviteService) {}
 
-    constructor(private inviteService: InviteServise) {}
+  @Post('/admin')
+  @UseGuards(AuthGuard(), AccountGuard)
+  sendInvite(
+    @Body(ValidationPipe) emails: Array<string>,
+  ): Promise<void> {
+    return this.inviteService.sendInvite(emails);
+  }
 
-    @Post('/')
-    async invite(
-        @Body(ValidationPipe) inviteDto: InviteDto
-    ): Promise<void> {
-        return this.inviteService.invite(inviteDto)
-    }
-
+  @Post('/')
+  async invite(@Body(ValidationPipe) inviteDto: InviteDto): Promise<void> {
+    return this.inviteService.invite(inviteDto);
+  }
 }

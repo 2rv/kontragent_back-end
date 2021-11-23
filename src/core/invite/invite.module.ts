@@ -1,21 +1,20 @@
-import {  Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { InviteService } from './invite.service';
+import { InviteController } from './invite.controller';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { MailConfig } from '../../config/mail.config';
+import { AuthModule } from '../auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { InviteRepository } from './inivite.repository';
-import { InviteController } from './invite.controller';
-import {InviteEntity} from './invite.entity'
-import { InviteServise } from './invite.service';
+import { InviteEntity } from './invite.entity';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([
-            InviteEntity,
-            InviteRepository
-        ])
-    ],
-
-    controllers: [InviteController],
-    providers: [InviteServise],
-    exports: [InviteServise]
+  imports: [
+    MailerModule.forRoot(MailConfig),
+    AuthModule,
+    TypeOrmModule.forFeature([InviteEntity, InviteRepository]),
+  ],
+  controllers: [InviteController],
+  providers: [InviteService],
 })
-
 export class InviteModule {}
