@@ -31,7 +31,7 @@ export class UserService {
       confirmEmail: user.confirmEmail,
       confirmPhone: user.confirmPhone,
       phone: user.phone,
-      role: user.role
+      role: user.role,
     };
     return userGetAccountDataDto;
   }
@@ -53,5 +53,4 @@ export class UserService {
 
    await this.userRepository.changeUserRole(user, changeUserRoleDto);
   }
-
 }

@@ -5,7 +5,6 @@ import { AccountGuard } from '../user/guard/account.guard';
 import { UserEntity } from '../user/user.entity';
 import { UserService } from './user.service';
 import { UserGetAccountEmailDto } from './dto/user-get-account-email.dto';
-import { UserGuard } from './guard/user.guard';
 import { Roles } from './decorator/role.decorator';
 import { USER_ROLE } from './enum/user-role.enum';
 import { GetUser } from './decorator/get-user.decorator';

@@ -5,11 +5,13 @@ import {
   ManyToOne,
   BaseEntity,
   JoinColumn,
+  OneToOne,
 } from 'typeorm';
 
 import { UserEntity } from '../user/user.entity';
 import { RevisionEntity } from '../revision/revision.entity';
 import { RevisionCompanyEntity } from '../revision-company/revision-company.entity';
+import { PostEntity } from '../post/post.entity';
 
 @Entity({ name: 'file' })
 export class FileEntity extends BaseEntity {
@@ -48,4 +50,7 @@ export class FileEntity extends BaseEntity {
     (revision: RevisionEntity) => revision.fileReview,
   )
   revisionReview: RevisionEntity;
+
+  @OneToOne(() => PostEntity, (post: PostEntity) => post.image)
+  post: PostEntity;
 }
