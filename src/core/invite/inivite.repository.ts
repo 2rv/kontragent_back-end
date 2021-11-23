@@ -1,6 +1,8 @@
 import { Repository, EntityRepository } from 'typeorm';
 import {  InviteEntity } from './invite.entity';
 import { InviteDto } from './dto/invite.dto';
+import {  BadRequestException } from '@nestjs/common';
+import {INVITE_ERROR} from './enum/invite-error.enum'
 
 @EntityRepository(InviteEntity)
 export class InviteRepository extends Repository<InviteEntity> {
@@ -10,7 +12,12 @@ export class InviteRepository extends Repository<InviteEntity> {
 
         const invited: InviteEntity = new InviteEntity();
         invited.email = email;
-         await invited.save();
+        try {
+            await invited.save();
+           
+          } catch (error) {
+            throw new BadRequestException(INVITE_ERROR.ALLREARY_INVITED);
+          }
     }
 
 }
