@@ -20,8 +20,6 @@ export class CompanyBalanceService {
     const companyBalance =
       await this.companyBalanceRepository.getCompanyBalanceByCompany(company);
 
-    console.log(companyBalance.amount, amount);
-
     const newBalance = companyBalance.amount - amount;
 
     if (newBalance < 0) {

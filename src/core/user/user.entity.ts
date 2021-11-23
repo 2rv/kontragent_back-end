@@ -19,6 +19,9 @@ import { USER_ROLE } from './enum/user-role.enum';
 
 import { ReferalEntity } from '../referal/referal.entity';
 import { ReferalMemberEntity } from '../referal-member/referal-member.entity';
+import { RevisionEntity } from '../revision/revision.entity';
+import { CommentEntity } from '../comment/comment.entity';
+import { PostEntity } from '../post/post.entity';
 
 @Entity({ name: 'user' })
 export class UserEntity extends BaseEntity {
@@ -76,6 +79,15 @@ export class UserEntity extends BaseEntity {
   @OneToOne(() => ReferalMemberEntity, (referalMember) => referalMember.user)
   @JoinColumn()
   referalMember: ReferalMemberEntity;
+
+  @OneToMany(() => RevisionEntity, (revision) => revision.creator)
+  revision: RevisionEntity[];
+
+  @OneToMany(() => CommentEntity, (comment) => comment.user)
+  comments: CommentEntity[];
+
+  @OneToMany(() => PostEntity, (post: PostEntity) => post.creator)
+  post: PostEntity[];
 
   static async hashPassword(password: string): Promise<string> {
     const salt = await generatePasswordSalt(password);

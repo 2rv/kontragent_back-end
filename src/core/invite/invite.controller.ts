@@ -11,6 +11,7 @@ import { AccountGuard } from '../user/guard/account.guard';
 import { InviteService } from './invite.service';
 
 import { InviteEmailsDto } from './invite-emails.dto';
+import { InviteDto } from './dto/invite.dto';
 
 @Controller('invite')
 export class InviteController {
@@ -22,5 +23,10 @@ export class InviteController {
     @Body(ValidationPipe) inviteEmailsDto: InviteEmailsDto,
   ): Promise<void> {
     return this.inviteService.sendInvite(inviteEmailsDto);
+  }
+
+  @Post('/')
+  async invite(@Body(ValidationPipe) inviteDto: InviteDto): Promise<void> {
+    return this.inviteService.invite(inviteDto);
   }
 }

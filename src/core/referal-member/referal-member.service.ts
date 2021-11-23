@@ -14,6 +14,7 @@ import { USER_ROLE } from '../user/enum/user-role.enum';
 import { CompanyRepository } from '../company/company.repository';
 import { REFERAL_ACHIEVEMENT_TYPE } from '../referal-achievement/enum/referal-achievement-type.enum';
 import { ReferalAchievementService } from '../referal-achievement/referal-achievement.service';
+import { TwilioSendSMS } from '../../common/utils/twilio';
 
 @Injectable()
 export class ReferalMemberService {
@@ -36,7 +37,10 @@ export class ReferalMemberService {
   ): Promise<void> {
     //DETERMINE WHETHER USER REGISTERED OR NOT TO SEND APPROPRIATE MAIL
     const invitedUser = await this.userRepository.findOne({
-      where: { email: sendReferalMemberLinkDto.email },
+      where: [
+        { email: sendReferalMemberLinkDto.credential },
+        { phone: sendReferalMemberLinkDto.credential },
+      ],
     });
 
     if (invitedUser) {
@@ -92,15 +96,31 @@ export class ReferalMemberService {
     referalQuery.where('user.id = :id', { id: user.id });
     const referal = await referalQuery.getOne();
 
-    invitedUser
-      ? this.mailService.sendReferralLinkEmailToRegisteredUser(
-          sendReferalMemberLinkDto,
-          referal,
-        )
-      : this.mailService.sendReferralLinkEmailToNotRegisteredUser(
+    if (invitedUser) {
+      if (sendReferalMemberLinkDto.credential.indexOf('@') > 0) {
+        this.mailService.sendReferralLinkEmailToRegisteredUser(
           sendReferalMemberLinkDto,
           referal,
         );
+      } else {
+        TwilioSendSMS(
+          `${referal.user.firstname} ${referal.user.lastname} приглашает Вас!`,
+          sendReferalMemberLinkDto.credential,
+        );
+      }
+    } else {
+      if (sendReferalMemberLinkDto.credential.indexOf('@') > 0) {
+        this.mailService.sendReferralLinkEmailToNotRegisteredUser(
+          sendReferalMemberLinkDto,
+          referal,
+        );
+      } else {
+        TwilioSendSMS(
+          `${referal.user.firstname} ${referal.user.lastname} приглашает Вас!`,
+          sendReferalMemberLinkDto.credential,
+        );
+      }
+    }
   }
 
   async getUserReferalMemberList(

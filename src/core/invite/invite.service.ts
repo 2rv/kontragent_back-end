@@ -1,11 +1,18 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { InviteDto } from './dto/invite.dto';
+import { InviteRepository } from './inivite.repository';
 import { InviteEmailsDto } from './invite-emails.dto';
 import { MailerService } from '@nestjs-modules/mailer';
 import * as path from 'path';
 
 @Injectable()
 export class InviteService {
-  constructor(private readonly mailerService: MailerService) {}
+  constructor(
+    private readonly mailerService: MailerService,
+    @InjectRepository(InviteRepository)
+    private iniviteRepository: InviteRepository,
+  ) {}
 
   private getTemplateLink(name: string) {
     return path.join(path.resolve(), `src/template/${name}.pug`);
@@ -27,5 +34,9 @@ export class InviteService {
           )}`,
         );
       });
+  }
+
+  async invite(inviteDto: InviteDto): Promise<void> {
+    await this.iniviteRepository.invite(inviteDto);
   }
 }

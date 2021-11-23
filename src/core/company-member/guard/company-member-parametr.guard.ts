@@ -16,7 +16,6 @@ export class CompanyMemberParametrGuard implements CanActivate {
   constructor(
     @InjectRepository(CompanyMemberEntity)
     private companyMemberRepository: Repository<CompanyMemberEntity>,
-    private readonly reflector: Reflector,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
