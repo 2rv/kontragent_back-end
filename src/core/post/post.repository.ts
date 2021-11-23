@@ -29,9 +29,9 @@ export class PostRepository extends Repository<PostEntity> {
         'post.description',
         'post.article',
         'post.createDate',
-        'creator',
         'creator.firstname',
         'creator.lastname',
+        'creator.id',
       ])
       .where('post.id = :id', { id })
       .getOne();

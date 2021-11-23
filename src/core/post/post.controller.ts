@@ -24,6 +24,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { GetAccount } from '../user/decorator/get-account.decorator';
 import { PostService } from './post.service';
 import { UserEntity } from '../user/user.entity';
+import { PostEntity } from './post.entity';
 
 @Controller('post')
 export class PostController {
@@ -34,7 +35,7 @@ export class PostController {
   async save(
     @Body(ValidationPipe) createPostDto: CreatePostDto,
     @GetAccount() creator: UserEntity,
-  ) {
+  ): Promise<PostEntity> {
     return await this.postService.create(createPostDto, creator);
   }
 
