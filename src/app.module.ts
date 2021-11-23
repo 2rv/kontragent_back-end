@@ -19,11 +19,13 @@ import { ReferalMemberModule } from './core/referal-member/referal-member.module
 import { ReferalAchievementModule } from './core/referal-achievement/referal-achievement.module';
 import { PostModule } from './core/post/post.module';
 import { CommentModule } from './core/comment/comment.module';
+import { InviteModule } from './core/invite/invite.module';
 
 @Module({
   providers: [],
   imports: [
     TypeOrmModule.forRoot(typeOrmConfig),
+    InviteModule,
     AuthModule,
     MailModule,
     UserSettingsModule,

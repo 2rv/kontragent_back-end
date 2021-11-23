@@ -9,7 +9,7 @@ import { RevisionEntity } from '../core/revision/revision.entity';
 import { RevisionCompanyEntity } from 'src/core/revision-company/revision-company.entity';
 import { RevisionCompanyYearEntity } from '../core/revision-company-year/revision-company-year.entity';
 import { UserEntity } from '../core/user/user.entity';
-
+import { InviteEntity } from '../core/invite/invite.entity';
 import { ReferalEntity } from '../core/referal/referal.entity';
 import { ReferalMemberEntity } from '../core/referal-member/referal-member.entity';
 import { ReferalAchievementEntity } from '../core/referal-achievement/referal-achievement.entity';
@@ -28,7 +28,7 @@ export const ApiEntities = [
   RevisionCompanyYearEntity,
   CompanyBalanceEntity,
   PaymentEntity,
-
+  InviteEntity,
   ReferalEntity,
   ReferalMemberEntity,
   ReferalAchievementEntity,
