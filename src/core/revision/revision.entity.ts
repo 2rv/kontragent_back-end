@@ -51,4 +51,7 @@ export class RevisionEntity extends BaseEntity {
 
   @CreateDateColumn()
   createDate: string;
+
+  @Column({ default: false })
+  selfRevision: boolean;
 }
