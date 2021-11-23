@@ -9,6 +9,7 @@ import {
 
 import { FileEntity } from '../file/file.entity';
 import { RevisionEntity } from '../revision/revision.entity';
+import { CompanyEntity } from '../company/company.entity';
 import { RevisionCompanyYearEntity } from '../revision-company-year/revision-company-year.entity';
 
 @Entity({ name: 'revision-company' })

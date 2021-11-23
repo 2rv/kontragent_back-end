@@ -4,6 +4,7 @@ import { CompanyBalanceService } from '../company-balance/company-balance.servic
 import { CompanyEntity } from '../company/company.entity';
 import { FileRepository } from '../file/file.repository';
 import { CreateRevisionCompanyDto } from '../revision-company/dto/create-revision-company.dto';
+import { CreateRevisionOwnCompanyDto } from '../revision-company/dto/create-revision-own-company.dto';
 import {
   GetCompanyRevisionListDto,
   GetCompanyRevisionListItemDto,
@@ -62,6 +63,43 @@ export class RevisionService {
     this.revisionCompanyService.createRevisionCompanies(
       createRevisionCompaniesDto,
       revision,
+    );
+  }
+
+  async createSelfRevision(
+    createRevisionOwnCompanyDto: CreateRevisionOwnCompanyDto,
+    company: CompanyEntity,
+    creator: UserEntity,
+  ): Promise<void> {
+    let price = 0;
+    const onePeriodRevisionPrice = 500;
+    const addPrice = (add: number) => (price += add);
+    const culcRevisionPrice = (years: CreateRevisionYearDto[]) => {
+      years.forEach((year) => {
+        year.firstPeriod && addPrice(onePeriodRevisionPrice);
+        year.secondPeriod && addPrice(onePeriodRevisionPrice);
+        year.thirdPeriod && addPrice(onePeriodRevisionPrice);
+        year.fourthPeriod && addPrice(onePeriodRevisionPrice);
+      });
+    };
+    culcRevisionPrice(createRevisionOwnCompanyDto.year);
+    
+    await this.companyBalanceService.createCompanyBalancePayment(
+      company,
+      price,
+    );
+
+    const revision: RevisionEntity = new RevisionEntity();
+    revision.company = company;
+    revision.creator = creator;
+    revision.status = REVISION_STATUS.NEW;
+    revision.selfRevision = true;
+    revision.save();
+
+    this.revisionCompanyService.createSelfRevisionCompany(
+      createRevisionOwnCompanyDto,
+      revision,
+      company,
     );
   }
 

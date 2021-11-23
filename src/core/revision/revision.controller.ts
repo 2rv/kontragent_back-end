@@ -18,6 +18,7 @@ import { AccountGuard } from '../user/guard/account.guard';
 import { GetRevision } from './decorator/get-revision.decorator';
 import { GetAccount } from '../user/decorator/get-account.decorator';
 import { CreateRevisionCompanyDto } from '../revision-company/dto/create-revision-company.dto';
+import { CreateRevisionOwnCompanyDto } from '../revision-company/dto/create-revision-own-company.dto';
 import { GetCompanyRevisionListDto } from './dto/get-company-revision-list.dto';
 import { GetRevisionListInfoDto } from './dto/get-revision-list-info.dto';
 import { UpdateRevisionDto } from './dto/update-revision-info.dto';
@@ -40,6 +41,22 @@ export class RevisionController {
   ): Promise<void> {
     return this.revisionService.createRevision(
       createRevisionCompanyDto,
+      company,
+      creator,
+    );
+  }
+
+  @Post('/own-company/:companyId')
+  @Roles(USER_ROLE.USER)
+  @UseGuards(AuthGuard(), AccountGuard, CompanyGuard, CompanyMemberGuard)
+  async createOwnCompanyRevision(
+    @Body(ValidationPipe)
+    createRevisionOwnCompanyDto: CreateRevisionOwnCompanyDto,
+    @GetCompany() company: CompanyEntity,
+    @GetAccount() creator: UserEntity,
+  ): Promise<void> {
+    return this.revisionService.createSelfRevision(
+      createRevisionOwnCompanyDto,
       company,
       creator,
     );
