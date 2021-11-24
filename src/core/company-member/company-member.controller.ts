@@ -12,10 +12,7 @@ import { GetCompany } from '../company/decorator/get-company.decorator';
 import { CompanyGuard } from '../company/guard/company.guard';
 import { CompanyMemberParametrGuard } from './guard/company-member-parametr.guard';
 import { CompanyMemberGuard } from './guard/company-member.guard';
-import { GetUser } from '../user/decorator/get-user.decorator';
 import { AccountGuard } from '../user/guard/account.guard';
-import { UserGuard } from '../user/guard/user.guard';
-import { UserEntity } from '../user/user.entity';
 import { CompanyMemberService } from './company-member.service';
 import { CompanyMemberEntity } from './company-memeber.entity';
 import { CompanyMemberRoles } from './decorator/company-member-role.decorator';
@@ -49,20 +46,14 @@ export class CompanyMemberController {
 
   @Post('/company/:companyId/member/user/:userId')
   @CompanyMemberRoles(COMPANY_MEMBER_ROLE.OWNER)
-  @UseGuards(
-    AuthGuard(),
-    AccountGuard,
-    UserGuard,
-    CompanyGuard,
-    CompanyMemberGuard,
-  )
+  @UseGuards(AuthGuard(), AccountGuard, CompanyGuard, CompanyMemberGuard)
   addCompanyMember(
     @GetCompany() company: CompanyEntity,
-    @GetUser() user: UserEntity,
+    @Param('userId') userId: string,
   ): Promise<void> {
     return this.companyMemberService.createCompanyMember(
       company,
-      user,
+      userId,
       COMPANY_MEMBER_ROLE.MANAGER,
     );
   }

@@ -9,6 +9,7 @@ import { UserEntity } from '../user.entity';
 import { USER_ROLE } from '../enum/user-role.enum';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { USER_ERROR } from '../enum/user-error.enum'
 
 @Injectable()
 export class UserGuard implements CanActivate {
@@ -30,7 +31,7 @@ export class UserGuard implements CanActivate {
     });
 
     if (!user) {
-      throw new NotFoundException();
+      throw new NotFoundException(USER_ERROR.CANNOT_FIND_USER);
     }
 
     if (String(user.role) === String(USER_ROLE.BLOCKED)) {

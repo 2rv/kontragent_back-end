@@ -4,6 +4,7 @@ import { AuthModule } from '../auth/auth.module';
 import { CompanyEntity } from '../company/company.entity';
 import { CompanyRepository } from '../company/company.repository';
 import { UserEntity } from '../user/user.entity';
+import { UserRepository } from '../user/user.repository';
 import { CompanyMemberController } from './company-member.controller';
 import { CompanyMemberRepository } from './company-member.repository';
 import { CompanyMemberService } from './company-member.service';
@@ -14,6 +15,7 @@ import { CompanyMemberEntity } from './company-memeber.entity';
     TypeOrmModule.forFeature([
       CompanyEntity,
       CompanyRepository,
+      UserRepository,
       UserEntity,
       CompanyMemberEntity,
       CompanyMemberRepository,
