@@ -10,7 +10,7 @@ export async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
 
-  app.enableCors();
+  app.enableCors({ origin: true });
   app.use(helmet());
   await app.listen(port);
 
