@@ -32,11 +32,11 @@ export class CompanyMemberService {
       where: { id: userId },
     });
 
-    if (String(user.role) === String(USER_ROLE.BLOCKED)) {
-      throw new BadRequestException(USER_ERROR.USER_IS_BLOKED);
-    }
     if (!user) {
       throw new BadRequestException(USER_ERROR.CANNOT_FIND_USER);
+    }
+    if (String(user.role) === String(USER_ROLE.BLOCKED)) {
+      throw new BadRequestException(USER_ERROR.USER_IS_BLOKED);
     }
     if (user.role === USER_ROLE.ADMIN) {
       throw new BadRequestException(
