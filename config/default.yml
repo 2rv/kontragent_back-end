@@ -4,6 +4,7 @@ API:
 DATABASE:
   TYPE: 'postgres'
   SYNCHRONIZE: true
+  URL: 
 
 CACHE:
   HOST: 'ec2-3-213-198-205.compute-1.amazonaws.com'

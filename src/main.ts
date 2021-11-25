@@ -11,8 +11,8 @@ export async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors();
-
   app.use(helmet());
+
   await app.listen(port);
 
   const logger = new Logger('Bootstrap Api Server');

@@ -7,7 +7,6 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { UserCreateDto } from './dto/user-create.dto';
-import { USER_ROLE } from '../user/enum/user-role.enum';
 import { ChangeUserRoleDto } from './dto/change-user-role.dto';
 
 @EntityRepository(UserEntity)
