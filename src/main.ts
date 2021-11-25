@@ -8,7 +8,19 @@ import { API_SERVER_PORT } from './config/server.config';
 export async function bootstrap() {
   const port = process.env.PORT || API_SERVER_PORT;
 
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule);
+
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PUTCH');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Accept');
+    next();
+  });
+
+  app.enableCors({
+    allowedHeaders: '*',
+    origin: '*',
+  });
 
   app.use(helmet());
   await app.listen(port);
