@@ -44,16 +44,16 @@ export class CompanyMemberController {
     return this.companyMemberService.getcompanyMemberList(company);
   }
 
-  @Post('/company/:companyId/member/user/:userId')
+  @Post('/company/:companyId/member/user/:credential')
   @CompanyMemberRoles(COMPANY_MEMBER_ROLE.OWNER)
   @UseGuards(AuthGuard(), AccountGuard, CompanyGuard, CompanyMemberGuard)
   addCompanyMember(
     @GetCompany() company: CompanyEntity,
-    @Param('userId') userId: string,
+    @Param('credential') credential: string,
   ): Promise<void> {
     return this.companyMemberService.createCompanyMember(
       company,
-      userId,
+      credential,
       COMPANY_MEMBER_ROLE.MANAGER,
     );
   }
