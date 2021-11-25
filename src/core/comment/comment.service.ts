@@ -12,7 +12,7 @@ export class CommentService {
   constructor(private commentRepository: CommentRepository) {}
 
   async create(commentDto: CommentDto): Promise<void> {
-    await this.commentRepository.save({ ...commentDto });
+    await this.commentRepository.createComment(commentDto);
   }
 
   async delete(id: string, user: UserEntity) {
