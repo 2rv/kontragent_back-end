@@ -8,9 +8,9 @@ import { API_SERVER_PORT } from './config/server.config';
 export async function bootstrap() {
   const port = process.env.PORT || API_SERVER_PORT;
 
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule);
 
-  // app.enableCors();
+  app.enableCors();
 
   app.use(helmet());
   await app.listen(port);
