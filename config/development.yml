@@ -1,2 +1,2 @@
 DATABASE:
-  URL: postgres://zpvcknrlpqqmxg:7faace6491a09cd829d748d7abd708bb9aec9ce34d7c75e34693f41d33647317@ec2-54-171-25-232.eu-west-1.compute.amazonaws.com:5432/dbq5136g2ls973
+  URL: postgres://dfxmqmwrzejxxd:e8b14cb8f98eea6aef3d01365c4c746a4a83bd57b7fb07fb8a5303e0e9a3b020@ec2-3-248-103-75.eu-west-1.compute.amazonaws.com:5432/d93eba91dp4u0h
