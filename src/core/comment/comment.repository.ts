@@ -1,21 +1,27 @@
 import { CommentEntity } from './comment.entity';
 import { EntityRepository, Repository } from 'typeorm';
 import { CommentDto } from './dto/comment.dto';
+import { UserEntity } from '../user/user.entity';
+import { PostEntity } from '../post/post.entity';
 
 
 @EntityRepository(CommentEntity)
 export class CommentRepository extends Repository<CommentEntity> {
 
-  async createComment(commentDto: CommentDto): Promise<void> {
+  async createComment(commentDto: CommentDto, user: UserEntity, post: PostEntity): Promise<CommentEntity>{
 
-    const { text, post, user} = commentDto
+    const { text} = commentDto
 
-    const comment: CommentEntity = new CommentEntity()
+    const comments: CommentEntity = new CommentEntity()
 
-    comment.text = text,
-    comment.post = post,
-    comment.user = user
+    comments.text = text;
+    comments.post = post;
+    comments.user = user; 
 
+    await comments.save()
+    return comments
+  
+    
   }
 
   async findPostComment(postId: string): Promise<CommentEntity[]> {

@@ -5,13 +5,14 @@ import {
   ManyToOne,
   JoinColumn,
   CreateDateColumn,
+  BaseEntity
 } from 'typeorm';
 
 import { PostEntity } from '../post/post.entity';
 import { UserEntity } from '../user/user.entity';
 
 @Entity({ name: 'comment' })
-export class CommentEntity {
+export class CommentEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
