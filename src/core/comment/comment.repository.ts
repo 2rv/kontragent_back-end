@@ -21,14 +21,15 @@ export class CommentRepository extends Repository<CommentEntity> {
     await comments.save()
     return comments
   
-    
   }
 
   async findPostComment(postId: string): Promise<CommentEntity[]> {
     return await this.createQueryBuilder('comment')
       .leftJoin('comment.post', 'post')
       .leftJoin('comment.user', 'user')
+     
       .where('post.id = :postId', { postId })
+      .orderBy('comment.createDate', 'ASC')
       .select([
         'comment.id',
         'comment.text',

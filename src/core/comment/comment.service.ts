@@ -18,19 +18,19 @@ export class CommentService {
   }
 
   async delete(id: string, user: UserEntity) {
-    if (user.role === USER_ROLE.ADMIN) {
-      return await this.commentRepository.delete(id);
-    }
-
     const comment = await this.commentRepository.findOne({
       where: {
-        id: id,
-        user: user.id,
+        id: id
       },
     });
+
+     if (user.role === USER_ROLE.ADMIN) {
+      return await this.commentRepository.delete(comment.id);
+    }
+    
     if (!comment) {
       throw new BadRequestException(COMMENT_ERROR.COMMENT_NOT_FOUND);
-    } else return await this.commentRepository.delete(id);
+    } else return await this.commentRepository.delete(comment.id);
   }
 
   async getPostComment(postId: string) {
