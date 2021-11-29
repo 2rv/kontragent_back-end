@@ -25,11 +25,11 @@ export class CompanyMemberService {
 
   async createCompanyMember(
     company: CompanyEntity,
-    userId: string,
+    credential: string,
     role: COMPANY_MEMBER_ROLE,
   ): Promise<void> {
     const user = await this.userRepository.findOne({
-      where: { id: userId },
+      where: [{ login: credential }, { email: credential }],
     });
 
     if (!user) {

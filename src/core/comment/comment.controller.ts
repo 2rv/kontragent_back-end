@@ -20,15 +20,21 @@ import { USER_ROLE } from '../user/enum/user-role.enum';
 import { CommentEntity } from './comment.entity';
 import { UserEntity } from '../user/user.entity';
 import { GetAccount } from '../user/decorator/get-account.decorator';
+import { PostParametrGuard } from '../post/guard/post-parametr.guard';
+import { GetPost } from '../post/decorator/post-parametr.decorator';
+import { PostEntity } from '../post/post.entity';
 
 @Controller('comment')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @Post('/create')
-  @UseGuards(AuthGuard(), AccountGuard)
-  async create(@Body(ValidationPipe) commentDto: CommentDto) {
-    return await this.commentService.create(commentDto);
+  @Post('/create/:postId')
+  @UseGuards(AuthGuard(), AccountGuard, PostParametrGuard)
+  async create(@Body(ValidationPipe) commentDto: CommentDto,
+  @GetAccount() user: UserEntity,
+  @GetPost() post: PostEntity
+  ): Promise<CommentEntity>{
+    return await this.commentService.create(commentDto, user, post );
   }
 
   @Delete('/delete/:id')

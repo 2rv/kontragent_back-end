@@ -27,6 +27,8 @@ export class PostParametrGuard implements CanActivate {
     if (!post) {
       throw new NotFoundException(POST_ERROR.POST_NOT_FOUND);
     }
+
+    request.post = post
     return true;
   }
 }
