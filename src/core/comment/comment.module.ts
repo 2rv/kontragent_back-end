@@ -7,11 +7,12 @@ import { CommentController } from './comment.controller';
 import { CommentService } from './comment.service';
 import { CommentRepository } from './comment.repository';
 import { CommentEntity } from './comment.entity';
+import { PostRepository } from '../post/post.repository';
 
 @Module({
   imports: [
     AuthModule,
-    TypeOrmModule.forFeature([CommentRepository, CommentEntity]),
+    TypeOrmModule.forFeature([CommentRepository, CommentEntity, PostRepository]),
   ],
   providers: [CommentService],
   exports: [CommentService],
