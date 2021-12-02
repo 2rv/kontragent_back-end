@@ -13,6 +13,7 @@ import { BillEntity } from './bill.entity';
 import { BILL_STATUS } from './enum/bill-status.enum';
 import { BILL_ERROR } from './enum/bill-error.enum';
 import { CompanyBalanceService } from '../company-balance/company-balance.service';
+import { GetBillListDto } from './dto/get-bill-list.dto';
 
 @Injectable()
 export class BillService {
@@ -75,6 +76,12 @@ export class BillService {
 
   await this.billRepository.fulfillCompanyBill(bill)
 
+  }
+
+  async getAdminBillList(): Promise<GetBillListDto> {
+    const list: BillEntity[] =
+        await this.billRepository.getAdminBillList()
+    return {list}
   }
 
 }

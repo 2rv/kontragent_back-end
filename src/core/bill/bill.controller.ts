@@ -3,6 +3,7 @@ import {
     Controller,
     Post,
     Patch,
+    Get,
     UseGuards,
     ValidationPipe,
 } from '@nestjs/common';
@@ -23,6 +24,7 @@ import { CompanyEntity } from '../company/company.entity';
 import { BILL_STATUS } from './enum/bill-status.enum';
 import { UpdateBillDto } from './dto/update-bill.dto';
 import { CompanyBalanceService } from '../company-balance/company-balance.service';
+import { GetBillListDto } from './dto/get-bill-list.dto';
 
 @Controller('bill')
 export class BillController {
@@ -61,7 +63,13 @@ export class BillController {
   fulfillCompanyBill(
     @GetBill() bill: BillEntity,
   ): Promise<void> {
-    return this.billService.fulfillCompanyBill(bill)
-    
+    return this.billService.fulfillCompanyBill(bill) 
+  }
+
+  @Get('/bill-list')
+  @Roles(USER_ROLE.ADMIN)
+  @UseGuards(AuthGuard(), AccountGuard)
+  getAdminBillList(): Promise<GetBillListDto> {
+      return this.billService.getAdminBillList()
   }
 }
