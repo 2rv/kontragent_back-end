@@ -60,7 +60,6 @@ export class BillService {
 
   async fulfillCompanyBill(
       bill: BillEntity, 
-      company: CompanyEntity
   ): Promise<void>{
 
     if(bill.status === BILL_STATUS.FULFILLED)
@@ -70,8 +69,9 @@ export class BillService {
         )
     }
         
-
-  await this.companyBalanceService.createCompanyBalanceRefill(company, bill.amount)
+    console.log(bill.company);
+    
+  await this.companyBalanceService.createCompanyBalanceRefill(bill.company, bill.amount)
 
   await this.billRepository.fulfillCompanyBill(bill)
 

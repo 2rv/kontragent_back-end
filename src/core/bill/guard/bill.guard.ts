@@ -26,6 +26,7 @@ export class BillGuard implements CanActivate {
     }
      const bill = await this.billRepository.findOne({
       where: { id: params.billId },
+      relations: ["company"]
     });
     if (!bill) {
       throw new NotFoundException(BILL_ERROR.CANNOT_FIND_BILL);

@@ -55,14 +55,13 @@ export class BillController {
     )
   }
 
-  @Patch('company/:companyId/fulfill/:billId')
+  @Patch('/fulfill/:billId')
   @Roles(USER_ROLE.ADMIN)
-  @UseGuards(AuthGuard(), AccountGuard, CompanyGuard, BillGuard)
+  @UseGuards(AuthGuard(), AccountGuard, BillGuard)
   fulfillCompanyBill(
     @GetBill() bill: BillEntity,
-    @GetCompany() company: CompanyEntity
   ): Promise<void> {
-    return this.billService.fulfillCompanyBill(bill, company)
+    return this.billService.fulfillCompanyBill(bill)
     
   }
 }
