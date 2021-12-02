@@ -10,6 +10,7 @@ import { CompanyBalanceRepository } from '../company-balance/company-balance.rep
 import { COMPANY_MEMBER_ROLE } from '../company-member/enum/company-member-role.enum';
 import { KontragentEntity } from './kontragent.entity';
 import { CompanyEntity } from '../company/company.entity';
+import { COMPANY_ERROR } from '../company/enum/company-error.enum';
 
 @Injectable()
 export class KontragentService {
@@ -67,7 +68,7 @@ export class KontragentService {
     });
 
     if (!company) {
-      throw new ConflictException(KONTRAGENT_ERROR.CANNOT_FIND_KONTRAGENT);
+      throw new ConflictException(COMPANY_ERROR.COMPANY_NOT_FOUND);
     }
 
     const kontragent: KontragentEntity =
@@ -86,7 +87,7 @@ export class KontragentService {
     });
 
     if (!company) {
-      throw new ConflictException(KONTRAGENT_ERROR.CANNOT_FIND_KONTRAGENT);
+      throw new ConflictException(COMPANY_ERROR.COMPANY_NOT_FOUND);
     }
 
     if (company.user !== user) {
