@@ -5,8 +5,7 @@ import {
     Column,
     ManyToOne,
     OneToMany,
-    OneToOne,
-    JoinColumn,
+    CreateDateColumn
 } from 'typeorm';
 import { CompanyEntity } from '../company/company.entity';
 import { FileEntity } from '../file/file.entity';
@@ -43,5 +42,7 @@ export class BillEntity extends BaseEntity {
     nullable: true,
   })
   description?: string;
+
+  @CreateDateColumn() createDate: string;
 }
 
