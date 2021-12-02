@@ -14,6 +14,7 @@ export class CompanyRepository extends Repository<CompanyEntity> {
   async createCompany(
     companyCreateDto: CreateCompanyDto,
     user: UserEntity,
+    registered: boolean,
   ): Promise<CompanyEntity> {
     const { name, inn } = companyCreateDto;
 
@@ -22,6 +23,7 @@ export class CompanyRepository extends Repository<CompanyEntity> {
     company.name = name;
     company.inn = inn;
     company.user = user;
+    company.registered = registered;
 
     try {
       await company.save();
