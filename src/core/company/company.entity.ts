@@ -12,8 +12,8 @@ import { CompanyBalanceEntity } from '../company-balance/company-balance.entity'
 import { CompanyMemberEntity } from '../company-member/company-memeber.entity';
 import { PaymentEntity } from '../payment/payment.entity';
 import { RevisionEntity } from '../revision/revision.entity';
-import { RevisionCompanyEntity } from '../revision-company/revision-company.entity';
 import { UserEntity } from '../user/user.entity';
+import { BillEntity } from '../bill/bill.entity';
 
 @Entity({ name: 'company' })
 export class CompanyEntity extends BaseEntity {
@@ -52,4 +52,7 @@ export class CompanyEntity extends BaseEntity {
 
   @OneToMany(() => RevisionEntity, (revision) => revision.company)
   revision: RevisionEntity[];
+
+  @OneToMany(() => BillEntity, (bills) => bills.company)
+  bills: BillEntity[];
 }

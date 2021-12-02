@@ -19,6 +19,7 @@ import { ReferalAchievementModule } from './core/referal-achievement/referal-ach
 import { PostModule } from './core/post/post.module';
 import { CommentModule } from './core/comment/comment.module';
 import { InviteModule } from './core/invite/invite.module';
+import { BillModule } from './core/bill/bill.module';
 
 @Module({
   providers: [],
@@ -43,6 +44,7 @@ import { InviteModule } from './core/invite/invite.module';
     InviteModule,
     PostModule,
     CommentModule,
+    BillModule
   ],
 })
 export class AppModule {}

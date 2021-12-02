@@ -12,6 +12,7 @@ import { UserEntity } from '../user/user.entity';
 import { RevisionEntity } from '../revision/revision.entity';
 import { RevisionCompanyEntity } from '../revision-company/revision-company.entity';
 import { PostEntity } from '../post/post.entity';
+import { BillEntity } from '../bill/bill.entity';
 
 @Entity({ name: 'file' })
 export class FileEntity extends BaseEntity {
@@ -53,4 +54,7 @@ export class FileEntity extends BaseEntity {
 
   @OneToOne(() => PostEntity, (post: PostEntity) => post.image)
   post: PostEntity;
+
+  @ManyToOne(() => BillEntity, (bill: BillEntity) => bill.files)
+  bill: BillEntity;
 }
