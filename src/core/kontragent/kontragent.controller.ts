@@ -10,8 +10,6 @@ import {
 
 import { AuthGuard } from '@nestjs/passport';
 import { AccountGuard } from '../user/guard/account.guard';
-import { UserEntity } from '../user/user.entity';
-import { GetAccount } from '../user/decorator/get-account.decorator';
 
 import { KontragentService } from './kontragent.service';
 import { CreateKontragentDto } from './dto/create-kontragent.dto';
@@ -20,33 +18,33 @@ import { KontragentConsumerGuard } from './guard/kontragent-consumer.guard';
 import { CompanyGuard } from '../company/guard/company.guard';
 import { CompanyMemberGuard } from '../company-member/guard/company-member.guard';
 import { KontragentEntity } from './kontragent.entity';
+import { GetCompany } from '../company/decorator/get-company.decorator';
+import { CompanyEntity } from '../company/company.entity';
+import { GetKontragent } from './decorators/get-kontragent.decorator';
 
 @Controller('kontragent')
 export class KontragentController {
   constructor(private kontragentService: KontragentService) {}
 
-  @Post('/create')
-  @UseGuards(
-    AuthGuard(),
-    AccountGuard,
-    CompanyGuard,
-    CompanyMemberGuard,
-    KontragentGuard,
-    KontragentConsumerGuard,
-  )
+  @Post('company/:companyId/create/kontragent')
+  @UseGuards(AuthGuard(), AccountGuard, CompanyGuard, CompanyMemberGuard)
   create(
     @Body() createKontragentDto: CreateKontragentDto,
+    @GetCompany() company: CompanyEntity,
   ): Promise<KontragentEntity> {
-    return this.kontragentService.createKontragent(createKontragentDto);
+    return this.kontragentService.createKontragent(
+      company,
+      createKontragentDto,
+    );
   }
 
-  @Get('/get')
-  @UseGuards(AuthGuard(), AccountGuard, CompanyGuard)
-  getAll(): Promise<KontragentEntity[]> {
-    return this.kontragentService.getAll();
+  @Get('/get/company/:companyId/kontragents')
+  @UseGuards(AuthGuard(), AccountGuard, CompanyGuard, CompanyMemberGuard)
+  getAllCompanyKontragents(): Promise<KontragentEntity[]> {
+    return this.kontragentService.getAllCompanyKontragents();
   }
 
-  @Get('/get/:kontragentId')
+  @Get('/get/company/:companyId/:kontragentId')
   @UseGuards(
     AuthGuard(),
     AccountGuard,
@@ -55,13 +53,13 @@ export class KontragentController {
     KontragentGuard,
     KontragentConsumerGuard,
   )
-  getOne(
-    @Param('kontragentId') kontragentId: string,
+  getOneKontragent(
+    @GetKontragent() kontragent: KontragentEntity,
   ): Promise<KontragentEntity> {
-    return this.kontragentService.getOne(kontragentId);
+    return this.kontragentService.getOneKontragent(kontragent);
   }
 
-  @Delete('/delete/:kontragentId')
+  @Delete('/delete/company/:companyId/:kontragentId')
   @UseGuards(
     AuthGuard(),
     AccountGuard,
@@ -70,7 +68,7 @@ export class KontragentController {
     KontragentGuard,
     KontragentConsumerGuard,
   )
-  delete(@Param('kontragentId') kontragentId: string) {
-    return this.kontragentService.delete(kontragentId);
+  deleteKontragent(@GetKontragent() kontragent: KontragentEntity) {
+    return this.kontragentService.deleteKontragent(kontragent);
   }
 }

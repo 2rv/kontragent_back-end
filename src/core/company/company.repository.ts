@@ -7,6 +7,7 @@ import { Repository, EntityRepository } from 'typeorm';
 import { UserEntity } from '../user/user.entity';
 import { CompanyEntity } from './company.entity';
 import { CreateCompanyDto } from './dto/create-company.dto';
+import { CreateUnregisteredCompanyDto } from './dto/create-company.dto copy';
 import { COMPANY_ERROR } from './enum/company-error.enum';
 
 @EntityRepository(CompanyEntity)
@@ -38,13 +39,10 @@ export class CompanyRepository extends Repository<CompanyEntity> {
   }
 
   async createUnregisteredCompany(
-    companyCreateDto: CreateCompanyDto,
+    unregisteredCompanyCreateDto: CreateUnregisteredCompanyDto,
   ): Promise<CompanyEntity> {
-    const { name, inn } = companyCreateDto;
-
+    const { inn } = unregisteredCompanyCreateDto;
     const company: CompanyEntity = new CompanyEntity();
-
-    company.name = name;
     company.inn = inn;
 
     try {

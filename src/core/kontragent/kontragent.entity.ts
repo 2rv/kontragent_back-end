@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   CreateDateColumn,
+  Column,
 } from 'typeorm';
 import { CompanyEntity } from '../company/company.entity';
 
@@ -14,6 +15,9 @@ export class KontragentEntity extends BaseEntity {
 
   @CreateDateColumn()
   createDate: string;
+
+  @Column({ name: 'name' })
+  name: string;
 
   @ManyToOne(() => CompanyEntity, (company) => company.kontragents)
   consumer: CompanyEntity;

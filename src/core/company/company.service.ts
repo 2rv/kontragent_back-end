@@ -44,14 +44,6 @@ export class CompanyService {
     return createCompanyInfoDto;
   }
 
-  async createUnregisteredCompany(
-    createCompanyDto: CreateCompanyDto,
-  ): Promise<CompanyEntity> {
-    return await this.companyRepository.createUnregisteredCompany(
-      createCompanyDto,
-    );
-  }
-
   async getCompanyInfo(company: CompanyEntity): Promise<GetCompanyInfoDto> {
     return {
       id: company.id,
