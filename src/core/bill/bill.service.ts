@@ -75,4 +75,9 @@ export class BillService {
     const res = await this.billRepository.getAdminBillInfo(bill);
     return res;
   }
+
+  async getBillInfo(bill: BillEntity): Promise<BillEntity> {
+    const res = await this.billRepository.getBillInfo(bill);
+    return res;
+  }
 }

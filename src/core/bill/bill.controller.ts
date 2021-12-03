@@ -76,5 +76,16 @@ export class BillController {
     return this.billService.getAdminBillInfo(bill);
   }
 
-  //@Get('/company/:companyId/')
+  @Get('/company/:companyId/bill/:billId')
+  @Roles(USER_ROLE.USER)
+  @UseGuards(
+    AuthGuard(),
+    AccountGuard,
+    CompanyGuard,
+    CompanyMemberGuard,
+    BillGuard,
+  )
+  getBillInfo(@GetBill() bill: BillEntity): Promise<BillEntity> {
+    return this.billService.getBillInfo(bill);
+  }
 }
