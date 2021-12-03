@@ -1,4 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  NotFoundException,
+} from '@nestjs/common';
 
 @Injectable()
 export class KontragentConsumerGuard implements CanActivate {
@@ -6,6 +11,10 @@ export class KontragentConsumerGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const { kontragent, company } = request;
 
-    return kontragent.consumer === company;
+    if (kontragent.consumer !== company) {
+      throw new NotFoundException();
+    }
+
+    return true;
   }
 }

@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  UseGuards,
-  Delete,
-  Param,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards, Delete } from '@nestjs/common';
 
 import { AuthGuard } from '@nestjs/passport';
 import { AccountGuard } from '../user/guard/account.guard';
@@ -21,6 +13,7 @@ import { KontragentEntity } from './kontragent.entity';
 import { GetCompany } from '../company/decorator/get-company.decorator';
 import { CompanyEntity } from '../company/company.entity';
 import { GetKontragent } from './decorators/get-kontragent.decorator';
+import { GetKontragentInfoDto } from './dto/get-kontragent-info.dto';
 
 @Controller('kontragent')
 export class KontragentController {
@@ -40,8 +33,10 @@ export class KontragentController {
 
   @Get('/get/company/:companyId/kontragents')
   @UseGuards(AuthGuard(), AccountGuard, CompanyGuard, CompanyMemberGuard)
-  getAllCompanyKontragents(): Promise<KontragentEntity[]> {
-    return this.kontragentService.getAllCompanyKontragents();
+  getAllCompanyKontragents(
+    @GetCompany() company: CompanyEntity,
+  ): Promise<KontragentEntity[]> {
+    return this.kontragentService.getAllCompanyKontragents(company);
   }
 
   @Get('/get/company/:companyId/:kontragentId')
@@ -55,7 +50,7 @@ export class KontragentController {
   )
   getOneKontragent(
     @GetKontragent() kontragent: KontragentEntity,
-  ): Promise<KontragentEntity> {
+  ): Promise<GetKontragentInfoDto> {
     return this.kontragentService.getOneKontragent(kontragent);
   }
 

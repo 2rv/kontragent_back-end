@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { KontragentRepository } from './kontragent.repository';
 import { CreateKontragentDto } from './dto/create-kontragent.dto';
 import { CompanyRepository } from '../company/company.repository';
 import { KontragentEntity } from './kontragent.entity';
 import { CompanyEntity } from '../company/company.entity';
+import { GetKontragentInfoDto } from './dto/get-kontragent-info.dto';
+import { KONTRAGENT_ERROR } from './enum/kontragent-error.enum';
 
 @Injectable()
 export class KontragentService {
@@ -22,6 +24,13 @@ export class KontragentService {
     const findedCompany: CompanyEntity = await this.companyRepository.findOne({
       inn: createKontragentDto.inn,
     });
+
+    const findKontragent: KontragentEntity =
+      await this.kontragentRepository.findOne({ contractor: company });
+
+    if (findKontragent) {
+      throw new ConflictException(KONTRAGENT_ERROR.KONTRAGENT_ALREADY_EXISTS);
+    }
 
     if (findedCompany) {
       return await this.kontragentRepository.createKontragent(
@@ -43,17 +52,24 @@ export class KontragentService {
     }
   }
 
-  async getAllCompanyKontragents(): Promise<KontragentEntity[]> {
-    return this.kontragentRepository.find();
+  async getAllCompanyKontragents(
+    company: CompanyEntity,
+  ): Promise<KontragentEntity[]> {
+    return this.kontragentRepository.find({ consumer: company });
   }
 
   async getOneKontragent(
     kontragent: KontragentEntity,
-  ): Promise<KontragentEntity> {
-    return await this.kontragentRepository.findOne({ consumer: kontragent });
+  ): Promise<GetKontragentInfoDto> {
+    return {
+      id: kontragent.id,
+      name: kontragent.name,
+      consumer: kontragent.consumer,
+      contractor: kontragent.contractor,
+    };
   }
 
   async deleteKontragent(kontragent: KontragentEntity) {
-    await this.kontragentRepository.delete({ consumer: kontragent });
+    await this.kontragentRepository.delete(kontragent.id);
   }
 }
