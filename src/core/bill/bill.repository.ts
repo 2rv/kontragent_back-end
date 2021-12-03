@@ -76,7 +76,7 @@ export class BillRepository extends Repository<BillEntity> {
         'bill.createDate',
         'bill.amount',
         'bill.description',
-        'company.name',
+        'company',
         'files',
       ])
       .getOne();
@@ -95,7 +95,7 @@ export class BillRepository extends Repository<BillEntity> {
         'bill.createDate',
         'bill.amount',
         'bill.description',
-        'company.name',
+        'company',
         'files',
       ])
       .getOne();
