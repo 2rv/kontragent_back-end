@@ -25,60 +25,52 @@ import { KontragentEntity } from './kontragent.entity';
 export class KontragentController {
   constructor(private kontragentService: KontragentService) {}
 
-  @Post('/company/:companyId/')
+  @Post('/create')
   @UseGuards(
     AuthGuard(),
     AccountGuard,
-    KontragentGuard,
-    KontragentConsumerGuard,
     CompanyGuard,
     CompanyMemberGuard,
+    KontragentGuard,
+    KontragentConsumerGuard,
   )
-  createKontragent(
+  create(
     @Body() createKontragentDto: CreateKontragentDto,
-    @GetAccount() user: UserEntity,
-    @Param('companyId') companyId,
   ): Promise<KontragentEntity> {
-    return this.kontragentService.createKontragent(
-      createKontragentDto,
-      user,
-      companyId,
-    );
-  }
-
-  @Get('/company/:companyId/:kontragentId')
-  @UseGuards(AuthGuard(), AccountGuard, KontragentGuard, CompanyMemberGuard)
-  getOneKontragent(
-    @Param('companyId') companyId: string,
-    @Param('kontragentId') kontragentId: string,
-  ): Promise<KontragentEntity> {
-    return this.kontragentService.getOneKontragent(companyId, kontragentId);
-  }
-
-  @Delete('/delete/company/:companyId/:kontragentId')
-  @UseGuards(
-    AuthGuard(),
-    AccountGuard,
-    KontragentGuard,
-    KontragentConsumerGuard,
-    CompanyGuard,
-    CompanyMemberGuard,
-  )
-  deleteKontragent(
-    @GetAccount() user: UserEntity,
-    @Param('companyId') companyId: string,
-    @Param('kontragentId') kontragentId: string,
-  ) {
-    return this.kontragentService.deleteKontragent(
-      user,
-      companyId,
-      kontragentId,
-    );
+    return this.kontragentService.createKontragent(createKontragentDto);
   }
 
   @Get('/get')
-  @UseGuards(AuthGuard(), AccountGuard, KontragentGuard, CompanyMemberGuard)
+  @UseGuards(AuthGuard(), AccountGuard, CompanyGuard)
   getAll(): Promise<KontragentEntity[]> {
     return this.kontragentService.getAll();
+  }
+
+  @Get('/get/:kontragentId')
+  @UseGuards(
+    AuthGuard(),
+    AccountGuard,
+    CompanyGuard,
+    CompanyMemberGuard,
+    KontragentGuard,
+    KontragentConsumerGuard,
+  )
+  getOne(
+    @Param('kontragentId') kontragentId: string,
+  ): Promise<KontragentEntity> {
+    return this.kontragentService.getOne(kontragentId);
+  }
+
+  @Delete('/delete/:kontragentId')
+  @UseGuards(
+    AuthGuard(),
+    AccountGuard,
+    CompanyGuard,
+    CompanyMemberGuard,
+    KontragentGuard,
+    KontragentConsumerGuard,
+  )
+  delete(@Param('kontragentId') kontragentId: string) {
+    return this.kontragentService.delete(kontragentId);
   }
 }

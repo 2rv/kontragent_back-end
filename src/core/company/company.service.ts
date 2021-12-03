@@ -27,11 +27,9 @@ export class CompanyService {
     createCompanyDto: CreateCompanyDto,
     user: UserEntity,
   ): Promise<CreateCompanyInfoDto> {
-    const registered = true;
     const company = await this.companyRepository.createCompany(
       createCompanyDto,
       user,
-      registered,
     );
 
     await this.companyMemberRepository.createCompanyMember(
@@ -48,17 +46,10 @@ export class CompanyService {
 
   async createUnregisteredCompany(
     createCompanyDto: CreateCompanyDto,
-    user: UserEntity,
-  ): Promise<CreateCompanyInfoDto> {
-    const registered = false;
-    const company = await this.companyRepository.createCompany(
+  ): Promise<CompanyEntity> {
+    return await this.companyRepository.createUnregisteredCompany(
       createCompanyDto,
-      user,
-      registered,
     );
-
-    const createCompanyInfoDto: CreateCompanyInfoDto = { id: company.id };
-    return createCompanyInfoDto;
   }
 
   async getCompanyInfo(company: CompanyEntity): Promise<GetCompanyInfoDto> {

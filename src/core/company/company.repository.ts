@@ -14,7 +14,6 @@ export class CompanyRepository extends Repository<CompanyEntity> {
   async createCompany(
     companyCreateDto: CreateCompanyDto,
     user: UserEntity,
-    registered: boolean,
   ): Promise<CompanyEntity> {
     const { name, inn } = companyCreateDto;
 
@@ -23,7 +22,30 @@ export class CompanyRepository extends Repository<CompanyEntity> {
     company.name = name;
     company.inn = inn;
     company.user = user;
-    company.registered = registered;
+    company.registered = true;
+
+    try {
+      await company.save();
+    } catch (error) {
+      if (error.code === '23505') {
+        throw new ConflictException(COMPANY_ERROR.COMPANY_ALREADY_EXISTS);
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
+
+    return company;
+  }
+
+  async createUnregisteredCompany(
+    companyCreateDto: CreateCompanyDto,
+  ): Promise<CompanyEntity> {
+    const { name, inn } = companyCreateDto;
+
+    const company: CompanyEntity = new CompanyEntity();
+
+    company.name = name;
+    company.inn = inn;
 
     try {
       await company.save();
