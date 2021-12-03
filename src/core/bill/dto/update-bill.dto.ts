@@ -1,30 +1,22 @@
 import {
-    ArrayMaxSize,
-    IsIn,
-    IsNumber,
-    IsPositive,
-    IsOptional,
-    Length,
+  ArrayMaxSize,
+  IsIn,
+  IsNumber,
+  IsPositive,
+  IsOptional,
+  Length,
 } from 'class-validator';
 import { BILL_STATUS } from '../enum/bill-status.enum';
-import {BILL_ERROR} from '../enum/bill-error.enum'
+import { BILL_ERROR } from '../enum/bill-error.enum';
 
 export class UpdateBillDto {
-
-  @IsOptional()
-  @IsIn(Object.values(BILL_STATUS))
-  status: BILL_STATUS;
-
-
   @IsOptional()
   @Length(10, 1000000, {
     message: BILL_ERROR.BILL_DESCRIPTION_MIN_10,
   })
   description: string;
 
-  @IsOptional()
   @IsNumber({}, { each: true })
-  @ArrayMaxSize(10)
+  @ArrayMaxSize(10, { message: 'MAXIMUM_OF_FILES_10' }) //локалиция ошибки из enum
   files?: number[];
-
 }

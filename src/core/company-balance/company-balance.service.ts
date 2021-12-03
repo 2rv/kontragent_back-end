@@ -21,7 +21,7 @@ export class CompanyBalanceService {
     const companyBalance =
       await this.companyBalanceRepository.getCompanyBalanceByCompany(company);
 
-    const newBalance = companyBalance.amount - amount; 
+    const newBalance = companyBalance.amount - amount;
 
     if (newBalance < 0) {
       throw new BadRequestException(COMPANY_BALANCE_ERROR.NOT_ENOUGH_MONEY);
@@ -39,18 +39,18 @@ export class CompanyBalanceService {
     const companyBalance =
       await this.companyBalanceRepository.getCompanyBalanceByCompany(company);
 
-    const newBalance = Number(companyBalance.amount) + Number(amount); 
-   
-    if (newBalance < 0) {
-      throw new BadRequestException(COMPANY_BALANCE_ERROR.NOT_ENOUGH_MONEY);
-    }
+    const newBalance = Number(companyBalance.amount) + Number(amount);
 
     await this.companyBalanceRepository.updateCompanyBalance(
       company,
       newBalance,
     );
 
-    await this.paymentRepository.createPayment(company, amount, PAYMENT_TYPE.BILL_IN);
+    await this.paymentRepository.createPayment(
+      company,
+      amount,
+      PAYMENT_TYPE.BILL_IN,
+    );
   }
 
   async getCompanyBalanceInfo(

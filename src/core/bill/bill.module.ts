@@ -11,23 +11,26 @@ import { BillService } from './bill.service';
 import { CompanyBalanceService } from '../company-balance/company-balance.service';
 import { FileEntity } from '../file/file.entity';
 import { PaymentRepository } from '../payment/payment.repository';
+import { CompanyMemberEntity } from '../company-member/company-memeber.entity';
+import { CompanyMemberRepository } from '../company-member/company-member.repository';
 
 @Module({
-    imports: [
-        AuthModule,
-        CompanyBalanceModule,
-        TypeOrmModule.forFeature([
-            FileRepository,
-            FileEntity,
-            BillRepository,
-            CompanyRepository,
-            CompanyBalanceRepository,
-            PaymentRepository
-        ]),
-    ],
+  imports: [
+    AuthModule,
+    CompanyBalanceModule,
+    TypeOrmModule.forFeature([
+      FileRepository,
+      FileEntity,
+      BillRepository,
+      CompanyRepository,
+      CompanyBalanceRepository,
+      PaymentRepository,
+      CompanyMemberEntity,
+      CompanyMemberRepository,
+    ]),
+  ],
 
-    controllers: [BillController],
-    providers: [BillService, CompanyBalanceService]
+  controllers: [BillController],
+  providers: [BillService, CompanyBalanceService],
 })
 export class BillModule {}
-

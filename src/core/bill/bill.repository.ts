@@ -1,74 +1,67 @@
-import {
-    InternalServerErrorException,
-} from '@nestjs/common';
+import { InternalServerErrorException } from '@nestjs/common';
 import { Repository, EntityRepository } from 'typeorm';
 import { CompanyEntity } from '../company/company.entity';
-import {BillCompanyCompanyIdDto} from './dto/bill-company-companyId.dto'
+import { CreateBillDto } from './dto/create-bill.dto';
 import { BillEntity } from './bill.entity';
 import { BILL_STATUS } from './enum/bill-status.enum';
 import { UpdateBillDto } from './dto/update-bill.dto';
 
-
 @EntityRepository(BillEntity)
 export class BillRepository extends Repository<BillEntity> {
+  async createCompanyBill(
+    createBillDto: CreateBillDto,
+    company: CompanyEntity,
+  ): Promise<BillEntity> {
+    const { amount } = createBillDto;
 
-    async createCompanyBill(
-        billCompanyCompanyIdDto: BillCompanyCompanyIdDto,
-        company: CompanyEntity,
-    ): Promise<BillEntity> {
-
-    const {amount} = billCompanyCompanyIdDto;
-
-    const bill: BillEntity = new BillEntity()
+    const bill: BillEntity = new BillEntity();
     bill.amount = amount;
     bill.company = company;
 
     try {
-        await bill.save()
-        return bill
-    }catch(error){
-        console.log(error);
-        
-        throw new InternalServerErrorException();
-        }
+      await bill.save();
+      return bill;
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async fillCompanyBill(
+    updateBillDto: UpdateBillDto,
+    bill: BillEntity,
+  ): Promise<BillEntity> {
+    if (updateBillDto.description) {
+      bill.description = updateBillDto.description;
     }
 
-    async fillCompanyBill(
-        updateBillDto: UpdateBillDto,
-        bill: BillEntity
-    ): Promise<BillEntity> {
+    bill.status = BILL_STATUS.FILLED;
+    bill.files = [];
 
-        if(updateBillDto.description){
-            bill.description = updateBillDto.description
-        }
+    await bill.save();
+    return bill;
+  }
 
-        bill.status = BILL_STATUS.FILLED
-        bill.files = []
+  async fulfillCompanyBill(bill: BillEntity): Promise<BillEntity> {
+    bill.status = BILL_STATUS.FULFILLED;
 
-        await bill.save()
-        return bill
-    }
+    await bill.save();
+    return bill;
+  }
 
-    async fulfillCompanyBill(
-        bill: BillEntity
-    ): Promise<BillEntity> {
+  async getAdminBillList(): Promise<BillEntity[]> {
+    const query = this.createQueryBuilder('bill');
+    query.leftJoin('bill.company', 'company');
+    query.select(['bill.id', 'bill.createDate', 'company.name']);
 
-        bill.status = BILL_STATUS.FULFILLED
+    return await query.getMany();
+  }
 
-        await bill.save()
-        return bill
-    }
+  async getCompanyBillList(company: CompanyEntity): Promise<BillEntity[]> {
+    const query = this.createQueryBuilder('bill');
+    query.leftJoin('bill.company', 'company');
+    query.where('company.id = :companyId', { companyId: company.id });
+    query.select(['bill.id', 'bill.amount', 'bill.createDate', 'bill.status']);
 
-    async getAdminBillList(): Promise<BillEntity[]>{
-        const query = this.createQueryBuilder('bill');
-        query.leftJoin('bill.company', 'company');
-        
-        query.select([
-            'bill.id',
-            'bill.createDate',
-            'company.name'
-        ]);
-
-        return await query.getMany();
-    }
+    return await query.getMany();
+  }
 }

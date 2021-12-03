@@ -71,10 +71,7 @@ export class FileRepository extends Repository<FileEntity> {
     await file.save();
   }
 
-  async assignFileToBillById(
-    bill: BillEntity,
-    fileId: number,
-  ): Promise<void> {
+  async assignFileToBillById(bill: BillEntity, fileId: number): Promise<void> {
     const file = await this.findOne({ where: { id: fileId } });
     if (!file) {
       throw new BadRequestException(FILE_ERROR.FILE_NOT_FOUND);
@@ -82,8 +79,7 @@ export class FileRepository extends Repository<FileEntity> {
 
     file.bill = bill;
 
-    await file.save()
-
+    await file.save();
   }
 
   async getRevisionDescriptionFileList(revision: RevisionEntity) {

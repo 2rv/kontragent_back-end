@@ -1,17 +1,17 @@
 import {
-    Entity,
-    BaseEntity,
-    PrimaryGeneratedColumn,
-    Column,
-    ManyToOne,
-    OneToMany,
-    CreateDateColumn
+  Entity,
+  BaseEntity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+  CreateDateColumn,
 } from 'typeorm';
 import { CompanyEntity } from '../company/company.entity';
 import { FileEntity } from '../file/file.entity';
-import {BILL_STATUS} from './enum/bill-status.enum'
+import { BILL_STATUS } from './enum/bill-status.enum';
 
-@Entity({ name: 'bill' })  
+@Entity({ name: 'bill' })
 export class BillEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -45,4 +45,3 @@ export class BillEntity extends BaseEntity {
 
   @CreateDateColumn() createDate: string;
 }
-
