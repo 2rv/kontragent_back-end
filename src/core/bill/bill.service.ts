@@ -70,4 +70,8 @@ export class BillService {
 
     return { list };
   }
+
+  async getAdminBillInfo(bill: BillEntity): Promise<void> {
+    await this.billRepository.getAdminBillInfo(bill);
+  }
 }

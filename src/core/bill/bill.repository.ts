@@ -64,4 +64,23 @@ export class BillRepository extends Repository<BillEntity> {
 
     return await query.getMany();
   }
+
+  async getAdminBillInfo(bill: BillEntity): Promise<BillEntity> {
+    const adminBill = await this.createQueryBuilder('bill')
+      .leftJoin('bill.company', 'company')
+      .leftJoin('bill.files', 'files')
+      .where('bill.id = :id', { id: bill.id })
+      .select([
+        'bill.id',
+        'bill.status',
+        'bill.createDate',
+        'bill.amount',
+        'bill.description',
+        'company.name',
+        'files',
+      ])
+      .getOne();
+
+    return adminBill;
+  }
 }

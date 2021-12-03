@@ -68,4 +68,11 @@ export class BillController {
   ): Promise<GetCompanyBillListDto> {
     return this.billService.getCompanyBillList(company);
   }
+
+  @Get('/:billId')
+  @Roles(USER_ROLE.ADMIN)
+  @UseGuards(AuthGuard(), AccountGuard, BillGuard)
+  getAdminBillInfo(@GetBill() bill: BillEntity): Promise<void> {
+    return this.billService.getAdminBillInfo(bill);
+  }
 }
