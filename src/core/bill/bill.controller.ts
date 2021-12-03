@@ -29,7 +29,7 @@ export class BillController {
   constructor(private billService: BillService) {}
 
   @Post('/company/:companyId/')
-  @UseGuards(AuthGuard(), AccountGuard, CompanyMemberGuard, CompanyGuard)
+  @UseGuards(AuthGuard(), AccountGuard, CompanyGuard, CompanyMemberGuard)
   createCompanyBill(
     @Body(ValidationPipe) createBillDto: CreateBillDto,
     @GetCompany() company: CompanyEntity,
