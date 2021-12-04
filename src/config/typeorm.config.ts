@@ -15,6 +15,7 @@ import { ReferalMemberEntity } from '../core/referal-member/referal-member.entit
 import { ReferalAchievementEntity } from '../core/referal-achievement/referal-achievement.entity';
 import { PostEntity } from '../core/post/post.entity';
 import { CommentEntity } from '../core/comment/comment.entity';
+import { BillEntity } from 'src/core/bill/bill.entity';
 import { KontragentEntity } from 'src/core/kontragent/kontragent.entity';
 
 const DATABASE_CONFIG = config.get('DATABASE');
@@ -35,6 +36,7 @@ export const ApiEntities = [
   ReferalAchievementEntity,
   PostEntity,
   CommentEntity,
+  BillEntity,
   KontragentEntity,
 ];
 
@@ -43,6 +45,6 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   url: process.env.DATABASE_URL || DATABASE_CONFIG.URL,
   entities: ApiEntities,
   ssl: { rejectUnauthorized: false },
-  // logging: ['query', 'error'],
+  logging: ['query', 'error'],
   synchronize: process.env.TYPEORM_SYNC || DATABASE_CONFIG.SYNCHRONIZE,
 };

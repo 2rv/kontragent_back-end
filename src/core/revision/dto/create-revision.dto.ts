@@ -25,7 +25,7 @@ export class CreateRevisionDto {
 
   @IsOptional()
   @IsNumber({}, { each: true })
-  @ArrayMaxSize(10)
+  @ArrayMaxSize(10, { message: 'MAXIMUM_OF_FILES_10' })
   fileIdList?: number[];
 
   @IsNotEmpty()

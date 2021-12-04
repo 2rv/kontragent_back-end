@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CompanyEntity } from '../company/company.entity';
+import { PAYMENT_TYPE } from '../payment/enum/payment-type.enum';
 import { PaymentRepository } from '../payment/payment.repository';
 import { CompanyBalanceEntity } from './company-balance.entity';
 import { CompanyBalanceRepository } from './company-balance.repository';
@@ -32,6 +33,24 @@ export class CompanyBalanceService {
     );
 
     await this.paymentRepository.createPayment(company, amount);
+  }
+
+  async createCompanyBalanceRefill(company: CompanyEntity, amount: number) {
+    const companyBalance =
+      await this.companyBalanceRepository.getCompanyBalanceByCompany(company);
+
+    const newBalance = Number(companyBalance.amount) + Number(amount);
+
+    await this.companyBalanceRepository.updateCompanyBalance(
+      company,
+      newBalance,
+    );
+
+    await this.paymentRepository.createPayment(
+      company,
+      amount,
+      PAYMENT_TYPE.BILL_IN,
+    );
   }
 
   async getCompanyBalanceInfo(

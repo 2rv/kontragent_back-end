@@ -43,13 +43,14 @@ export class CompanyBalanceRepository extends Repository<CompanyBalanceEntity> {
 
   async getCompanyBalanceByCompany(
     company: CompanyEntity,
-  ): Promise<CompanyBalanceEntity> {
+  ): Promise<CompanyBalanceEntity> { 
+   
     const query = this.createQueryBuilder('companyBalance');
 
     query.leftJoin('companyBalance.company', 'company');
 
     query.where('company.id = :id', { id: company.id });
-
+   
     return query.getOne();
   }
 }
