@@ -80,4 +80,8 @@ export class BillService {
     const res = await this.billRepository.getBillInfo(bill);
     return res;
   }
+
+  async deleteBill(bill: BillEntity) {
+    await this.billRepository.delete(bill.id);
+  }
 }

@@ -4,6 +4,7 @@ import {
   Post,
   Patch,
   Get,
+  Delete,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
@@ -11,9 +12,9 @@ import { AccountGuard } from '../user/guard/account.guard';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '../user/decorator/role.decorator';
 import { USER_ROLE } from '../user/enum/user-role.enum';
-import { GetAccount } from '../user/decorator/get-account.decorator';
 import { GetBill } from './decorator/get-bill.decorator';
 import { BillGuard } from './guard/bill.guard';
+import { CompanyBillGuard } from './guard/company-bill.guard';
 import { BillService } from './bill.service';
 import { BillEntity } from './bill.entity';
 import { CompanyGuard } from '../company/guard/company.guard';
@@ -61,6 +62,15 @@ export class BillController {
     return this.billService.getAdminBillList();
   }
 
+  @Get('admin/company/:companyId/bill-list')
+  @Roles(USER_ROLE.ADMIN)
+  @UseGuards(AuthGuard(), AccountGuard, CompanyGuard)
+  getAdminCompanyBillList(
+    @GetCompany() company: CompanyEntity,
+  ): Promise<GetCompanyBillListDto> {
+    return this.billService.getCompanyBillList(company);
+  }
+
   @Get('/company/:companyId/bill-list')
   @UseGuards(AuthGuard(), AccountGuard, CompanyGuard, CompanyMemberGuard)
   getCompanyBillList(
@@ -84,8 +94,16 @@ export class BillController {
     CompanyGuard,
     CompanyMemberGuard,
     BillGuard,
+    CompanyBillGuard,
   )
   getBillInfo(@GetBill() bill: BillEntity): Promise<BillEntity> {
     return this.billService.getBillInfo(bill);
+  }
+
+  @Delete('/delete/bill/:billId')
+  @Roles(USER_ROLE.ADMIN)
+  @UseGuards(AuthGuard(), AccountGuard, BillGuard)
+  deleteBill(@GetBill() bill: BillEntity) {
+    return this.billService.deleteBill(bill);
   }
 }
