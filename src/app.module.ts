@@ -20,6 +20,7 @@ import { PostModule } from './core/post/post.module';
 import { CommentModule } from './core/comment/comment.module';
 import { InviteModule } from './core/invite/invite.module';
 import { BillModule } from './core/bill/bill.module';
+import { KontragentModule } from './core/kontragent/kontragent.module';
 
 @Module({
   providers: [],
@@ -44,7 +45,8 @@ import { BillModule } from './core/bill/bill.module';
     InviteModule,
     PostModule,
     CommentModule,
-    BillModule
+    BillModule,
+    KontragentModule,
   ],
 })
 export class AppModule {}
