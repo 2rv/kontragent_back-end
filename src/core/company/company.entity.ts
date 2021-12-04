@@ -12,8 +12,9 @@ import { CompanyBalanceEntity } from '../company-balance/company-balance.entity'
 import { CompanyMemberEntity } from '../company-member/company-memeber.entity';
 import { PaymentEntity } from '../payment/payment.entity';
 import { RevisionEntity } from '../revision/revision.entity';
-import { RevisionCompanyEntity } from '../revision-company/revision-company.entity';
 import { UserEntity } from '../user/user.entity';
+import { BillEntity } from '../bill/bill.entity';
+import { KontragentEntity } from '../kontragent/kontragent.entity';
 
 @Entity({ name: 'company' })
 export class CompanyEntity extends BaseEntity {
@@ -31,6 +32,9 @@ export class CompanyEntity extends BaseEntity {
 
   @Column({ default: false })
   verificateInfo: boolean;
+
+  @Column({ default: false })
+  registered: boolean;
 
   @ManyToOne(() => UserEntity, (user) => user.company)
   user: UserEntity;
@@ -52,4 +56,10 @@ export class CompanyEntity extends BaseEntity {
 
   @OneToMany(() => RevisionEntity, (revision) => revision.company)
   revision: RevisionEntity[];
+
+  @OneToMany(() => BillEntity, (bills) => bills.company)
+  bills: BillEntity[];
+
+  @OneToMany(() => KontragentEntity, (kontragent) => kontragent.consumer)
+  kontragents: KontragentEntity[];
 }
