@@ -15,6 +15,7 @@ import { ReferalMemberEntity } from '../core/referal-member/referal-member.entit
 import { ReferalAchievementEntity } from '../core/referal-achievement/referal-achievement.entity';
 import { PostEntity } from '../core/post/post.entity';
 import { CommentEntity } from '../core/comment/comment.entity';
+import { KontragentEntity } from 'src/core/kontragent/kontragent.entity';
 
 const DATABASE_CONFIG = config.get('DATABASE');
 
@@ -34,6 +35,7 @@ export const ApiEntities = [
   ReferalAchievementEntity,
   PostEntity,
   CommentEntity,
+  KontragentEntity,
 ];
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
