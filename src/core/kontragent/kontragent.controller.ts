@@ -39,7 +39,7 @@ export class KontragentController {
     return this.kontragentService.getAllCompanyKontragents(company);
   }
 
-  @Get('/get/company/:companyId/:kontragentId')
+  @Get('/getone/company/:companyId/:kontragentId')
   @UseGuards(
     AuthGuard(),
     AccountGuard,

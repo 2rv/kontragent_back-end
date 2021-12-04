@@ -3,8 +3,10 @@ import {
   BaseEntity,
   PrimaryGeneratedColumn,
   ManyToOne,
+  OneToOne,
   CreateDateColumn,
   Column,
+  JoinColumn,
 } from 'typeorm';
 import { CompanyEntity } from '../company/company.entity';
 
@@ -22,5 +24,7 @@ export class KontragentEntity extends BaseEntity {
   @ManyToOne(() => CompanyEntity, (company) => company.kontragents)
   consumer: CompanyEntity;
 
+  @OneToOne((t) => CompanyEntity)
+  @JoinColumn()
   contractor: CompanyEntity;
 }

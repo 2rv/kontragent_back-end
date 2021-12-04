@@ -26,6 +26,7 @@ export class KontragentGuard implements CanActivate {
 
     const kontragent = await this.kontragentRepository.findOne({
       where: { id: params.kontragentId },
+      relations: ['consumer']
     });
 
     if (!kontragent) {

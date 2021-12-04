@@ -11,7 +11,7 @@ export class KontragentConsumerGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const { kontragent, company } = request;
 
-    if (kontragent.consumer !== company) {
+    if (kontragent.consumer.id !== company.id) {
       throw new NotFoundException();
     }
 

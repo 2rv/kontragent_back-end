@@ -25,14 +25,16 @@ export class KontragentService {
       inn: createKontragentDto.inn,
     });
 
-    const findKontragent: KontragentEntity =
-      await this.kontragentRepository.findOne({ contractor: company });
-
-    if (findKontragent) {
-      throw new ConflictException(KONTRAGENT_ERROR.KONTRAGENT_ALREADY_EXISTS);
-    }
-
     if (findedCompany) {
+      const findKontragent: KontragentEntity =
+        await this.kontragentRepository.findOne({
+          where: { contractor: findedCompany, consumer: company },
+        });
+
+      if (findKontragent) {
+        throw new ConflictException(KONTRAGENT_ERROR.KONTRAGENT_ALREADY_EXISTS);
+      }
+
       return await this.kontragentRepository.createKontragent(
         company,
         findedCompany,
@@ -55,7 +57,19 @@ export class KontragentService {
   async getAllCompanyKontragents(
     company: CompanyEntity,
   ): Promise<KontragentEntity[]> {
-    return this.kontragentRepository.find({ consumer: company });
+    return this.kontragentRepository
+      .createQueryBuilder('kontragent')
+      .leftJoin('kontragent.contractor', 'contractor')
+      .leftJoin('kontragent.consumer', 'consumer')
+      .where('consumer.id = :id', { id: company.id })
+      .select([
+        'kontragent.id',
+        'kontragent.createDate',
+        'kontragent.name',
+        'contractor.name',
+        'contractor.inn',
+      ])
+      .getMany();
   }
 
   async getOneKontragent(

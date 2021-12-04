@@ -21,7 +21,7 @@ export class CompanyEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   name: string;
 
   @Column({ unique: true })
