@@ -51,7 +51,7 @@ export class BillRepository extends Repository<BillEntity> {
   async getAdminBillList(): Promise<BillEntity[]> {
     const query = this.createQueryBuilder('bill');
     query.leftJoin('bill.company', 'company');
-    query.select(['bill.id', 'bill.createDate', 'company.name']);
+    query.select(['bill.id', 'bill.status', 'bill.createDate', 'company.name']);
 
     return await query.getMany();
   }
