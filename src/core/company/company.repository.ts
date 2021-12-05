@@ -38,6 +38,32 @@ export class CompanyRepository extends Repository<CompanyEntity> {
     return company;
   }
 
+  async assignUnregisteredCompany(
+    companyCreateDto: CreateCompanyDto,
+    user: UserEntity,
+    createdUnregisteredCompany: CompanyEntity,
+  ) {
+    const { name } = companyCreateDto;
+
+    createdUnregisteredCompany.name = name;
+    createdUnregisteredCompany.user = user;
+    createdUnregisteredCompany.registered = true;
+
+    try {
+      await createdUnregisteredCompany.save();
+    } catch (error) {
+      if (error.code === '23505') {
+        throw new ConflictException(COMPANY_ERROR.COMPANY_ALREADY_EXISTS);
+      } else {
+        throw new InternalServerErrorException(
+          COMPANY_ERROR.COMPANY_ALREADY_EXISTS,
+        );
+      }
+    }
+
+    return createdUnregisteredCompany;
+  }
+
   async createUnregisteredCompany(
     unregisteredCompanyCreateDto: CreateUnregisteredCompanyDto,
   ): Promise<CompanyEntity> {
@@ -80,6 +106,7 @@ export class CompanyRepository extends Repository<CompanyEntity> {
     const query = this.createQueryBuilder('company');
 
     query.leftJoin('company.companyBalance', 'companyBalance');
+    query.where('company.registered = :registered', { registered: true });
 
     query.select([
       'company.id',

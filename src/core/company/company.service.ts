@@ -27,21 +27,44 @@ export class CompanyService {
     createCompanyDto: CreateCompanyDto,
     user: UserEntity,
   ): Promise<CreateCompanyInfoDto> {
-    const company = await this.companyRepository.createCompany(
-      createCompanyDto,
-      user,
-    );
+    const createdUnregisteredCompany = await this.companyRepository.findOne({
+      where: { inn: createCompanyDto.inn, registered: false },
+    });
 
-    await this.companyMemberRepository.createCompanyMember(
-      company,
-      user,
-      COMPANY_MEMBER_ROLE.OWNER,
-    );
+    if (createdUnregisteredCompany) {
+      await this.companyRepository.assignUnregisteredCompany(
+        createCompanyDto,
+        user,
+        createdUnregisteredCompany,
+      );
 
-    await this.companyBalanceRepository.createCompanyBalance(company);
+      await this.companyMemberRepository.createCompanyMember(
+        createdUnregisteredCompany,
+        user,
+        COMPANY_MEMBER_ROLE.OWNER,
+      );
 
-    const createCompanyInfoDto: CreateCompanyInfoDto = { id: company.id };
-    return createCompanyInfoDto;
+      const createCompanyInfoDto: CreateCompanyInfoDto = {
+        id: createdUnregisteredCompany.id,
+      };
+      return createCompanyInfoDto;
+    } else {
+      const company = await this.companyRepository.createCompany(
+        createCompanyDto,
+        user,
+      );
+
+      await this.companyMemberRepository.createCompanyMember(
+        company,
+        user,
+        COMPANY_MEMBER_ROLE.OWNER,
+      );
+
+      await this.companyBalanceRepository.createCompanyBalance(company);
+
+      const createCompanyInfoDto: CreateCompanyInfoDto = { id: company.id };
+      return createCompanyInfoDto;
+    }
   }
 
   async getCompanyInfo(company: CompanyEntity): Promise<GetCompanyInfoDto> {

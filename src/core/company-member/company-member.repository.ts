@@ -15,6 +15,18 @@ export class CompanyMemberRepository extends Repository<CompanyMemberEntity> {
     user: UserEntity,
     userCompanyRole: number,
   ): Promise<void> {
+    const alreadyCompanyMember = await this.createQueryBuilder('company-member')
+      .leftJoin('company-member.company', 'company')
+      .leftJoin('company-member.user', 'user')
+      .where('company.id = :id', { id: company.id })
+      .andWhere('user.id = :id', { id: user.id })
+      .getOne();
+
+    if (alreadyCompanyMember)
+      throw new ConflictException(
+        COMPANY_MEMBER_ERROR.USER_ALREADY_HAS_COMPANY_ACCOUNT,
+      );
+
     const companyMember: CompanyMemberEntity = new CompanyMemberEntity();
     companyMember.company = company;
     companyMember.user = user;
