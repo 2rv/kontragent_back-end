@@ -55,6 +55,8 @@ export class FileEntity extends BaseEntity {
   @OneToOne(() => PostEntity, (post: PostEntity) => post.image)
   post: PostEntity;
 
-  @ManyToOne(() => BillEntity, (bill: BillEntity) => bill.files)
+  @ManyToOne(() => BillEntity, (bill: BillEntity) => bill.files, {
+    onDelete: 'CASCADE',
+  })
   bill: BillEntity;
 }
