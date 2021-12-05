@@ -18,7 +18,7 @@ export class KontragentEntity extends BaseEntity {
   @CreateDateColumn()
   createDate: string;
 
-  @Column({ name: 'name' })
+  @Column({ name: 'name', nullable: true })
   name: string;
 
   @ManyToOne(() => CompanyEntity, (company) => company.kontragents)
