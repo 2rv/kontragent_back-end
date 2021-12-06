@@ -11,6 +11,8 @@ import { BILL_STATUS } from './enum/bill-status.enum';
 import { BILL_ERROR } from './enum/bill-error.enum';
 import { CompanyBalanceService } from '../company-balance/company-balance.service';
 import { GetCompanyBillListDto } from './dto/get-company-bill-list.dto';
+import { PaymentRepository } from '../payment/payment.repository';
+import { PAYMENT_TYPE } from '../payment/enum/payment-type.enum';
 
 @Injectable()
 export class BillService {
@@ -19,6 +21,8 @@ export class BillService {
     private billRepository: BillRepository,
     @InjectRepository(FileRepository)
     private fileRepository: FileRepository,
+    @InjectRepository(PaymentRepository)
+    private paymentRepository: PaymentRepository,
     private companyBalanceService: CompanyBalanceService,
   ) {}
 
@@ -54,6 +58,12 @@ export class BillService {
     );
 
     await this.billRepository.fulfillCompanyBill(bill);
+
+    await this.paymentRepository.createPayment(
+      bill.company,
+      bill.amount,
+      PAYMENT_TYPE.BILL_IN,
+    );
   }
 
   async getAdminBillList(): Promise<GetCompanyBillListDto> {
