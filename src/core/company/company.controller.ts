@@ -73,6 +73,14 @@ export class CompanyController {
     return this.companyService.getAdminCompanyList();
   }
 
+  @Get('/admin/get/unregistered')
+  @Roles(USER_ROLE.ADMIN)
+  @UseGuards(AuthGuard(), AccountGuard)
+  getAdminCompanyUnregisteredList(): Promise<CompanyEntity[]> {
+    console.log('asd');
+    return this.companyService.getAdminCompanyUnregisteredList();
+  }
+
   @Patch('/admin/verificateInfo/:companyId')
   @Roles(USER_ROLE.ADMIN)
   @UseGuards(AuthGuard(), AccountGuard, CompanyGuard)

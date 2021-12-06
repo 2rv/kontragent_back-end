@@ -87,6 +87,10 @@ export class CompanyService {
     return { list };
   }
 
+  async getAdminCompanyUnregisteredList(): Promise<CompanyEntity[]> {
+    return await this.companyRepository.getCompanyUnregisteredList();
+  }
+
   async verifyCompanyInfo(company: CompanyEntity): Promise<void> {
     await this.companyRepository.verifyCompanyInfo(company);
   }

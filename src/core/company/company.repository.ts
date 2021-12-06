@@ -120,6 +120,25 @@ export class CompanyRepository extends Repository<CompanyEntity> {
     return await query.getMany();
   }
 
+  async getCompanyUnregisteredList(): Promise<CompanyEntity[]> {
+    const query = this.createQueryBuilder('company');
+
+    query.leftJoin('company.companyBalance', 'companyBalance');
+
+    query.select([
+      'company.id',
+      'company.name',
+      'company.inn',
+      'company.verificatePayment',
+      'company.verificateInfo',
+      'companyBalance.amount',
+    ]);
+
+    query.where('company.registered = false');
+
+    return await query.getMany();
+  }
+
   async verifyCompanyInfo(company: CompanyEntity): Promise<void> {
     try {
       this.update(company, { verificateInfo: true });
