@@ -13,7 +13,7 @@ import { USER_VERIFICATION_ERROR } from './enum/user-verification-error.enum';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from '../user/user.repository';
 import { MailService } from '../mail/mail.service';
-import { TwilioSendSMS } from 'src/common/utils/twilio';
+import { sendCodeSMS } from 'src/common/utils/sms';
 
 import { ReferalMemberService } from '../referal-member/referal-member.service';
 
@@ -85,7 +85,6 @@ export class UserVerificationService {
     };
 
     const code = randomNumberCode();
-
     console.log(`PHONE VERIFICATION CODE: ${code}`);
 
     await this.cacheManager.set(
@@ -93,7 +92,7 @@ export class UserVerificationService {
       JSON.stringify(userVerificationPhonePayload),
     );
 
-    TwilioSendSMS(code, user.phone);
+    sendCodeSMS(code, user.phone);
   }
 
   async confirmUserVerificationPhone(code: string): Promise<void> {

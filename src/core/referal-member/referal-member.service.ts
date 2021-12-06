@@ -14,7 +14,7 @@ import { USER_ROLE } from '../user/enum/user-role.enum';
 import { CompanyRepository } from '../company/company.repository';
 import { REFERAL_ACHIEVEMENT_TYPE } from '../referal-achievement/enum/referal-achievement-type.enum';
 import { ReferalAchievementService } from '../referal-achievement/referal-achievement.service';
-import { TwilioSendSMS } from '../../common/utils/twilio';
+import { sendCodeSMS } from '../../common/utils/sms';
 
 @Injectable()
 export class ReferalMemberService {
@@ -103,8 +103,8 @@ export class ReferalMemberService {
           referal,
         );
       } else {
-        TwilioSendSMS(
-          `${referal.user.firstname} ${referal.user.lastname} приглашает Вас!`,
+        sendCodeSMS(
+          `Приглашение присоединиться к реферальной системе: http://контрагент.рф/account/referal/${referal.id}`,
           sendReferalMemberLinkDto.credential,
         );
       }
@@ -115,8 +115,8 @@ export class ReferalMemberService {
           referal,
         );
       } else {
-        TwilioSendSMS(
-          `${referal.user.firstname} ${referal.user.lastname} приглашает Вас!`,
+        sendCodeSMS(
+          `Приглашение присоединиться к платформе Контрагент: http://контрагент.рф/auth/referal/${referal.id}`,
           sendReferalMemberLinkDto.credential,
         );
       }
