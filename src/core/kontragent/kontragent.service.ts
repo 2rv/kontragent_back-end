@@ -75,12 +75,13 @@ export class KontragentService {
   async getOneKontragent(
     kontragent: KontragentEntity,
   ): Promise<GetKontragentInfoDto> {
-    return {
-      id: kontragent.id,
-      name: kontragent.name,
-      consumer: kontragent.consumer,
-      contractor: kontragent.contractor,
-    };
+    return this.kontragentRepository
+      .createQueryBuilder('kontragent')
+      .leftJoin('kontragent.contractor', 'contractor')
+      .leftJoin('kontragent.consumer', 'consumer')
+      .select(['kontragent', 'contractor', 'consumer'])
+      .where('kontragent.id = :id', { id: kontragent.id })
+      .getOne();
   }
 
   async deleteKontragent(kontragent: KontragentEntity) {
