@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, UseGuards, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  Delete,
+  ValidationPipe,
+} from '@nestjs/common';
 
 import { AuthGuard } from '@nestjs/passport';
 import { AccountGuard } from '../user/guard/account.guard';
@@ -22,7 +30,7 @@ export class KontragentController {
   @Post('company/:companyId/create/kontragent')
   @UseGuards(AuthGuard(), AccountGuard, CompanyGuard, CompanyMemberGuard)
   create(
-    @Body() createKontragentDto: CreateKontragentDto,
+    @Body(ValidationPipe) createKontragentDto: CreateKontragentDto,
     @GetCompany() company: CompanyEntity,
   ): Promise<KontragentEntity> {
     return this.kontragentService.createKontragent(

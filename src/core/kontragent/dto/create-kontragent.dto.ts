@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, Matches } from 'class-validator';
 
 export class CreateKontragentDto {
   @IsNotEmpty()
@@ -7,5 +7,6 @@ export class CreateKontragentDto {
 
   @IsNotEmpty()
   @IsString()
+  @Matches(/^\d{10,10}$/, { message: 'COMPANY_INN' })
   inn: string;
 }
