@@ -17,11 +17,12 @@ import { CompanyMemberService } from './company-member.service';
 import { CompanyMemberEntity } from './company-memeber.entity';
 import { CompanyMemberRoles } from './decorator/company-member-role.decorator';
 import { GetParamCompanyMember } from './decorator/company-member-parametr.decorator';
-import { GetcompanyMemberListDto } from './dto/get-company-user-list.dto';
+import { GetCompanyMemberListDto } from './dto/get-company-user-list.dto';
+import { GetAdminCompanyMemberListDto } from './dto/get-admin-company-user-list.dto';
 import { COMPANY_MEMBER_ROLE } from './enum/company-member-role.enum';
-
 import { Roles } from '../user/decorator/role.decorator';
 import { USER_ROLE } from '../user/enum/user-role.enum';
+import { GetCompanyMember } from './decorator/get-company-member.decorator';
 
 @Controller('company-member')
 export class CompanyMemberController {
@@ -31,8 +32,12 @@ export class CompanyMemberController {
   @UseGuards(AuthGuard(), AccountGuard, CompanyGuard, CompanyMemberGuard)
   getcompanyMemberList(
     @GetCompany() company: CompanyEntity,
-  ): Promise<GetcompanyMemberListDto> {
-    return this.companyMemberService.getcompanyMemberList(company);
+    @GetCompanyMember() companyMember: CompanyMemberEntity,
+  ): Promise<GetCompanyMemberListDto> {
+    return this.companyMemberService.getcompanyMemberList(
+      company,
+      companyMember,
+    );
   }
 
   @Get('/admin/company/:companyId/member/list')
@@ -40,8 +45,8 @@ export class CompanyMemberController {
   @UseGuards(AuthGuard(), AccountGuard, CompanyGuard)
   getAdminCompanyMemberList(
     @GetCompany() company: CompanyEntity,
-  ): Promise<GetcompanyMemberListDto> {
-    return this.companyMemberService.getcompanyMemberList(company);
+  ): Promise<GetAdminCompanyMemberListDto> {
+    return this.companyMemberService.getAdminCompanyMemberList(company);
   }
 
   @Post('/company/:companyId/member/user/:credential')

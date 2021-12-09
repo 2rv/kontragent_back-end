@@ -52,6 +52,29 @@ export class CompanyMemberRepository extends Repository<CompanyMemberEntity> {
 
     query.leftJoin('companyMember.user', 'user');
     query.leftJoin('companyMember.company', 'company');
+    query.where('company.id = :id', { id: company.id });
+
+    query.select([
+      'companyMember.id',
+      'companyMember.role',
+      'user.id',
+      'user.email',
+      'user.phone',
+      'user.login',
+      'user.firstname',
+      'user.lastname',
+    ]);
+
+    return query.getMany();
+  }
+
+  async getAdminCompanyMemberList(
+    company: CompanyEntity,
+  ): Promise<CompanyMemberEntity[]> {
+    const query = this.createQueryBuilder('companyMember');
+
+    query.leftJoin('companyMember.user', 'user');
+    query.leftJoin('companyMember.company', 'company');
 
     query.where('company.id = :id', { id: company.id });
 
