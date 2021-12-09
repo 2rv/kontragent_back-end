@@ -15,12 +15,12 @@ export class CompanyMemberRepository extends Repository<CompanyMemberEntity> {
     user: UserEntity,
     userCompanyRole: number,
   ): Promise<void> {
-    const alreadyCompanyMember = await this.createQueryBuilder('company-member')
-      .leftJoin('company-member.company', 'company')
-      .leftJoin('company-member.user', 'user')
-      .where('company.id = :id', { id: company.id })
-      .andWhere('user.id = :id', { id: user.id })
-      .getOne();
+    const alreadyCompanyMember = await this.findOne({
+      where: {
+        user: { id: user.id },
+        company: { id: company.id },
+      },
+    });
 
     if (alreadyCompanyMember)
       throw new ConflictException(
