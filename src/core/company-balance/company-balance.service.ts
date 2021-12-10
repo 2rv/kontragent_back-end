@@ -17,7 +17,11 @@ export class CompanyBalanceService {
     private paymentRepository: PaymentRepository,
   ) {}
 
-  async createCompanyBalancePayment(company: CompanyEntity, amount: number) {
+  async createCompanyBalancePayment(
+    company: CompanyEntity,
+    amount: number,
+    type?: PAYMENT_TYPE,
+  ) {
     const companyBalance =
       await this.companyBalanceRepository.getCompanyBalanceByCompany(company);
 
@@ -32,7 +36,11 @@ export class CompanyBalanceService {
       newBalance,
     );
 
-    await this.paymentRepository.createPayment(company, amount);
+    await this.paymentRepository.createPayment(
+      company,
+      amount,
+      type ? type : PAYMENT_TYPE.OUT,
+    );
   }
 
   async createCompanyBalanceRefill(company: CompanyEntity, amount: number) {

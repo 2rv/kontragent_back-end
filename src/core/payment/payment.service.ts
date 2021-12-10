@@ -7,6 +7,7 @@ import { CompanyRepository } from '../company/company.repository';
 import { GetCompanyPaymentListDto } from './dto/get-company-payment-list.dto';
 import { PAYMENT_VALUTE } from './enum/payment-valute';
 import { PaymentRepository } from './payment.repository';
+import { PAYMENT_TYPE } from './enum/payment-type.enum';
 
 @Injectable()
 export class PaymentService {
@@ -54,6 +55,7 @@ export class PaymentService {
           await this.paymentRepository.createPayment(
             company,
             Number(queryData.params.orderSum),
+            PAYMENT_TYPE.PAY_IN,
           );
 
           return {

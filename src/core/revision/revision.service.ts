@@ -13,6 +13,7 @@ import { GetRevisionListInfoDto } from './dto/get-revision-list-info.dto';
 import { UpdateRevisionDto } from './dto/update-revision-info.dto';
 import { REVISION_ERROR } from './enum/revision-error.enum';
 import { REVISION_STATUS } from './enum/revision-status.enum';
+import { PAYMENT_TYPE } from '../payment/enum/payment-type.enum';
 import { RevisionEntity } from './revision.entity';
 import { RevisionRepository } from './revision.repository';
 import { RevisionCompanyService } from '../revision-company/revision-company.service';
@@ -52,6 +53,7 @@ export class RevisionService {
     await this.companyBalanceService.createCompanyBalancePayment(
       company,
       price,
+      PAYMENT_TYPE.REVISION,
     );
 
     const revision: RevisionEntity = new RevisionEntity();
@@ -87,6 +89,7 @@ export class RevisionService {
     await this.companyBalanceService.createCompanyBalancePayment(
       company,
       price,
+      PAYMENT_TYPE.REVISION,
     );
 
     const revision: RevisionEntity = new RevisionEntity();
