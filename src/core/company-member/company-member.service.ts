@@ -44,6 +44,9 @@ export class CompanyMemberService {
         COMPANY_MEMBER_ERROR.CANNOT_ADD_SUCH_A_USER,
       );
     }
+    if (!user.confirmEmail && !user.confirmPhone) {
+      throw new BadRequestException(USER_ERROR.USER_NOT_VERIFIED);
+    }
 
     const companyMember = await this.companyMemberRepository
       .createQueryBuilder('company-member')
