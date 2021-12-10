@@ -44,6 +44,10 @@ export class CompanyService {
         COMPANY_MEMBER_ROLE.OWNER,
       );
 
+      await this.companyBalanceRepository.createCompanyBalance(
+        createdUnregisteredCompany,
+      );
+
       const createCompanyInfoDto: CreateCompanyInfoDto = {
         id: createdUnregisteredCompany.id,
       };

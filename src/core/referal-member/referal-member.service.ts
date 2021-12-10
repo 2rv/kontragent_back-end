@@ -11,6 +11,7 @@ import { ReferalMemberEntity } from './referal-member.entity';
 import { ReferalMemberRepository } from './referal-member.repository';
 import { REFERAL_MEMBER_ERROR } from './enum/referal-member-enum';
 import { USER_ROLE } from '../user/enum/user-role.enum';
+import { USER_ERROR } from '../user/enum/user-error.enum';
 import { CompanyRepository } from '../company/company.repository';
 import { REFERAL_ACHIEVEMENT_TYPE } from '../referal-achievement/enum/referal-achievement-type.enum';
 import { ReferalAchievementService } from '../referal-achievement/referal-achievement.service';
@@ -147,6 +148,10 @@ export class ReferalMemberService {
     //ПРОВЕРКА НА АДМИНА
     if (user.role === USER_ROLE.ADMIN)
       throw new BadRequestException(REFERAL_MEMBER_ERROR.CANNOT_JOIN_AS_ADMIN);
+
+    //ПРОВЕРКА НА ВЕРИФИЦИРОВАННОСТЬ
+    if (!user.confirmEmail && !user.confirmPhone)
+      throw new BadRequestException(USER_ERROR.USER_NOT_VERIFIED);
 
     //ПРОВЕРКА НА СОТРУДНИКА КОМПАНИИ
     const referalUserCompany =
