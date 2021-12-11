@@ -43,5 +43,8 @@ export class BillEntity extends BaseEntity {
   })
   description?: string;
 
-  @CreateDateColumn() createDate: string;
+  @CreateDateColumn({
+    type: 'timestamptz',
+  })
+  createDate: string;
 }

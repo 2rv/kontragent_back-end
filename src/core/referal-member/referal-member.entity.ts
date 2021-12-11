@@ -17,7 +17,9 @@ export class ReferalMemberEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    type: 'timestamptz',
+  })
   createDate: number;
 
   @OneToOne(() => UserEntity, (user) => user.referalMember)

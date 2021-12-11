@@ -54,7 +54,9 @@ export class UserEntity extends BaseEntity {
   })
   role: USER_ROLE;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    type: 'timestamptz',
+  })
   createDate: string;
 
   @Column({ default: false })
