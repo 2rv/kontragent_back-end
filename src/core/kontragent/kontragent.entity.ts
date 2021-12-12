@@ -15,7 +15,9 @@ export class KontragentEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    type: 'timestamptz',
+  })
   createDate: string;
 
   @Column({ name: 'name', nullable: true })

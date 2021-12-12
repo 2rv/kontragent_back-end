@@ -1,5 +1,5 @@
 DATABASE:
-  URL: EN
+  URL: postgres://postgres:password@localhost:5432/postgres
 
 CACHE:
   HOST: 'localhost'
@@ -13,3 +13,14 @@ MAIL:
   MAIL_HOST: 'smtp.mail.ru'
   MAIL_PORT: 465
   MAIL_SERVICE: 'Mail.ru'
+
+AWS:
+  SECRET_ACCESS_KEY: 'dGApIL+MRcG5bFYmrze//3gOR25vAB0YFF2ydq8U'
+  ACCESS_KEY_ID: 'AKIAX7CIUBVQ6B4QXYEX'
+  REGION: 'us-east-2'
+  BUCKET_NAME: 'kontragent'
+  ACL: 'public-read'
+
+UNITPAY:
+  PAYMENT_SIGNATURE: 'ab9e5fac77bdfe33049d29ea9ff87b2a'
+  PAYMENT_ID: '437111-09b41'

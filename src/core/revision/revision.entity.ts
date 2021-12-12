@@ -49,7 +49,9 @@ export class RevisionEntity extends BaseEntity {
   @ManyToOne(() => UserEntity, (user) => user.revision)
   creator: UserEntity;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    type: 'timestamptz',
+  })
   createDate: string;
 
   @Column({ default: false })

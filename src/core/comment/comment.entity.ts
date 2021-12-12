@@ -5,7 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
   CreateDateColumn,
-  BaseEntity
+  BaseEntity,
 } from 'typeorm';
 
 import { PostEntity } from '../post/post.entity';
@@ -22,7 +22,7 @@ export class CommentEntity extends BaseEntity {
   text!: string;
 
   @CreateDateColumn({
-    readonly: true,
+    type: 'timestamptz',
   })
   createDate: string;
 

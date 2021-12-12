@@ -24,7 +24,9 @@ export class PaymentEntity extends BaseEntity {
   })
   amount: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    type: 'timestamptz',
+  })
   createDate: number;
 
   @Column({

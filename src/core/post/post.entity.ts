@@ -18,7 +18,7 @@ export class PostEntity extends BaseEntity {
   id: number;
 
   @CreateDateColumn({
-    readonly: true,
+    type: 'timestamptz',
   })
   createDate: string;
 
