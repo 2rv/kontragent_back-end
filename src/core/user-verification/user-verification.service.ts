@@ -134,6 +134,6 @@ export class UserVerificationService {
     );
     this.cacheManager.del(code);
 
-    this.referalMemberService.createReferalMember(referal, user);
+    this.referalMemberService.createReferalMember(referal, user, true);
   }
 }

@@ -133,6 +133,7 @@ export class ReferalMemberService {
   async createReferalMember(
     referal: ReferalEntity,
     user: UserEntity,
+    newUser: boolean,
   ): Promise<ReferalMemberEntity> {
     const query = this.userRepository
       .createQueryBuilder('user')
@@ -188,11 +189,12 @@ export class ReferalMemberService {
     const newReferalMember =
       await this.referalMemberRepository.createReferalMember(referal, user);
 
-    await this.referalAchievementService.createReferalAchievement(
-      1500,
-      REFERAL_ACHIEVEMENT_TYPE.SIGNUP,
-      newReferalMember,
-    );
+    if (newUser)
+      await this.referalAchievementService.createReferalAchievement(
+        1500,
+        REFERAL_ACHIEVEMENT_TYPE.SIGNUP,
+        newReferalMember,
+      );
 
     return newReferalMember;
   }
