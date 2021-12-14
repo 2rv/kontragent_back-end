@@ -1,5 +1,5 @@
 DATABASE:
-  URL: postgres://postgres:TPYZ7ACD@localhost:5432/postgres
+  URL: postgres://postgres:TPYZ7ACD@46.36.219.174:5432/postgres
 
 CACHE:
   HOST: 'localhost'
