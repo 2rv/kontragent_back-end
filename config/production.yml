@@ -1,6 +1,5 @@
 DATABASE:
-  # URL: postgres://postgres:TPYZ7ACD@46.36.219.174:5432/postgres
-  URL: postgres://zpvcknrlpqqmxg:7faace6491a09cd829d748d7abd708bb9aec9ce34d7c75e34693f41d33647317@ec2-54-171-25-232.eu-west-1.compute.amazonaws.com:5432/dbq5136g2ls973
+  URL: postgres://postgres:TPYZ7ACD@localhost:5432/postgres
 
 CACHE:
   HOST: 'localhost'
