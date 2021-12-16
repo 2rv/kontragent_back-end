@@ -11,6 +11,7 @@ import { RevisionEntity } from '../revision/revision.entity';
 import { PostEntity } from '../post/post.entity';
 import { RevisionCompanyEntity } from '../revision-company/revision-company.entity';
 import { BillEntity } from '../bill/bill.entity';
+import { FeedbackEntity } from '../feedback/feedback.entity';
 
 @EntityRepository(FileEntity)
 export class FileRepository extends Repository<FileEntity> {
@@ -78,6 +79,20 @@ export class FileRepository extends Repository<FileEntity> {
     }
 
     file.bill = bill;
+
+    await file.save();
+  }
+
+  async assignFileToFeedbackById(
+    feedback: FeedbackEntity,
+    fileId: number,
+  ): Promise<void> {
+    const file = await this.findOne({ where: { id: fileId } });
+    if (!file) {
+      throw new BadRequestException(FILE_ERROR.FILE_NOT_FOUND);
+    }
+
+    file.feedback = feedback;
 
     await file.save();
   }
