@@ -4,6 +4,7 @@ import * as path from 'path';
 
 import { SendReferalMemberLinkDto } from '../referal-member/dto/send-referal-member-link.dto';
 import { ReferalEntity } from '../referal/referal.entity';
+import { CreateNotificationEmailDto } from '../notification/dto/create-notification-email.dto';
 
 @Injectable()
 export class MailService {
@@ -72,6 +73,25 @@ export class MailService {
         console.log(
           `SEND REFERRAL LINK TO REGISTERED USER ERROR: ${JSON.stringify(e)}`,
         );
+      });
+  }
+
+  async sendNotificationEmail(
+    createNotificationEmailDto: CreateNotificationEmailDto,
+  ) {
+    return await this.mailerService
+      .sendMail({
+        to: createNotificationEmailDto.email,
+        subject: `Сообщение от администраци платформы Контрагент`,
+        template: this.getTemplateLink('sendNotificationEmail'),
+        context: {
+          email: createNotificationEmailDto.email,
+          message: createNotificationEmailDto.message,
+          fileList: createNotificationEmailDto.fileList,
+        },
+      })
+      .catch((e) => {
+        console.log(`SEND NOTIFICATION ERROR: ${JSON.stringify(e)}`);
       });
   }
 

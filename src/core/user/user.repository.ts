@@ -51,26 +51,27 @@ export class UserRepository extends Repository<UserEntity> {
   }
 
   async getAdminUserList(account: UserEntity) {
-   return  this.createQueryBuilder('user')
-    .where("user.id != :id", {id:account.id})
-    .select([
-      'user.id',
-      'user.login',
-      'user.firstname',
-      'user.lastname',
-      'user.phone',
-      'user.email',
-      'user.confirmEmail',
-      'user.confirmPhone',
-      'user.role',
-    ])
-    .getMany();
+    return this.createQueryBuilder('user')
+      .where('user.id != :id', { id: account.id })
+      .select([
+        'user.id',
+        'user.login',
+        'user.firstname',
+        'user.lastname',
+        'user.phone',
+        'user.email',
+        'user.confirmEmail',
+        'user.confirmPhone',
+        'user.role',
+      ])
+      .getMany();
   }
 
-
-  async changeUserRole(user: UserEntity, changeUserRoleDto: ChangeUserRoleDto): Promise<void> {
-
-    user.role = changeUserRoleDto.role 
-    await user.save() 
+  async changeUserRole(
+    user: UserEntity,
+    changeUserRoleDto: ChangeUserRoleDto,
+  ): Promise<void> {
+    user.role = changeUserRoleDto.role;
+    await user.save();
   }
 }

@@ -4,15 +4,14 @@ API:
 DATABASE:
   TYPE: 'postgres'
   SYNCHRONIZE: true
-  URL: 
+  URL:
 
 CACHE:
-  HOST: 'ec2-3-213-198-205.compute-1.amazonaws.com'
-  PORT: 31679
+  HOST: 'ec2-3-234-163-200.compute-1.amazonaws.com'
+  PORT: 10269
   PASSWORD: 'pdeb811685305cf8c1bb28d6541d08d8b84190ca075f7189558595b5848891508'
   TTL: 6000000
 
 JWT:
   EXPIRES_IN: '99999h'
   SECRET: 'FKdksk12l3ldlsfdlLlsdll123l05kgjgk04jdkgn6kk2d0fkgsdk32ldovyjkxg'
-

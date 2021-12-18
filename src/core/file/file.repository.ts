@@ -11,6 +11,8 @@ import { RevisionEntity } from '../revision/revision.entity';
 import { PostEntity } from '../post/post.entity';
 import { RevisionCompanyEntity } from '../revision-company/revision-company.entity';
 import { BillEntity } from '../bill/bill.entity';
+import { NotificationEntity } from '../notification/notification.entity';
+import { AwsUploadFile } from '../../common/utils/aws';
 
 @EntityRepository(FileEntity)
 export class FileRepository extends Repository<FileEntity> {
@@ -78,6 +80,20 @@ export class FileRepository extends Repository<FileEntity> {
     }
 
     file.bill = bill;
+
+    await file.save();
+  }
+
+  async assignFileToNotificationById(
+    notification: NotificationEntity,
+    fileId: number,
+  ): Promise<void> {
+    const file = await this.findOne({ where: { id: fileId } });
+    if (!file) {
+      throw new BadRequestException(FILE_ERROR.FILE_NOT_FOUND);
+    }
+
+    file.notification = notification;
 
     await file.save();
   }
