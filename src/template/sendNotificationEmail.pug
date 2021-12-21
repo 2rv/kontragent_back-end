@@ -6,7 +6,10 @@
 </head>
 <body style="margin: 20px;">
 	<div style="line-height: 1.5; font-size: 14px; font-family: 'Roboto', sans-serif; background-color: #F0F0F0; border-radius: 10px; padding: 15px; color: #5F5B5D;">
-		<div><span><b>Сообщение:</b> #{message}</span></div>
+		<div><span>#{message}</span></div>
+	</div>
+	<div style="line-height: 1.5; font-size: 14px; font-family: 'Roboto', sans-serif; background-color: #F0F0F0; border-radius: 10px; padding: 15px; margin-top: 15px; color: #5F5B5D;">
+		<div>#{fileList.map(file => `${file.originalName} ${file.url}`).join(' ')}  </div>
 	</div>
 </body>
 </html>

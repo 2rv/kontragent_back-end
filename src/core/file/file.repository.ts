@@ -87,7 +87,7 @@ export class FileRepository extends Repository<FileEntity> {
   async assignFileToNotificationById(
     notification: NotificationEntity,
     fileId: number,
-  ): Promise<void> {
+  ): Promise<FileEntity> {
     const file = await this.findOne({ where: { id: fileId } });
     if (!file) {
       throw new BadRequestException(FILE_ERROR.FILE_NOT_FOUND);
@@ -96,6 +96,8 @@ export class FileRepository extends Repository<FileEntity> {
     file.notification = notification;
 
     await file.save();
+
+    return file;
   }
 
   async getRevisionDescriptionFileList(revision: RevisionEntity) {

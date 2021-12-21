@@ -52,24 +52,18 @@ export class NotificationService {
       createNotificationEmailDto,
       addressee,
     );
-
-    /* const ids: number[] = createNotificationEmailDto.fileList;
-    if (ids && ids.length > 0) {
-      for (const i in ids) {
-        const fileList: number = ids[i];
-        await this.fileService.createMany(notification, ids[i]);
-      }
-    }*/
+    const fileList = [];
     const ids: number[] = createNotificationEmailDto.fileList;
     if (ids && ids.length > 0) {
       for (const i in ids) {
-        await this.fileRepository.assignFileToNotificationById(
+        fileList[i] = await this.fileRepository.assignFileToNotificationById(
           notification,
           ids[i],
         );
       }
     }
 
+    createNotificationEmailDto.fileList = fileList;
     if (addressee) {
       this.mailService.sendNotificationEmail(createNotificationEmailDto);
     }

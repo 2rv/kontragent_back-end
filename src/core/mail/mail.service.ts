@@ -87,6 +87,7 @@ export class MailService {
         context: {
           email: createNotificationEmailDto.email,
           message: createNotificationEmailDto.message,
+
           fileList: createNotificationEmailDto.fileList,
         },
       })
