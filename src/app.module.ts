@@ -21,6 +21,7 @@ import { CommentModule } from './core/comment/comment.module';
 import { InviteModule } from './core/invite/invite.module';
 import { BillModule } from './core/bill/bill.module';
 import { KontragentModule } from './core/kontragent/kontragent.module';
+import { CompanyDataModule } from './core/company-data/company-data.module';
 
 @Module({
   providers: [],
@@ -47,6 +48,7 @@ import { KontragentModule } from './core/kontragent/kontragent.module';
     CommentModule,
     BillModule,
     KontragentModule,
+    CompanyDataModule,
   ],
 })
 export class AppModule {}
