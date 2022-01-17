@@ -32,4 +32,7 @@ export class CreateRevisionCompanyDto {
   fileIdList?: number[];
 
   year: CreateRevisionYearDto[];
+
+  @IsString()
+  createDate: string;
 }
