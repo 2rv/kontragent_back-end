@@ -6,6 +6,8 @@ import { Injectable } from '@nestjs/common';
 import { AwsUploadFile } from '../../common/utils/aws';
 import { UserEntity } from '../user/user.entity';
 import { GetFileDataDto } from './dto/get-file-data.dto';
+import { FilesUploadDto } from './dto/files-upload.dto';
+import { NotificationEntity } from '../notification/notification.entity';
 
 @Injectable()
 export class FileService {
@@ -35,5 +37,23 @@ export class FileService {
 
   async delete(file: FileEntity) {
     await file.remove();
+  }
+
+  async createMany(
+    notification: NotificationEntity,
+    fileList: number[],
+  ): Promise<any> {
+    const uploadedFiles = [];
+
+    for (let file of fileList) {
+      const fileUrl = await AwsUploadFile(file);
+
+      const upload = await this.fileRepository.save({
+        fileUrl: fileUrl,
+        notification: notification,
+      });
+      uploadedFiles.push(upload);
+    }
+    return uploadedFiles;
   }
 }

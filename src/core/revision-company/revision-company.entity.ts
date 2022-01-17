@@ -6,12 +6,15 @@ import {
   OneToMany,
   ManyToOne,
   CreateDateColumn,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 
 import { FileEntity } from '../file/file.entity';
 import { RevisionEntity } from '../revision/revision.entity';
 import { CompanyEntity } from '../company/company.entity';
 import { RevisionCompanyYearEntity } from '../revision-company-year/revision-company-year.entity';
+import { ReviewEntity } from '../review/review.entity';
 
 @Entity({ name: 'revision-company' })
 export class RevisionCompanyEntity extends BaseEntity {
@@ -43,4 +46,8 @@ export class RevisionCompanyEntity extends BaseEntity {
 
   @OneToMany(() => FileEntity, (file) => file.revisionDescription)
   fileDescription: FileEntity[];
+
+  @OneToOne(() => ReviewEntity, (review) => review.revisionCompany)
+  @JoinColumn()
+  review: ReviewEntity;
 }

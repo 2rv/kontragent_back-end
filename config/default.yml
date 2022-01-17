@@ -6,9 +6,13 @@ DATABASE:
   SYNCHRONIZE: true
 
 CACHE:
-  HOST: 'ec2-63-34-45-212.eu-west-1.compute.amazonaws.com'
-  PORT: 12349
-  PASSWORD: 'p8f19f1c25754952a4c14f1ed5cb91b8ef6290d27918620960d72031f0d161ceb'
+  # HOST: 'ec2-63-34-45-212.eu-west-1.compute.amazonaws.com'
+  # PORT: 12349
+  # PASSWORD: 'p8f19f1c25754952a4c14f1ed5cb91b8ef6290d27918620960d72031f0d161ceb'
+
+  HOST: 'ec2-3-234-163-200.compute-1.amazonaws.com'
+  PORT: 10269
+  PASSWORD: 'pdeb811685305cf8c1bb28d6541d08d8b84190ca075f7189558595b5848891508'
   TTL: 6000000
 
 JWT:
