@@ -22,6 +22,7 @@ import { InviteModule } from './core/invite/invite.module';
 import { BillModule } from './core/bill/bill.module';
 import { KontragentModule } from './core/kontragent/kontragent.module';
 import { FeedbackModule } from './core/feedback/feedback.module';
+import { ReviewModule } from './core/review/review.module';
 
 @Module({
   providers: [],
@@ -49,6 +50,7 @@ import { FeedbackModule } from './core/feedback/feedback.module';
     BillModule,
     KontragentModule,
     FeedbackModule,
+    ReviewModule,
   ],
 })
 export class AppModule {}
