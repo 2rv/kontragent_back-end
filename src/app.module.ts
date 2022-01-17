@@ -22,6 +22,8 @@ import { InviteModule } from './core/invite/invite.module';
 import { BillModule } from './core/bill/bill.module';
 import { KontragentModule } from './core/kontragent/kontragent.module';
 import { NotificationModule } from './core/notification/notification.module';
+import { FeedbackModule } from './core/feedback/feedback.module';
+import { ReviewModule } from './core/review/review.module';
 
 @Module({
   providers: [],
@@ -49,6 +51,8 @@ import { NotificationModule } from './core/notification/notification.module';
     BillModule,
     KontragentModule,
     NotificationModule,
+    FeedbackModule,
+    ReviewModule,
   ],
 })
 export class AppModule {}

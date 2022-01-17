@@ -15,6 +15,7 @@ import { RevisionEntity } from '../revision/revision.entity';
 import { UserEntity } from '../user/user.entity';
 import { BillEntity } from '../bill/bill.entity';
 import { KontragentEntity } from '../kontragent/kontragent.entity';
+import { ReviewEntity } from '../review/review.entity';
 
 @Entity({ name: 'company' })
 export class CompanyEntity extends BaseEntity {
@@ -62,4 +63,7 @@ export class CompanyEntity extends BaseEntity {
 
   @OneToMany(() => KontragentEntity, (kontragent) => kontragent.consumer)
   kontragents: KontragentEntity[];
+
+  @OneToMany(() => ReviewEntity, (review) => review.company)
+  review: ReviewEntity[];
 }

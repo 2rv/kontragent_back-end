@@ -18,6 +18,8 @@ import { CommentEntity } from '../core/comment/comment.entity';
 import { BillEntity } from 'src/core/bill/bill.entity';
 import { KontragentEntity } from 'src/core/kontragent/kontragent.entity';
 import { NotificationEntity } from 'src/core/notification/notification.entity';
+import { FeedbackEntity } from 'src/core/feedback/feedback.entity';
+import { ReviewEntity } from 'src/core/review/review.entity';
 
 const DATABASE_CONFIG = config.get('DATABASE');
 
@@ -40,6 +42,8 @@ export const ApiEntities = [
   BillEntity,
   KontragentEntity,
   NotificationEntity,
+  FeedbackEntity,
+  ReviewEntity,
 ];
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
