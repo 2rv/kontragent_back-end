@@ -38,7 +38,7 @@ export class RevisionController {
     @Body(ValidationPipe) createRevisionCompanyDto: CreateRevisionCompanyDto[],
     @GetCompany() company: CompanyEntity,
     @GetAccount() creator: UserEntity,
-  ): Promise<void> {
+  ): Promise<any> {
     return this.revisionService.createRevision(
       createRevisionCompanyDto,
       company,

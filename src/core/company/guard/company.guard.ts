@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { CompanyRepository } from '../company.repository';
 import { InjectRepository } from '@nestjs/typeorm';
+import { COMPANY_ERROR } from '../enum/company-error.enum';
 
 @Injectable()
 export class CompanyGuard implements CanActivate {
@@ -28,7 +29,7 @@ export class CompanyGuard implements CanActivate {
     });
 
     if (!company) {
-      throw new NotFoundException();
+      throw new NotFoundException(COMPANY_ERROR.COMPANY_NOT_FOUND);
     }
 
     request.company = company;

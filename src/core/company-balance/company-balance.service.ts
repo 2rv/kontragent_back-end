@@ -7,6 +7,7 @@ import { CompanyBalanceEntity } from './company-balance.entity';
 import { CompanyBalanceRepository } from './company-balance.repository';
 import { GetCompanyBalanceInfoDto } from './dto/get-company-balance-info.dto';
 import { COMPANY_BALANCE_ERROR } from './enum/company-balance-error.enum';
+import { ReferalPaymentService } from '../referal-payment/referal-payment.service';
 
 @Injectable()
 export class CompanyBalanceService {
@@ -15,6 +16,7 @@ export class CompanyBalanceService {
     private companyBalanceRepository: CompanyBalanceRepository,
     @InjectRepository(PaymentRepository)
     private paymentRepository: PaymentRepository,
+    private referalPaymentService: ReferalPaymentService,
   ) {}
 
   async createCompanyBalancePayment(
@@ -43,21 +45,23 @@ export class CompanyBalanceService {
     );
   }
 
-  async createCompanyBalanceRefill(company: CompanyEntity, amount: number) {
-    const companyBalance =
-      await this.companyBalanceRepository.getCompanyBalanceByCompany(company);
-
-    const newBalance = Number(companyBalance.amount) + Number(amount);
+  async createCompanyBalanceRefillPayment(
+    company: CompanyEntity,
+    amount: number,
+    paymentType: PAYMENT_TYPE,
+  ) {
+    const newBalance = Number(company.companyBalance.amount) + Number(amount);
 
     await this.companyBalanceRepository.updateCompanyBalance(
       company,
       newBalance,
     );
 
-    await this.paymentRepository.createPayment(
-      company,
+    await this.paymentRepository.createPayment(company, amount, paymentType);
+
+    await this.referalPaymentService.createCompanyReferalPayment(
       amount,
-      PAYMENT_TYPE.BILL_IN,
+      company,
     );
   }
 

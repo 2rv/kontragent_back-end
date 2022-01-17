@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { ReferalRepository } from '../referal.repository';
 import { InjectRepository } from '@nestjs/typeorm';
-import { REFERAL_ERROR } from '../enum/referal-member-error.enum';
+import { REFERAL_ERROR } from '../enum/referal-error.enum';
 
 @Injectable()
 export class ReferalGuard implements CanActivate {

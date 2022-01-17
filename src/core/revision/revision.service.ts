@@ -35,37 +35,60 @@ export class RevisionService {
     createRevisionCompaniesDto: CreateRevisionCompanyDto[],
     company: CompanyEntity,
     creator: UserEntity,
-  ): Promise<void> {
-    let price = 0;
-    const onePeriodRevisionPrice = 500;
-    const addPrice = (add: number) => (price += add);
-    const culcRevisionPrice = (years: CreateRevisionYearDto[]) => {
+  ): Promise<any> {
+    //ПРОВЕРКА НА ДОПУСТИМЫЕ ГОДА
+
+    let periods = 0;
+    const addPeriod = () => (periods = ++periods);
+    const countRevisionPeriods = (years: CreateRevisionYearDto[]) =>
       years.forEach((year) => {
-        year.firstPeriod && addPrice(onePeriodRevisionPrice);
-        year.secondPeriod && addPrice(onePeriodRevisionPrice);
-        year.thirdPeriod && addPrice(onePeriodRevisionPrice);
-        year.fourthPeriod && addPrice(onePeriodRevisionPrice);
+        year.firstPeriod && addPeriod();
+        year.secondPeriod && addPeriod();
+        year.thirdPeriod && addPeriod();
+        year.fourthPeriod && addPeriod();
       });
-    };
     createRevisionCompaniesDto.forEach((revisionCompany) => {
-      culcRevisionPrice(revisionCompany.year);
+      countRevisionPeriods(revisionCompany.year);
     });
-    await this.companyBalanceService.createCompanyBalancePayment(
-      company,
-      price,
-      PAYMENT_TYPE.REVISION,
-    );
 
-    const revision: RevisionEntity = new RevisionEntity();
-    revision.company = company;
-    revision.creator = creator;
-    revision.status = REVISION_STATUS.NEW;
-    revision.save();
+    if (periods > 12 && periods < 1)
+      throw new BadRequestException(
+        REVISION_ERROR.REVISION_PERIOD_OUT_OF_RANGE,
+      );
+    console.log(`PERIODS ${periods}`);
 
-    this.revisionCompanyService.createRevisionCompanies(
-      createRevisionCompaniesDto,
-      revision,
-    );
+    const REVISION_PRICE_POINTS = {
+      1: 60000,
+      2: 100000,
+      3: 85000,
+      4: 300000,
+      8: 540000,
+      12: 700000,
+    };
+
+    const price =
+      REVISION_PRICE_POINTS[Math.trunc(periods / 4) * 4] +
+      REVISION_PRICE_POINTS[periods % 4];
+    console.log(`PRICE ${price}`);
+
+    return price;
+
+    // await this.companyBalanceService.createCompanyBalancePayment(
+    //   company,
+    //   price,
+    //   PAYMENT_TYPE.REVISION,
+    // );
+
+    // const revision: RevisionEntity = new RevisionEntity();
+    // revision.company = company;
+    // revision.creator = creator;
+    // revision.status = REVISION_STATUS.NEW;
+    // revision.save();
+
+    // this.revisionCompanyService.createRevisionCompanies(
+    //   createRevisionCompaniesDto,
+    //   revision,
+    // );
   }
 
   async createSelfRevision(
@@ -85,7 +108,7 @@ export class RevisionService {
       });
     };
     culcRevisionPrice(createRevisionOwnCompanyDto.year);
-    
+
     await this.companyBalanceService.createCompanyBalancePayment(
       company,
       price,

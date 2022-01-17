@@ -12,7 +12,7 @@ import { UserEntity } from '../core/user/user.entity';
 import { InviteEntity } from '../core/invite/invite.entity';
 import { ReferalEntity } from '../core/referal/referal.entity';
 import { ReferalMemberEntity } from '../core/referal-member/referal-member.entity';
-import { ReferalAchievementEntity } from '../core/referal-achievement/referal-achievement.entity';
+import { ReferalPaymentEntity } from '../core/referal-payment/referal-payment.entity';
 import { PostEntity } from '../core/post/post.entity';
 import { CommentEntity } from '../core/comment/comment.entity';
 import { BillEntity } from 'src/core/bill/bill.entity';
@@ -33,7 +33,7 @@ export const ApiEntities = [
   InviteEntity,
   ReferalEntity,
   ReferalMemberEntity,
-  ReferalAchievementEntity,
+  ReferalPaymentEntity,
   PostEntity,
   CommentEntity,
   BillEntity,

@@ -7,6 +7,7 @@ import {
 
 import { ReferalEntity } from './referal.entity';
 import { UserEntity } from '../user/user.entity';
+import { REFERAL_ERROR } from './enum/referal-error.enum';
 
 @EntityRepository(ReferalEntity)
 export class ReferalRepository extends Repository<ReferalEntity> {
@@ -25,15 +26,33 @@ export class ReferalRepository extends Repository<ReferalEntity> {
     }
   }
 
-  async updateReferalBalance(
+  async subtractReferalBalance(
     referal: ReferalEntity,
-    award: number,
+    amount: number,
   ): Promise<void> {
     try {
       const currentBalance = referal.balance;
-      this.update(referal, { balance: Number(currentBalance) + award });
+      const newBalance = Number(currentBalance) - amount;
+
+      this.update(referal, { balance: newBalance });
     } catch {
-      throw new BadRequestException('CHANGE.COULDNT_UPDATE_REFERRER_BALANCE');
+      throw new BadRequestException(
+        REFERAL_ERROR.REFERAL_BALANCE_CANT_SUBTRACT,
+      );
+    }
+  }
+
+  async addReferalBalance(
+    referal: ReferalEntity,
+    amount: number,
+  ): Promise<void> {
+    try {
+      const currentBalance = referal.balance;
+      const newBalance = Number(currentBalance) + amount;
+
+      this.update(referal, { balance: newBalance });
+    } catch {
+      throw new BadRequestException(REFERAL_ERROR.REFERAL_BALANCE_CANT_ADD);
     }
   }
 

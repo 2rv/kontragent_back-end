@@ -18,14 +18,18 @@ export class BillGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
+
     const { params } = request;
+
     if (isNaN(params.billId)) {
       throw new BadRequestException();
     }
+
     const bill = await this.billRepository.findOne({
       where: { id: params.billId },
       relations: ['company'],
     });
+
     if (!bill) {
       throw new NotFoundException(BILL_ERROR.CANNOT_FIND_BILL);
     }

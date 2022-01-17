@@ -7,6 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { RevisionRepository } from '../revision.repository';
 import { CompanyEntity } from '../../company/company.entity';
+import { REVISION_ERROR } from '../enum/revision-error.enum';
 
 @Injectable()
 export class RevisionGuard implements CanActivate {
@@ -29,7 +30,7 @@ export class RevisionGuard implements CanActivate {
         });
 
     if (!revision) {
-      throw new NotFoundException();
+      throw new NotFoundException(REVISION_ERROR.REVISION_NOT_FOUND);
     }
 
     request.revision = revision;

@@ -1,7 +1,6 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CompanyEntity } from '../company/company.entity';
-import { UserEntity } from '../user/user.entity';
 import { BillRepository } from './bill.repository';
 import { FileRepository } from '../file/file.repository';
 import { CreateBillDto } from './dto/create-bill.dto';
@@ -22,7 +21,6 @@ export class BillService {
     @InjectRepository(FileRepository)
     private fileRepository: FileRepository,
     @InjectRepository(PaymentRepository)
-    private paymentRepository: PaymentRepository,
     private companyBalanceService: CompanyBalanceService,
   ) {}
 
@@ -48,20 +46,17 @@ export class BillService {
   }
 
   async fulfillCompanyBill(bill: BillEntity): Promise<void> {
-    if (bill.status === BILL_STATUS.FULFILLED) {
+    const { status, amount, company } = bill;
+    
+    if (status === BILL_STATUS.FULFILLED) {
       throw new BadRequestException(BILL_ERROR.BILL_ALREADY_FULFIELD);
     }
 
-    await this.companyBalanceService.createCompanyBalanceRefill(
-      bill.company,
-      bill.amount,
-    );
-
     await this.billRepository.fulfillCompanyBill(bill);
 
-    await this.paymentRepository.createPayment(
-      bill.company,
-      bill.amount,
+    await this.companyBalanceService.createCompanyBalanceRefillPayment(
+      company,
+      amount,
       PAYMENT_TYPE.BILL_IN,
     );
   }

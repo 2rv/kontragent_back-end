@@ -9,7 +9,7 @@ import {
 
 import { UserEntity } from '../user/user.entity';
 import { ReferalMemberEntity } from '../referal-member/referal-member.entity';
-import { ReferalAchievementEntity } from '../referal-achievement/referal-achievement.entity';
+import { ReferalPaymentEntity } from '../referal-payment/referal-payment.entity';
 
 @Entity({ name: 'referal' })
 export class ReferalEntity extends BaseEntity {
@@ -33,8 +33,8 @@ export class ReferalEntity extends BaseEntity {
   referalMember: ReferalMemberEntity[];
 
   @OneToMany(
-    () => ReferalAchievementEntity,
+    () => ReferalPaymentEntity,
     (referrerAchievement) => referrerAchievement.referal,
   )
-  referalAchievement: ReferalAchievementEntity[];
+  referalPayment: ReferalPaymentEntity[];
 }

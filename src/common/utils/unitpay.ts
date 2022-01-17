@@ -4,7 +4,7 @@ import { UnitPayConfig } from 'src/config/unitpay.config';
 
 const u = new UnitPay(UnitPayConfig);
 
-export const UnitpayGeneratePaymentLink = (
+export const unitpayGeneratePaymentLink = (
   price: number,
   orderId: number,
   paymentType: string = 'card',

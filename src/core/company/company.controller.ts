@@ -45,16 +45,16 @@ export class CompanyController {
     return this.companyService.createCompany(companyCreateDto, user);
   }
 
-  @Get('/get/:companyId')
-  @UseGuards(AuthGuard(), AccountGuard, CompanyGuard)
-  getCompany(@GetCompany() company: CompanyEntity): Promise<GetCompanyInfoDto> {
-    return this.companyService.getCompanyInfo(company);
-  }
-
   @Get('/account')
   @UseGuards(AuthGuard(), AccountGuard)
   getAccountCompanyList(@GetAccount() user: UserEntity) {
     return this.companyService.getAccountCompanyList(user);
+  }
+
+  @Get('/:companyId')
+  @UseGuards(AuthGuard(), AccountGuard, CompanyGuard)
+  getCompany(@GetCompany() company: CompanyEntity): Promise<GetCompanyInfoDto> {
+    return this.companyService.getCompanyInfo(company);
   }
 
   @Get('/admin/:userId')

@@ -9,19 +9,19 @@ import {
 import { ReferalMemberEntity } from '../referal-member/referal-member.entity';
 import { ReferalEntity } from '../referal/referal.entity';
 
-import { REFERAL_ACHIEVEMENT_TYPE } from './enum/referal-achievement-type.enum';
+import { REFERAL_PAYMENT_TYPE } from './enum/referal-payment-type.enum';
 
-@Entity({ name: 'referal-achievement' })
-export class ReferalAchievementEntity extends BaseEntity {
+@Entity({ name: 'referal-payment' })
+export class ReferalPaymentEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({
     type: 'enum',
-    enum: REFERAL_ACHIEVEMENT_TYPE,
+    enum: REFERAL_PAYMENT_TYPE,
     nullable: false,
   })
-  type: REFERAL_ACHIEVEMENT_TYPE;
+  type: REFERAL_PAYMENT_TYPE;
 
   @Column({
     type: 'decimal',
@@ -31,10 +31,10 @@ export class ReferalAchievementEntity extends BaseEntity {
 
   @ManyToOne(
     () => ReferalMemberEntity,
-    (referalMember) => referalMember.referalAchievement,
+    (referalMember) => referalMember.referalPayment,
   )
   referalMember: ReferalMemberEntity;
 
-  @ManyToOne(() => ReferalEntity, (referal) => referal.referalAchievement)
+  @ManyToOne(() => ReferalEntity, (referal) => referal.referalPayment)
   referal: ReferalEntity;
 }

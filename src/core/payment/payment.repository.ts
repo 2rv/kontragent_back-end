@@ -32,12 +32,9 @@ export class PaymentRepository extends Repository<PaymentEntity> {
   }
 
   async getPaymentByCompany(company: CompanyEntity): Promise<PaymentEntity[]> {
-    const query = this.createQueryBuilder('payment');
-
-    query.leftJoin('payment.company', 'company');
-
-    query.where('company.id = :id', { id: company.id });
-
-    return query.getMany();
+    return this.createQueryBuilder('payment')
+      .leftJoin('payment.company', 'company')
+      .where('company.id = :id', { id: company.id })
+      .getMany();
   }
 }

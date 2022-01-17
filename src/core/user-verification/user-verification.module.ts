@@ -11,8 +11,8 @@ import { UserVerificationService } from './user-verification.service';
 import { ReferalRepository } from '../referal/referal.repository';
 import { ReferalMemberRepository } from '../referal-member/referal-member.repository';
 import { ReferalMemberService } from '../referal-member/referal-member.service';
-import { ReferalAchievementRepository } from '../referal-achievement/referal-achievement.repository';
-import { ReferalAchievementModule } from '../referal-achievement/referal-achievement.module';
+import { ReferalPaymentRepository } from '../referal-payment/referal-payment.repository';
+import { ReferalAchievementModule } from '../referal-payment/referal-payment.module';
 import { CompanyRepository } from '../company/company.repository';
 
 @Module({
@@ -22,7 +22,7 @@ import { CompanyRepository } from '../company/company.repository';
       UserRepository,
       ReferalRepository,
       ReferalMemberRepository,
-      ReferalAchievementRepository,
+      ReferalPaymentRepository,
       UserEntity,
       CompanyRepository,
     ]),

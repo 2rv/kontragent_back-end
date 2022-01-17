@@ -1,4 +1,0 @@
-export enum REFERAL_ACHIEVEMENT_TYPE {
-  SIGNUP = 0,
-  PAYMENT = 1,
-}

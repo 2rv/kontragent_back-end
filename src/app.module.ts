@@ -15,7 +15,7 @@ import { CompanyBalanceModule } from './core/company-balance/company-balance.mod
 import { FileModule } from './core/file/file.module';
 import { ReferalModule } from './core/referal/referal.module';
 import { ReferalMemberModule } from './core/referal-member/referal-member.module';
-import { ReferalAchievementModule } from './core/referal-achievement/referal-achievement.module';
+import { ReferalAchievementModule } from './core/referal-payment/referal-payment.module';
 import { PostModule } from './core/post/post.module';
 import { CommentModule } from './core/comment/comment.module';
 import { InviteModule } from './core/invite/invite.module';

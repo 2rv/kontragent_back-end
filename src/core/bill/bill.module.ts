@@ -13,7 +13,10 @@ import { FileEntity } from '../file/file.entity';
 import { PaymentRepository } from '../payment/payment.repository';
 import { CompanyMemberEntity } from '../company-member/company-memeber.entity';
 import { CompanyMemberRepository } from '../company-member/company-member.repository';
-
+import { ReferalPaymentRepository } from '../referal-payment/referal-payment.repository';
+import { ReferalPaymentService } from '../referal-payment/referal-payment.service';
+import { ReferalRepository } from '../referal/referal.repository';
+import { ReferalMemberRepository } from '../referal-member/referal-member.repository';
 @Module({
   imports: [
     AuthModule,
@@ -27,10 +30,13 @@ import { CompanyMemberRepository } from '../company-member/company-member.reposi
       PaymentRepository,
       CompanyMemberEntity,
       CompanyMemberRepository,
+      ReferalPaymentRepository,
+      ReferalRepository,
+      ReferalMemberRepository,
     ]),
   ],
 
   controllers: [BillController],
-  providers: [BillService, CompanyBalanceService],
+  providers: [BillService, CompanyBalanceService, ReferalPaymentService],
 })
 export class BillModule {}

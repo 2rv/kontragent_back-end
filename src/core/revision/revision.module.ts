@@ -18,6 +18,10 @@ import { RevisionService } from './revision.service';
 import { RevisionCompanyService } from '../revision-company/revision-company.service';
 import { RevisionCompanyRepository } from '../revision-company/revision-company.repository';
 import { RevisionCompanyYearRepository } from '../revision-company-year/revision-company-year.repository';
+import { ReferalPaymentRepository } from '../referal-payment/referal-payment.repository';
+import { ReferalPaymentService } from '../referal-payment/referal-payment.service';
+import { ReferalRepository } from '../referal/referal.repository';
+import { ReferalMemberRepository } from '../referal-member/referal-member.repository';
 
 @Module({
   imports: [
@@ -36,9 +40,17 @@ import { RevisionCompanyYearRepository } from '../revision-company-year/revision
       PaymentRepository,
       RevisionCompanyRepository,
       RevisionCompanyYearRepository,
+      ReferalPaymentRepository,
+      ReferalRepository,
+      ReferalMemberRepository,
     ]),
   ],
   controllers: [RevisionController],
-  providers: [RevisionService, CompanyBalanceService, RevisionCompanyService],
+  providers: [
+    RevisionService,
+    CompanyBalanceService,
+    RevisionCompanyService,
+    ReferalPaymentService,
+  ],
 })
 export class RevisionModule {}

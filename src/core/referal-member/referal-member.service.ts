@@ -13,8 +13,8 @@ import { REFERAL_MEMBER_ERROR } from './enum/referal-member-enum';
 import { USER_ROLE } from '../user/enum/user-role.enum';
 import { USER_ERROR } from '../user/enum/user-error.enum';
 import { CompanyRepository } from '../company/company.repository';
-import { REFERAL_ACHIEVEMENT_TYPE } from '../referal-achievement/enum/referal-achievement-type.enum';
-import { ReferalAchievementService } from '../referal-achievement/referal-achievement.service';
+import { REFERAL_PAYMENT_TYPE } from '../referal-payment/enum/referal-payment-type.enum';
+import { ReferalPaymentService } from '../referal-payment/referal-payment.service';
 import { sendCodeSMS } from '../../common/utils/sms';
 
 @Injectable()
@@ -28,7 +28,7 @@ export class ReferalMemberService {
     private referalMemberRepository: ReferalMemberRepository,
     @InjectRepository(CompanyRepository)
     private companyRepository: CompanyRepository,
-    private referalAchievementService: ReferalAchievementService,
+    private referalPaymentService: ReferalPaymentService,
     private mailService: MailService,
   ) {}
 
@@ -190,9 +190,9 @@ export class ReferalMemberService {
       await this.referalMemberRepository.createReferalMember(referal, user);
 
     if (newUser)
-      await this.referalAchievementService.createReferalAchievement(
+      await this.referalPaymentService.createReferalPayment(
         1500,
-        REFERAL_ACHIEVEMENT_TYPE.SIGNUP,
+        REFERAL_PAYMENT_TYPE.SIGNUP,
         newReferalMember,
       );
 

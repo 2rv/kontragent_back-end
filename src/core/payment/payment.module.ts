@@ -11,10 +11,15 @@ import { UserEntity } from '../user/user.entity';
 import { PaymentController } from './payment.controller';
 import { PaymentRepository } from './payment.repository';
 import { PaymentService } from './payment.service';
+import { CompanyBalanceService } from '../company-balance/company-balance.service';
+import { ReferalPaymentService } from '../referal-payment/referal-payment.service';
+import { ReferalRepository } from '../referal/referal.repository';
+import { ReferalPaymentRepository } from '../referal-payment/referal-payment.repository';
+import { ReferalMemberRepository } from '../referal-member/referal-member.repository';
 
 @Module({
   controllers: [PaymentController],
-  providers: [PaymentService],
+  providers: [PaymentService, CompanyBalanceService, ReferalPaymentService],
   imports: [
     TypeOrmModule.forFeature([
       CompanyEntity,
@@ -25,6 +30,9 @@ import { PaymentService } from './payment.service';
       PaymentRepository,
       CompanyMemberEntity,
       CompanyMemberRepository,
+      ReferalRepository,
+      ReferalPaymentRepository,
+      ReferalMemberRepository,
     ]),
     AuthModule,
   ],
