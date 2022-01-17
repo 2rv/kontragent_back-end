@@ -41,6 +41,9 @@ export class CompanyEntity extends BaseEntity {
   @Column({ nullable: true })
   review: string;
 
+  //   @OneToMany(() => ReviewEntity, (review) => review.company)
+  //   review: ReviewEntity[];
+
   @CreateDateColumn({
     type: 'timestamptz',
   })
@@ -72,7 +75,4 @@ export class CompanyEntity extends BaseEntity {
 
   @OneToMany(() => KontragentEntity, (kontragent) => kontragent.consumer)
   kontragents: KontragentEntity[];
-
-  @OneToMany(() => ReviewEntity, (review) => review.company)
-  review: ReviewEntity[];
 }
