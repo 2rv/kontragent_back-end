@@ -6,6 +6,7 @@ import {
   IsOptional,
   IsString,
   MaxLength,
+  Matches,
 } from 'class-validator';
 
 import { CreateRevisionYearDto } from '../../revision-company-year/dto/create-revision-company-year.dto';
@@ -18,7 +19,7 @@ export class CreateRevisionCompanyDto {
 
   @IsNotEmpty()
   @IsString()
-  @MaxLength(30)
+  @Matches(/^\d{10,10}$/, { message: 'COMPANY_INN' })
   inn: string;
 
   @IsNotEmpty()
