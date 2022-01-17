@@ -21,6 +21,7 @@ import { CommentModule } from './core/comment/comment.module';
 import { InviteModule } from './core/invite/invite.module';
 import { BillModule } from './core/bill/bill.module';
 import { KontragentModule } from './core/kontragent/kontragent.module';
+import { CompanyDataModule } from './core/company-data/company-data.module';
 import { NotificationModule } from './core/notification/notification.module';
 import { FeedbackModule } from './core/feedback/feedback.module';
 import { ReviewModule } from './core/review/review.module';
@@ -50,6 +51,7 @@ import { ReviewModule } from './core/review/review.module';
     CommentModule,
     BillModule,
     KontragentModule,
+    CompanyDataModule,
     NotificationModule,
     FeedbackModule,
     ReviewModule,
