@@ -13,6 +13,7 @@ import { RevisionEntity } from '../revision/revision.entity';
 import { RevisionCompanyEntity } from '../revision-company/revision-company.entity';
 import { PostEntity } from '../post/post.entity';
 import { BillEntity } from '../bill/bill.entity';
+import { ReviewEntity } from '../review/review.entity';
 
 @Entity({ name: 'file' })
 export class FileEntity extends BaseEntity {
@@ -59,4 +60,7 @@ export class FileEntity extends BaseEntity {
     onDelete: 'CASCADE',
   })
   bill: BillEntity;
+
+  @ManyToOne(() => ReviewEntity, (review: ReviewEntity) => review.fileReview)
+  fileReview: ReviewEntity;
 }
