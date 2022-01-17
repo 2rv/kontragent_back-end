@@ -31,6 +31,9 @@ import { GetAccountCompanyListDto } from './dto/get-account-company-list.dto';
 
 import { UserGuard } from '../user/guard/user.guard';
 import { GetUser } from '../user/decorator/get-user.decorator';
+import { AddCompanyAdminDto } from './dto/add-company-admin.dto';
+import { GetRevision } from '../revision/decorator/get-revision.decorator';
+import { RevisionEntity } from '../revision/revision.entity';
 
 @Controller('company')
 export class CompanyController {
@@ -43,6 +46,16 @@ export class CompanyController {
     @GetAccount() user: UserEntity,
   ): Promise<CreateCompanyInfoDto> {
     return this.companyService.createCompany(companyCreateDto, user);
+  }
+
+  @Post('/admin')
+  @Roles(USER_ROLE.ADMIN)
+  @UseGuards(AuthGuard(), AccountGuard)
+  addCompanyAdmin(
+    @Body(ValidationPipe)
+    addCompanyAdminDto: AddCompanyAdminDto[],
+  ): Promise<void> {
+    return this.companyService.addCompanyAdmin(addCompanyAdminDto);
   }
 
   @Get('/get/:companyId')

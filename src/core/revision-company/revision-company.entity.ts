@@ -5,6 +5,7 @@ import {
   Column,
   OneToMany,
   ManyToOne,
+  CreateDateColumn,
   OneToOne,
   JoinColumn,
 } from 'typeorm';
@@ -28,6 +29,11 @@ export class RevisionCompanyEntity extends BaseEntity {
 
   @Column({ nullable: false })
   inn: string;
+
+  @CreateDateColumn({
+    type: 'timestamptz',
+  })
+  createDate: string;
 
   @OneToMany(
     () => RevisionCompanyYearEntity,

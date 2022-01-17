@@ -7,6 +7,7 @@ import {
   OneToMany,
   OneToOne,
   JoinColumn,
+  CreateDateColumn,
 } from 'typeorm';
 import { CompanyBalanceEntity } from '../company-balance/company-balance.entity';
 import { CompanyMemberEntity } from '../company-member/company-memeber.entity';
@@ -36,6 +37,14 @@ export class CompanyEntity extends BaseEntity {
 
   @Column({ default: false })
   registered: boolean;
+
+  @Column({ nullable: true })
+  review: string;
+
+  @CreateDateColumn({
+    type: 'timestamptz',
+  })
+  createDate: string;
 
   @ManyToOne(() => UserEntity, (user) => user.company)
   user: UserEntity;
