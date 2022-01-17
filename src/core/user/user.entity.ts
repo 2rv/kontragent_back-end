@@ -22,6 +22,7 @@ import { ReferalMemberEntity } from '../referal-member/referal-member.entity';
 import { RevisionEntity } from '../revision/revision.entity';
 import { CommentEntity } from '../comment/comment.entity';
 import { PostEntity } from '../post/post.entity';
+import { NotificationEntity } from '../notification/notification.entity';
 import { FeedbackEntity } from '../feedback/feedback.entity';
 
 @Entity({ name: 'user' })
@@ -91,6 +92,11 @@ export class UserEntity extends BaseEntity {
 
   @OneToMany(() => PostEntity, (post: PostEntity) => post.creator)
   post: PostEntity[];
+
+
+  @OneToOne(() => NotificationEntity, (notification) => notification.user)
+  @JoinColumn()
+  notification: NotificationEntity;
 
   @OneToMany(() => FeedbackEntity, (feedback: FeedbackEntity) => feedback.user)
   feedback: FeedbackEntity[];

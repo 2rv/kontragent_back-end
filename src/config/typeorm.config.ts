@@ -17,6 +17,7 @@ import { PostEntity } from '../core/post/post.entity';
 import { CommentEntity } from '../core/comment/comment.entity';
 import { BillEntity } from 'src/core/bill/bill.entity';
 import { KontragentEntity } from 'src/core/kontragent/kontragent.entity';
+import { NotificationEntity } from 'src/core/notification/notification.entity';
 import { FeedbackEntity } from 'src/core/feedback/feedback.entity';
 import { ReviewEntity } from 'src/core/review/review.entity';
 
@@ -40,6 +41,7 @@ export const ApiEntities = [
   CommentEntity,
   BillEntity,
   KontragentEntity,
+  NotificationEntity,
   FeedbackEntity,
   ReviewEntity,
 ];

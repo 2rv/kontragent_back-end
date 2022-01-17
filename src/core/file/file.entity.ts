@@ -13,6 +13,7 @@ import { RevisionEntity } from '../revision/revision.entity';
 import { RevisionCompanyEntity } from '../revision-company/revision-company.entity';
 import { PostEntity } from '../post/post.entity';
 import { BillEntity } from '../bill/bill.entity';
+import { NotificationEntity } from '../notification/notification.entity';
 import { FeedbackEntity } from '../feedback/feedback.entity';
 import { ReviewEntity } from '../review/review.entity';
 
@@ -62,8 +63,15 @@ export class FileEntity extends BaseEntity {
   })
   bill: BillEntity;
 
+  @ManyToOne(
+    () => NotificationEntity,
+    (notification: NotificationEntity) => notification.fileList,
+  )
+  notification: NotificationEntity;
+  
   @ManyToOne(() => FeedbackEntity, (feedback: FeedbackEntity) => feedback.files)
   feedback: FeedbackEntity;
+
   @ManyToOne(() => ReviewEntity, (review: ReviewEntity) => review.fileReview)
   fileReview: ReviewEntity;
 }
