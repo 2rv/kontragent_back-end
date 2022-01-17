@@ -22,6 +22,7 @@ import { ReferalMemberEntity } from '../referal-member/referal-member.entity';
 import { RevisionEntity } from '../revision/revision.entity';
 import { CommentEntity } from '../comment/comment.entity';
 import { PostEntity } from '../post/post.entity';
+import { FeedbackEntity } from '../feedback/feedback.entity';
 
 @Entity({ name: 'user' })
 export class UserEntity extends BaseEntity {
@@ -90,6 +91,9 @@ export class UserEntity extends BaseEntity {
 
   @OneToMany(() => PostEntity, (post: PostEntity) => post.creator)
   post: PostEntity[];
+
+  @OneToMany(() => FeedbackEntity, (feedback: FeedbackEntity) => feedback.user)
+  feedback: FeedbackEntity[];
 
   static async hashPassword(password: string): Promise<string> {
     const salt = await generatePasswordSalt(password);
