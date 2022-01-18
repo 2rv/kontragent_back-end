@@ -93,7 +93,6 @@ export class UserEntity extends BaseEntity {
   @OneToMany(() => PostEntity, (post: PostEntity) => post.creator)
   post: PostEntity[];
 
-
   @OneToOne(() => NotificationEntity, (notification) => notification.user)
   @JoinColumn()
   notification: NotificationEntity;

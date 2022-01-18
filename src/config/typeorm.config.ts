@@ -23,7 +23,6 @@ import { FeedbackEntity } from 'src/core/feedback/feedback.entity';
 import { ReviewEntity } from 'src/core/review/review.entity';
 
 const DATABASE_CONFIG = config.get('DATABASE');
-console.log(DATABASE_CONFIG);
 
 export const ApiEntities = [
   UserEntity,
@@ -54,6 +53,6 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   url: process.env.DATABASE_URL || DATABASE_CONFIG.URL,
   entities: ApiEntities,
   ssl: { rejectUnauthorized: false },
-  logging: ['query', 'error'],
+  //   logging: ['query', 'error'],
   synchronize: process.env.TYPEORM_SYNC || DATABASE_CONFIG.SYNCHRONIZE,
 };
