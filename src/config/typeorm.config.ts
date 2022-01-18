@@ -23,6 +23,7 @@ import { FeedbackEntity } from 'src/core/feedback/feedback.entity';
 import { ReviewEntity } from 'src/core/review/review.entity';
 
 const DATABASE_CONFIG = config.get('DATABASE');
+console.log(DATABASE_CONFIG);
 
 export const ApiEntities = [
   UserEntity,
