@@ -43,6 +43,7 @@ export class UserRecoveryService {
     };
 
     const code = randomNumberCode();
+    console.log('recovery: ', code);
 
     await this.cacheManager.set(
       code,

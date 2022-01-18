@@ -7,6 +7,6 @@ export class CreateCompanyDto {
 
   @IsNotEmpty()
   @IsString()
-  @Matches(/^\d{10,10}$/, { message: 'COMPANY_INN' })
+  @Matches(/^(\d{10}|\d{12})$/, { message: 'COMPANY_INN' })
   inn: string;
 }
