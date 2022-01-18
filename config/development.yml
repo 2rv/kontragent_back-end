@@ -16,7 +16,7 @@ AWS:
 
 MAIL:
   MAIL_LOGIN: 'kontragent-heroku@mail.ru'
-  MAIL_PASSWORD: 'nwUwJtZjRk6|j9R'
+  MAIL_PASSWORD: 'ZiN7kUNHiwk2Qeh17rP4'
   MAIL_HOST: 'smtp.mail.ru'
   MAIL_PORT: 465
   MAIL_SERVICE: 'Mail.ru'
