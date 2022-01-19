@@ -1,7 +1,9 @@
-import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsEmail, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 export class UserSettingsUpdateEmailDto {
   @IsNotEmpty()
-  @IsString()
-  @MaxLength(100)
+  @IsEmail()
+  @Transform((login) => login.toLowerCase())
+  @Transform((value) => value.trim())
   email: string;
 }

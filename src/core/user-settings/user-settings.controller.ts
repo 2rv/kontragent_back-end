@@ -4,6 +4,7 @@ import {
   UseGuards,
   Body,
   ValidationPipe,
+  UsePipes,
 } from '@nestjs/common';
 import { UserSettingsService } from './user-settings.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -31,10 +32,11 @@ export class UserSettingsController {
     );
   }
 
+  @UsePipes(new ValidationPipe({ transform: true }))
   @Patch('/email')
   @UseGuards(AuthGuard(), AccountGuard, PasswordGuard)
   updateEmail(
-    @Body(ValidationPipe)
+    @Body()
     userSettingsUpdateEmailDto: UserSettingsUpdateEmailDto,
     @GetAccount() user: UserEntity,
   ): Promise<void> {
