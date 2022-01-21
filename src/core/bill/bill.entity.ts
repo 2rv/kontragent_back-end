@@ -16,7 +16,9 @@ export class BillEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => CompanyEntity, (company) => company.bills)
+  @ManyToOne(() => CompanyEntity, (company) => company.bills, {
+    onDelete: 'CASCADE',
+  })
   company: CompanyEntity;
 
   @OneToMany(() => FileEntity, (file) => file.bill)

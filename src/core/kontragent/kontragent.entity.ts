@@ -23,10 +23,12 @@ export class KontragentEntity extends BaseEntity {
   @Column({ name: 'name', nullable: true })
   name: string;
 
-  @ManyToOne(() => CompanyEntity, (company) => company.kontragents)
-  consumer: CompanyEntity;
+  @ManyToOne(() => CompanyEntity, (company) => company.kontragents, {
+    onDelete: 'CASCADE',
+  })
+  consumer: CompanyEntity; // компания которая которая присваивает себе contractor
 
-  @OneToOne((t) => CompanyEntity)
+  @OneToOne(() => CompanyEntity, { onDelete: 'CASCADE' })
   @JoinColumn()
-  contractor: CompanyEntity;
+  contractor: CompanyEntity; // это компания на которую ссылкается consumer
 }

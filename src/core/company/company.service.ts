@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  ConflictException,
-  InternalServerErrorException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CompanyBalanceRepository } from '../company-balance/company-balance.repository';
 import { CompanyMemberRepository } from '../company-member/company-member.repository';
@@ -16,10 +11,9 @@ import { GetAccountCompanyListDto } from './dto/get-account-company-list.dto';
 import { GetAdminCompanyListDto } from './dto/get-admin-company-list.dto';
 import { GetCompanyInfoDto } from './dto/get-company-info.dto';
 import { CreateCompanyInfoDto } from './dto/create-company-info.dto';
-import { AddCompanyAdminDto } from './dto/add-company-admin.dto';
-import { COMPANY_ERROR } from './enum/company-error.enum';
+import { ImportCompaniesDto } from './dto/import-companies.dto';
 import { RevisionCompanyRepository } from '../revision-company/revision-company.repository';
-import { RevisionEntity } from '../revision/revision.entity';
+import { ReviewRepository } from '../review/review.repository';
 
 @Injectable()
 export class CompanyService {
@@ -30,6 +24,8 @@ export class CompanyService {
     private companyMemberRepository: CompanyMemberRepository,
     @InjectRepository(CompanyBalanceRepository)
     private companyBalanceRepository: CompanyBalanceRepository,
+    @InjectRepository(ReviewRepository)
+    private reviewRepository: ReviewRepository,
     @InjectRepository(RevisionCompanyRepository)
     private revisionCompanyRepository: RevisionCompanyRepository,
   ) {}
@@ -82,54 +78,39 @@ export class CompanyService {
     }
   }
 
-  async addCompanyAdmin(
-    addCompanyAdminDto: AddCompanyAdminDto[],
-  ): Promise<void> {
-    for (const i in addCompanyAdminDto) {
-      if (!addCompanyAdminDto[i].inn) {
-        return;
-      }
-
-      if (!addCompanyAdminDto[i].review) {
-        return;
-      }
-
+  async importCompanies(companiesData: ImportCompaniesDto): Promise<void> {
+    const { companies } = companiesData;
+    for (const item of companies) {
       const companyByInn = await this.companyRepository.findOne({
-        where: { inn: addCompanyAdminDto[i].inn },
+        where: { inn: item.inn },
       });
 
       if (!companyByInn) {
-        const company: CompanyEntity = new CompanyEntity();
+        const company = await this.companyRepository.save({
+          name: item.name ? item.name : `Компания ИНН ${item.inn}`,
+          inn: item.inn,
+          createDate: item.createDate,
+        });
 
-        company.name = addCompanyAdminDto[i].name;
-        company.inn = addCompanyAdminDto[i].inn;
-        if (!company.name) {
-          addCompanyAdminDto[
-            i
-          ].name = `Компания ИНН ${addCompanyAdminDto[i].inn}`;
+        await this.reviewRepository.createReview({
+          company: company,
+          review: item.review,
+          createDate: item.createDate,
+        });
+
+        console.log(`${company.id}: ${company.name} создана`);
+      } else {
+        if (item.createDate) {
+          companyByInn.createDate = item.createDate;
         }
 
-        company.review = addCompanyAdminDto[i].review;
-        company.createDate = addCompanyAdminDto[i].createDate;
-
-        await company.save();
-
-        await this.revisionCompanyRepository.createRevisionReview(
-          company,
-          addCompanyAdminDto[i].review,
-          addCompanyAdminDto[i].createDate,
-        );
-      } else {
-        companyByInn.review = addCompanyAdminDto[i].review;
-        companyByInn.createDate = addCompanyAdminDto[i].createDate;
+        await this.reviewRepository.createReview({
+          company: companyByInn,
+          review: item.review,
+          createDate: item.createDate,
+        });
 
         await companyByInn.save();
-
-        await this.revisionCompanyRepository.createRevisionReview(
-          companyByInn,
-          addCompanyAdminDto[i].review,
-          addCompanyAdminDto[i].createDate,
-        );
       }
     }
   }

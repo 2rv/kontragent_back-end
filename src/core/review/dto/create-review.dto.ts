@@ -1,14 +1,15 @@
-import { IsOptional } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { CompanyEntity } from 'src/core/company/company.entity';
-import { RevisionCompanyEntity } from 'src/core/revision-company/revision-company.entity';
-import { RevisionEntity } from 'src/core/revision/revision.entity';
 
 export class CreateReviewDto {
+  @IsNotEmpty()
   company: CompanyEntity;
 
-  @IsOptional()
-  revision?: RevisionEntity;
+  @IsNotEmpty()
+  @IsString()
+  review: string;
 
   @IsOptional()
-  revisionCompany?: RevisionCompanyEntity;
+  @IsString()
+  createDate?: string;
 }

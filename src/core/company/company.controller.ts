@@ -31,9 +31,7 @@ import { GetAccountCompanyListDto } from './dto/get-account-company-list.dto';
 
 import { UserGuard } from '../user/guard/user.guard';
 import { GetUser } from '../user/decorator/get-user.decorator';
-import { AddCompanyAdminDto } from './dto/add-company-admin.dto';
-import { GetRevision } from '../revision/decorator/get-revision.decorator';
-import { RevisionEntity } from '../revision/revision.entity';
+import { ImportCompaniesDto } from './dto/import-companies.dto';
 
 @Controller('company')
 export class CompanyController {
@@ -48,14 +46,14 @@ export class CompanyController {
     return this.companyService.createCompany(companyCreateDto, user);
   }
 
-  @Post('/admin')
+  @Post('/import')
   @Roles(USER_ROLE.ADMIN)
   @UseGuards(AuthGuard(), AccountGuard)
-  addCompanyAdmin(
+  importCompanies(
     @Body(ValidationPipe)
-    addCompanyAdminDto: AddCompanyAdminDto[],
+    companies: ImportCompaniesDto,
   ): Promise<void> {
-    return this.companyService.addCompanyAdmin(addCompanyAdminDto);
+    return this.companyService.importCompanies(companies);
   }
 
   @Get('/get/:companyId')
@@ -90,7 +88,6 @@ export class CompanyController {
   @Roles(USER_ROLE.ADMIN)
   @UseGuards(AuthGuard(), AccountGuard)
   getAdminCompanyUnregisteredList(): Promise<CompanyEntity[]> {
-    console.log('asd');
     return this.companyService.getAdminCompanyUnregisteredList();
   }
 

@@ -23,6 +23,11 @@ export class CompanyEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @CreateDateColumn({
+    type: 'timestamptz',
+  })
+  createDate: string;
+
   @Column({ unique: true, nullable: true })
   name: string;
 
@@ -38,19 +43,11 @@ export class CompanyEntity extends BaseEntity {
   @Column({ default: false })
   registered: boolean;
 
-  @Column({ nullable: true })
-  review: string;
-
-  //   @OneToMany(() => ReviewEntity, (review) => review.company)
-  //   review: ReviewEntity[];
-
-  @CreateDateColumn({
-    type: 'timestamptz',
-  })
-  createDate: string;
-
   @ManyToOne(() => UserEntity, (user) => user.company)
   user: UserEntity;
+
+  @OneToMany(() => ReviewEntity, (review) => review.company)
+  review: ReviewEntity[];
 
   @OneToMany(
     () => CompanyMemberEntity,
@@ -58,21 +55,21 @@ export class CompanyEntity extends BaseEntity {
   )
   companyMember: CompanyMemberEntity[];
 
+  @OneToMany(() => RevisionEntity, (revision) => revision.company)
+  revision: RevisionEntity[];
+
+  @OneToMany(() => KontragentEntity, (kontragent) => kontragent.consumer)
+  kontragents: KontragentEntity[]; // удаляется каскадом или если её contractor был удалён
+
   @OneToOne(
     () => CompanyBalanceEntity,
     (companyBalance) => companyBalance.company,
   )
-  companyBalance: CompanyBalanceEntity;
+  companyBalance: CompanyBalanceEntity; // удаляется каскадом
 
   @OneToMany(() => PaymentEntity, (payment) => payment.company)
-  payment: PaymentEntity[];
-
-  @OneToMany(() => RevisionEntity, (revision) => revision.company)
-  revision: RevisionEntity[];
+  payment: PaymentEntity[]; // удаляется каскадом
 
   @OneToMany(() => BillEntity, (bills) => bills.company)
-  bills: BillEntity[];
-
-  @OneToMany(() => KontragentEntity, (kontragent) => kontragent.consumer)
-  kontragents: KontragentEntity[];
+  bills: BillEntity[]; // удаляется каскадом
 }
