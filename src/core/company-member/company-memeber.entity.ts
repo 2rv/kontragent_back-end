@@ -14,7 +14,9 @@ export class CompanyMemberEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => CompanyEntity, (company) => company.companyMember)
+  @ManyToOne(() => CompanyEntity, (company) => company.companyMember, {
+    onDelete: 'SET NULL',
+  })
   company: CompanyEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.companyMember)

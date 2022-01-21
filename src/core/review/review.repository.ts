@@ -7,31 +7,12 @@ import { CompanyEntity } from '../company/company.entity';
 
 @EntityRepository(ReviewEntity)
 export class ReviewRepository extends Repository<ReviewEntity> {
-  async createReview(createReviewDto: CreateReviewDto): Promise<ReviewEntity> {
-    const review: ReviewEntity = new ReviewEntity();
-    const {
-      company,
-      revision,
-      revisionCompany,
-    }: CreateReviewDto = createReviewDto;
-
-    review.company = company;
-
-    if (revision) {
-      review.revision = revision;
-    }
-
-    if (revisionCompany) {
-      review.revisionCompany = revisionCompany;
-    }
-
+  async createReview(reviewData: CreateReviewDto): Promise<ReviewEntity> {
     try {
-      await review.save();
+      return await this.save(reviewData);
     } catch (error) {
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException(error);
     }
-
-    return review;
   }
 
   async getReviewList(company: CompanyEntity): Promise<GetReviewListItemDto[]> {

@@ -14,7 +14,9 @@ export class PaymentEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => CompanyEntity, (company) => company.payment)
+  @ManyToOne(() => CompanyEntity, (company) => company.payment, {
+    onDelete: 'CASCADE',
+  })
   company: CompanyEntity;
 
   @Column({

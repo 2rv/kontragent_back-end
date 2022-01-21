@@ -13,7 +13,9 @@ export class CompanyBalanceEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => CompanyEntity, (company) => company.companyBalance)
+  @OneToOne(() => CompanyEntity, (company) => company.companyBalance, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   company: CompanyEntity;
 

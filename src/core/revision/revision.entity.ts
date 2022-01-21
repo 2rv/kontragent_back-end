@@ -47,7 +47,9 @@ export class RevisionEntity extends BaseEntity {
   @OneToMany(() => ReviewEntity, (review) => review.revision)
   revisionReview: ReviewEntity[];
 
-  @ManyToOne(() => CompanyEntity, (company) => company.revision)
+  @ManyToOne(() => CompanyEntity, (company) => company.revision, {
+    onDelete: 'SET NULL',
+  })
   company: CompanyEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.revision)

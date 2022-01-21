@@ -7,6 +7,7 @@ import { KontragentEntity } from './kontragent.entity';
 import { CompanyEntity } from '../company/company.entity';
 import { GetKontragentInfoDto } from './dto/get-kontragent-info.dto';
 import { KONTRAGENT_ERROR } from './enum/kontragent-error.enum';
+import { ImportKontragentsDto } from './dto/import-kontragents.dto';
 
 @Injectable()
 export class KontragentService {
@@ -51,6 +52,43 @@ export class KontragentService {
         unregisteredCompany,
         createKontragentDto.name,
       );
+    }
+  }
+
+  async importKontragents(
+    company: CompanyEntity,
+    kontragentsData: ImportKontragentsDto,
+  ) {
+    const { kontragents } = kontragentsData;
+
+    for (const item of kontragents) {
+      const companyByInn = await this.companyRepository.findOne({
+        where: { inn: item.inn },
+      });
+
+      if (companyByInn) {
+        const findKontragent: KontragentEntity =
+          await this.kontragentRepository.findOne({
+            where: { contractor: companyByInn, consumer: company },
+          });
+
+        if (!findKontragent) {
+          await this.kontragentRepository.createKontragent(
+            company,
+            companyByInn,
+            item.name ? item.name : `Компания ИНН ${item.inn}`,
+          );
+        }
+      } else {
+        const unregisteredCompany: CompanyEntity =
+          await this.companyRepository.createUnregisteredCompany(item);
+
+        await this.kontragentRepository.createKontragent(
+          company,
+          unregisteredCompany,
+          item.name ? item.name : `Компания ИНН ${item.inn}`,
+        );
+      }
     }
   }
 

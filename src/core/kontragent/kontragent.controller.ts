@@ -22,6 +22,9 @@ import { GetCompany } from '../company/decorator/get-company.decorator';
 import { CompanyEntity } from '../company/company.entity';
 import { GetKontragent } from './decorators/get-kontragent.decorator';
 import { GetKontragentInfoDto } from './dto/get-kontragent-info.dto';
+import { USER_ROLE } from '../user/enum/user-role.enum';
+import { Roles } from '../user/decorator/role.decorator';
+import { ImportKontragentsDto } from './dto/import-kontragents.dto';
 
 @Controller('kontragent')
 export class KontragentController {
@@ -37,6 +40,17 @@ export class KontragentController {
       company,
       createKontragentDto,
     );
+  }
+
+  @Post('/import/:companyId')
+  @Roles(USER_ROLE.ADMIN, USER_ROLE.USER)
+  @UseGuards(AuthGuard(), AccountGuard, CompanyGuard)
+  importCompanies(
+    @GetCompany() company: CompanyEntity,
+    @Body(ValidationPipe)
+    kontragentsData: ImportKontragentsDto,
+  ): Promise<void> {
+    return this.kontragentService.importKontragents(company, kontragentsData);
   }
 
   @Get('/get/company/:companyId/kontragents')

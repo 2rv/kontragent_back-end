@@ -11,6 +11,7 @@ import { CompanyBalanceRepository } from '../company-balance/company-balance.rep
 import { CompanyBalanceEntity } from '../company-balance/company-balance.entity';
 import { UserEntity } from '../user/user.entity';
 import { RevisionCompanyRepository } from '../revision-company/revision-company.repository';
+import { ReviewRepository } from '../review/review.repository';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { RevisionCompanyRepository } from '../revision-company/revision-company.
       CompanyBalanceEntity,
       UserEntity,
       RevisionCompanyRepository,
+      ReviewRepository,
     ]),
     AuthModule,
   ],
