@@ -26,10 +26,9 @@ export class AuthController {
     return this.authService.signUp(userSignUpDto);
   }
 
+  @UsePipes(new ValidationPipe({ transform: true }))
   @Post('/login')
-  logIn(
-    @Body(ValidationPipe) userLoginDto: UserLoginDto,
-  ): Promise<LoginInfoDto> {
+  logIn(@Body() userLoginDto: UserLoginDto): Promise<LoginInfoDto> {
     return this.authService.login(userLoginDto);
   }
 

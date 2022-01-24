@@ -4,6 +4,8 @@ import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 export class UserSignUpDto {
   @IsNotEmpty()
   @IsString()
+  @Transform((login) => login.toLowerCase())
+  @Transform((value) => value.trim())
   login: string;
 
   @IsNotEmpty()
