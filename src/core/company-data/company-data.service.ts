@@ -1,5 +1,5 @@
 import { Readable } from 'stream';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CompanyDataRepository } from './company-data.repository';
 import { CompanyDataEntity } from './company-data.entity';
@@ -39,12 +39,16 @@ import { getFtsDebtors } from './actions/get-fts-debtors';
 import { getPledger } from './actions/get-pledger';
 import { getSites } from './actions/get-sites';
 import { checkPassport } from './actions/get-check-passport';
+import { KontragentRepository } from '../kontragent/kontragent.repository';
+import { KontragentEntity } from '../kontragent/kontragent.entity';
 
 @Injectable()
 export class CompanyDataService {
   constructor(
     @InjectRepository(CompanyDataRepository)
     private companyRepository: CompanyDataRepository,
+    @InjectRepository(KontragentRepository)
+    private kontragentRepository: KontragentRepository,
   ) {}
 
   async getInfo(inn: string): Promise<any> {
@@ -54,6 +58,13 @@ export class CompanyDataService {
       req: req[0],
       egrDetails: egrDetails[0],
     };
+  }
+
+  async getKontragentInfo(kontragent: KontragentEntity): Promise<any> {
+    const info = await this.kontragentRepository.getKontragent(kontragent);
+
+    if (!info) throw new BadRequestException('Контрагент не найден');
+    return this.getInfo(info.contractor.inn);
   }
 
   async getReq(inn: string): Promise<any> {

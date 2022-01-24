@@ -24,4 +24,13 @@ export class KontragentRepository extends Repository<KontragentEntity> {
 
     return kontragent;
   }
+
+  async getKontragent(kontragent: KontragentEntity): Promise<KontragentEntity> {
+    return this.createQueryBuilder('kontragent')
+      .leftJoin('kontragent.contractor', 'contractor')
+      .leftJoin('kontragent.consumer', 'consumer')
+      .select(['kontragent', 'contractor', 'consumer'])
+      .where('kontragent.id = :id', { id: kontragent.id })
+      .getOne();
+  }
 }

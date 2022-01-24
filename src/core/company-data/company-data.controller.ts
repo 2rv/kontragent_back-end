@@ -1,12 +1,17 @@
 import { Controller, Get, Param, Query, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { CompanyMemberGuard } from '../company-member/guard/company-member.guard';
 import { CompanyEntity } from '../company/company.entity';
 import { GetCompany } from '../company/decorator/get-company.decorator';
 import { CompanyGuard } from '../company/guard/company.guard';
+import { GetKontragent } from '../kontragent/decorators/get-kontragent.decorator';
+import { KontragentConsumerGuard } from '../kontragent/guard/kontragent-consumer.guard';
+import { KontragentGuard } from '../kontragent/guard/kontragent.guard';
+import { KontragentEntity } from '../kontragent/kontragent.entity';
 import { AccountGuard } from '../user/guard/account.guard';
 import { CompanyDataService } from './company-data.service';
 
-@Controller('Company-data')
+@Controller('company-data')
 export class CompanyDataController {
   constructor(private companyDataService: CompanyDataService) {}
 
@@ -14,6 +19,19 @@ export class CompanyDataController {
   @UseGuards(AuthGuard(), AccountGuard, CompanyGuard)
   getInfo(@GetCompany() company: CompanyEntity) {
     return this.companyDataService.getInfo(company.inn);
+  }
+
+  @Get('/kontragent/info/:companyId/:kontragentId')
+  @UseGuards(
+    AuthGuard(),
+    AccountGuard,
+    CompanyGuard,
+    CompanyMemberGuard,
+    KontragentGuard,
+    KontragentConsumerGuard,
+  )
+  getKontragentInfo(@GetKontragent() kontragent: KontragentEntity) {
+    return this.companyDataService.getKontragentInfo(kontragent);
   }
 
   @Get('/egr-details/:companyId')
