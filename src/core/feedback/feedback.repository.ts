@@ -35,6 +35,14 @@ export class FeedbackRepository extends Repository<FeedbackEntity> {
     return await query.getMany();
   }
 
+  async getAdminFeedbackListToday(): Promise<FeedbackEntity[]> {
+    const thisDay = new Intl.DateTimeFormat().format(new Date());
+    const query = this.createQueryBuilder('feedback')
+      .select(['feedback.id', 'feedback.title', 'feedback.createDate'])
+      .where('feedback.createDate >= :today', { today: thisDay });
+    return await query.getMany();
+  }
+
   async getAdminFeedbackInfo(
     feedback: FeedbackEntity,
   ): Promise<FeedbackEntity> {

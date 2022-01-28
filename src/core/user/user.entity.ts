@@ -67,6 +67,9 @@ export class UserEntity extends BaseEntity {
   @Column({ default: false })
   confirmPhone: boolean;
 
+  @Column({ default: true })
+  subscribeMailing: boolean;
+
   @OneToMany(() => CompanyEntity, (company) => company.user)
   company: CompanyEntity[];
 

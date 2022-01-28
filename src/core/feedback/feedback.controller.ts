@@ -39,6 +39,13 @@ export class FeedbackController {
     return this.feedbackService.getAdminFeedbackList();
   }
 
+  @Get('/today')
+  @Roles(USER_ROLE.ADMIN)
+  @UseGuards(AuthGuard(), AccountGuard)
+  getAdminFeedbackListToday(): Promise<GetAdminFeedbackListDto> {
+    return this.feedbackService.getAdminFeedbackListToday();
+  }
+
   @Get('/:feedbackId')
   @Roles(USER_ROLE.ADMIN)
   @UseGuards(AuthGuard(), AccountGuard, FeedbackGuard)

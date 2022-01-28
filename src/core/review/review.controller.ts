@@ -18,16 +18,20 @@ import { ReviewService } from './review.service';
 export class ReviewController {
   constructor(private reviewService: ReviewService) {}
 
-  @Get('/get/:reviewId')
-  @Roles(USER_ROLE.ADMIN)
-  @UseGuards(AuthGuard(), AccountGuard, ReviewGuard)
-  getReview(@GetReview() review: ReviewEntity): Promise<GetRevisionDataDto> {
-    return this.reviewService.getReview(review);
-  }
+  // @Get('/get/:reviewId')
+  // // @Roles(USER_ROLE.ADMIN)
+  // @UseGuards(AuthGuard(), AccountGuard, ReviewGuard)
+  // getReview(@GetReview() review: ReviewEntity): Promise<GetRevisionDataDto> {
+  //   console.log(review);
+
+  //   return this.reviewService.getReview(review);
+  // }
 
   @Get('/get/:companyId')
   @UseGuards(AuthGuard(), AccountGuard, CompanyGuard)
-  getReviewList(@GetCompany() company: CompanyEntity): Promise<GetReviewListDto> {
+  getReviewList(
+    @GetCompany() company: CompanyEntity,
+  ): Promise<GetReviewListDto> {
     return this.reviewService.getReviewList(company);
   }
 }
