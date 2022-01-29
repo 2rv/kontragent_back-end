@@ -6,6 +6,7 @@ import { AuthModule } from '../auth/auth.module';
 import { ReviewService } from './review.service';
 import { ReviewRepository } from './review.repository';
 import { CompanyRepository } from '../company/company.repository';
+import { KontragentRepository } from '../kontragent/kontragent.repository';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { CompanyRepository } from '../company/company.repository';
       ReviewEntity,
       ReviewRepository,
       CompanyRepository,
+      KontragentRepository,
     ]),
     AuthModule,
   ],

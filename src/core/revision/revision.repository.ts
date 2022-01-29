@@ -25,10 +25,6 @@ export class RevisionRepository extends Repository<RevisionEntity> {
     revision: RevisionEntity,
     updateRevisionDto: UpdateRevisionDto,
   ): Promise<RevisionEntity> {
-    if (updateRevisionDto.review) {
-      revision.review = updateRevisionDto.review;
-    }
-
     if (updateRevisionDto.status) {
       revision.status = updateRevisionDto.status;
     }
@@ -36,8 +32,6 @@ export class RevisionRepository extends Repository<RevisionEntity> {
     if (updateRevisionDto.additionPrice) {
       revision.additionPrice = updateRevisionDto.additionPrice;
     }
-
-    revision.fileReview = []
 
     await revision.save();
 

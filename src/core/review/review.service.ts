@@ -9,6 +9,7 @@ import {
   GetReviewListItemDto,
 } from './dto/get-review-list.dto';
 import { CompanyEntity } from '../company/company.entity';
+import { KontragentEntity } from '../kontragent/kontragent.entity';
 
 @Injectable()
 export class ReviewService {
@@ -25,9 +26,12 @@ export class ReviewService {
     return review;
   }
 
-  async getReviewList(company: CompanyEntity): Promise<GetReviewListDto> {
-    const list: GetReviewListItemDto[] =
-      await this.reviewRepository.getReviewList(company);
+  async getReviewList(kontragent: KontragentEntity): Promise<GetReviewListDto> {
+    console.log(kontragent);
+    const list = await this.reviewRepository.getReviewList(
+      kontragent.contractor,
+    );
+    console.log(list);
     return { list };
   }
 }

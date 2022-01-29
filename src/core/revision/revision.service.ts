@@ -36,6 +36,7 @@ export class RevisionService {
     company: CompanyEntity,
     creator: UserEntity,
   ): Promise<void> {
+    // подсчёт цены
     let price = 0;
     const onePeriodRevisionPrice = 500;
     const addPrice = (add: number) => (price += add);
@@ -50,12 +51,13 @@ export class RevisionService {
     createRevisionCompaniesDto.forEach((revisionCompany) => {
       culcRevisionPrice(revisionCompany.year);
     });
+
     await this.companyBalanceService.createCompanyBalancePayment(
       company,
       price,
       PAYMENT_TYPE.REVISION,
     );
-
+    // подсчёт цены
     const revision: RevisionEntity = new RevisionEntity();
     revision.company = company;
     revision.creator = creator;
@@ -85,7 +87,7 @@ export class RevisionService {
       });
     };
     culcRevisionPrice(createRevisionOwnCompanyDto.year);
-    
+
     await this.companyBalanceService.createCompanyBalancePayment(
       company,
       price,

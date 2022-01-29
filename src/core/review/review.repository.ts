@@ -17,9 +17,10 @@ export class ReviewRepository extends Repository<ReviewEntity> {
 
   async getReviewList(company: CompanyEntity): Promise<GetReviewListItemDto[]> {
     const query = this.createQueryBuilder('review');
-    query.leftJoin('review.company', 'company');
-    query.where('review.id = :id', { id: company.id });
-    query.select(['review.id', 'company']);
+    // query.leftJoin('review.company', 'company');
+    // query.leftJoinAndSelect('review.fileReview', 'fileReview');
+    // query.where('company.id = :id', { id: company.id });
+    // query.select(['review.id', 'company', 'review.review']);
     return query.getMany();
   }
 }

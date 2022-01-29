@@ -9,10 +9,8 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
-
 import { FileEntity } from '../file/file.entity';
 import { RevisionEntity } from '../revision/revision.entity';
-import { CompanyEntity } from '../company/company.entity';
 import { RevisionCompanyYearEntity } from '../revision-company-year/revision-company-year.entity';
 import { ReviewEntity } from '../review/review.entity';
 
