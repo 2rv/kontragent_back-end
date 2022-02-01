@@ -24,10 +24,10 @@ export class UpdateRevisionDto {
   @IsPositive({
     message: REVISION_VALIDATION_ERROR.ADDITIONAL_PRICE_ISNOT_NATURAL,
   })
-  additionPrice?: number;
+  price?: number;
 
   @IsOptional()
   @IsNumber({}, { each: true })
   @ArrayMaxSize(10, { message: 'MAXIMUM_OF_FILES_10' })
-  fileReviewIdList?: number[];
+  filesReview?: number[];
 }

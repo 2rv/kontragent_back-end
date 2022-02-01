@@ -20,7 +20,6 @@ import { NotificationEntity } from 'src/core/notification/notification.entity';
 import { FeedbackEntity } from 'src/core/feedback/feedback.entity';
 import { ReviewEntity } from 'src/core/review/review.entity';
 import { RevisionKontragentEntity } from 'src/core/revision-kontragent/revision-kontragent.entity';
-import { RevisionSelfEntity } from 'src/core/revision-self/revision-self.entity';
 
 const DATABASE_CONFIG = config.get('DATABASE');
 
@@ -45,15 +44,14 @@ export const ApiEntities = [
   FeedbackEntity,
   ReviewEntity,
   RevisionKontragentEntity,
-  RevisionSelfEntity,
 ];
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: DATABASE_CONFIG.TYPE,
-  url: 'postgres://postgres:pasha1neo@localhost:5432/kontragent',
-  // url: process.env.DATABASE_URL || DATABASE_CONFIG.URL,
-  // ssl: { rejectUnauthorized: false },
-  // logging: ['query', 'error'],
+  // url: 'postgres://postgres:pasha1neo@localhost:5432/kontragent',
+  url: process.env.DATABASE_URL || DATABASE_CONFIG.URL,
+  ssl: { rejectUnauthorized: false },
+  logging: ['query', 'error'],
   entities: ApiEntities,
   synchronize: process.env.TYPEORM_SYNC || DATABASE_CONFIG.SYNCHRONIZE,
 };

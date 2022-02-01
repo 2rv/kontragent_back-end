@@ -6,10 +6,10 @@ import {
   OneToOne,
   OneToMany,
   Column,
+  CreateDateColumn,
 } from 'typeorm';
 import { CompanyEntity } from '../company/company.entity';
 import { FileEntity } from '../file/file.entity';
-import { RevisionEntity } from '../revision/revision.entity';
 import { CreateRevisionSelfPeriodDto } from './dto/revision-self-period.dto';
 
 @Entity({ name: 'revision-self' })
@@ -17,9 +17,24 @@ export class RevisionSelfEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => RevisionEntity, (company) => company.revisionSelf)
-  @JoinColumn()
-  revision: RevisionEntity;
+  @CreateDateColumn({
+    type: 'timestamptz',
+  })
+  createDate: string;
+
+  // @Column({
+  //   type: 'enum',
+  //   enum: REVISION_STATUS,
+  //   default: REVISION_STATUS.NEW,
+  //   nullable: false,
+  // })
+  // status: REVISION_STATUS;
+
+  @Column({ nullable: false, default: 0, type: 'decimal' })
+  price: number;
+
+  // @ManyToOne(() => UserEntity, (user) => user.revision)
+  // creator: UserEntity;
 
   @OneToOne(() => CompanyEntity, { onDelete: 'SET NULL' }) // ссылаемся на компанию не создавая на другой стороне поля
   @JoinColumn()
@@ -31,6 +46,6 @@ export class RevisionSelfEntity extends BaseEntity {
   @Column({ nullable: false })
   description: string;
 
-  @OneToMany(() => FileEntity, (file) => file.revisionSelf)
-  files: FileEntity[];
+  // @OneToMany(() => FileEntity, (file) => file.revisionSelf)
+  // files: FileEntity[];
 }

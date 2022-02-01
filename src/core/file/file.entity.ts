@@ -15,7 +15,7 @@ import { NotificationEntity } from '../notification/notification.entity';
 import { FeedbackEntity } from '../feedback/feedback.entity';
 import { ReviewEntity } from '../review/review.entity';
 import { RevisionKontragentEntity } from '../revision-kontragent/revision-kontragent.entity';
-import { RevisionSelfEntity } from '../revision-self/revision-self.entity';
+import { RevisionEntity } from '../revision/revision.entity';
 
 @Entity({ name: 'file' })
 export class FileEntity extends BaseEntity {
@@ -51,11 +51,10 @@ export class FileEntity extends BaseEntity {
   revisionKontragent: RevisionKontragentEntity;
 
   @ManyToOne(
-    () => RevisionSelfEntity,
-    (revisionSelf: RevisionSelfEntity) => revisionSelf.files,
-    { onDelete: 'CASCADE' },
+    () => RevisionEntity,
+    (revision: RevisionEntity) => revision.filesReview,
   )
-  revisionSelf: RevisionSelfEntity;
+  revisionFilesReview: RevisionEntity;
 
   @OneToOne(() => PostEntity, (post: PostEntity) => post.image)
   post: PostEntity;

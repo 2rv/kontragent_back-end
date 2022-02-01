@@ -1,21 +1,24 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { CompanyBalanceService } from '../company-balance/company-balance.service';
 import { CompanyEntity } from '../company/company.entity';
 import { FileRepository } from '../file/file.repository';
-import {
-  GetCompanyRevisionListDto,
-  GetCompanyRevisionListItemDto,
-} from './dto/get-company-revision-list.dto';
-import { GetRevisionListInfoDto } from './dto/get-revision-list-info.dto';
-import { UpdateRevisionDto } from './dto/update-revision-info.dto';
+import { PAYMENT_TYPE } from '../payment/enum/payment-type.enum';
+import { UserEntity } from '../user/user.entity';
+
+import { RevisionRepository } from './revision.repository';
+import { RevisionEntity } from './revision.entity';
+
 import { REVISION_ERROR } from './enum/revision-error.enum';
 import { REVISION_STATUS } from './enum/revision-status.enum';
-import { PAYMENT_TYPE } from '../payment/enum/payment-type.enum';
-import { RevisionEntity } from './revision.entity';
-import { RevisionRepository } from './revision.repository';
-import { UserEntity } from '../user/user.entity';
-import { CreateRevisionKontragentDto } from './dto/create-revision-kontragent.dto';
+
+import { CreateRevisionDto } from './dto/create-revision.dto';
+import { GetRevisionListDto } from './dto/get-revision-list.dto';
+import { UpdateRevisionDto } from './dto/update-revision.dto';
 
 @Injectable()
 export class RevisionService {
@@ -27,202 +30,97 @@ export class RevisionService {
     private companyBalanceService: CompanyBalanceService,
   ) {}
 
-  async createRevisionKontragent(
-    newRevisionData: CreateRevisionKontragentDto,
-    company: CompanyEntity,
-    creator: UserEntity,
-  ): Promise<void> {
-    await this.revisionRepository.createRevisionNew(
-      newRevisionData,
-      company,
-      creator,
-    );
-  }
-
-  // --------------- старый код
-
   async createRevision(
-    createRevisionCompaniesDto: any[],
+    createRevisionDto: CreateRevisionDto,
     company: CompanyEntity,
     creator: UserEntity,
   ): Promise<void> {
-    // подсчёт цены
-    let price = 0;
-    const onePeriodRevisionPrice = 500;
-    const addPrice = (add: number) => (price += add);
-    const culcRevisionPrice = (years: any[]) => {
-      years.forEach((year) => {
-        year.firstPeriod && addPrice(onePeriodRevisionPrice);
-        year.secondPeriod && addPrice(onePeriodRevisionPrice);
-        year.thirdPeriod && addPrice(onePeriodRevisionPrice);
-        year.fourthPeriod && addPrice(onePeriodRevisionPrice);
+    try {
+      const price = createRevisionDto.kontragents.reduce((acc, item) => {
+        item.years.forEach((period) => {
+          if (period.kvartal1) acc += 500;
+          if (period.kvartal2) acc += 500;
+          if (period.kvartal3) acc += 500;
+          if (period.kvartal4) acc += 500;
+        });
+        return acc;
+      }, 0);
+
+      await this.companyBalanceService.createCompanyBalancePayment(
+        company,
+        price,
+        PAYMENT_TYPE.REVISION,
+      );
+
+      const result = await this.revisionRepository.createRevision(
+        createRevisionDto,
+        company,
+        creator,
+      );
+
+      result.revisionKontragent.map((item) => {
+        this.fileRepository.assignFileToRevisionKontragentDescriptionById(item);
       });
-    };
-    createRevisionCompaniesDto.forEach((revisionCompany) => {
-      culcRevisionPrice(revisionCompany.year);
-    });
-
-    await this.companyBalanceService.createCompanyBalancePayment(
-      company,
-      price,
-      PAYMENT_TYPE.REVISION,
-    );
-    // подсчёт цены
-    const revision: RevisionEntity = new RevisionEntity();
-    revision.company = company;
-    revision.creator = creator;
-    revision.status = REVISION_STATUS.NEW;
-    revision.save();
-
-    // this.revisionCompanyService.createRevisionCompanies(
-    //   createRevisionCompaniesDto,
-    //   revision,
-    // );
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
-  async createSelfRevision(
-    createRevisionOwnCompanyDto: any,
-    company: CompanyEntity,
-    creator: UserEntity,
-  ): Promise<void> {
-    let price = 0;
-    const onePeriodRevisionPrice = 500;
-    const addPrice = (add: number) => (price += add);
-    const culcRevisionPrice = (years: any[]) => {
-      years.forEach((year) => {
-        year.firstPeriod && addPrice(onePeriodRevisionPrice);
-        year.secondPeriod && addPrice(onePeriodRevisionPrice);
-        year.thirdPeriod && addPrice(onePeriodRevisionPrice);
-        year.fourthPeriod && addPrice(onePeriodRevisionPrice);
-      });
-    };
-    culcRevisionPrice(createRevisionOwnCompanyDto.year);
-
-    await this.companyBalanceService.createCompanyBalancePayment(
-      company,
-      price,
-      PAYMENT_TYPE.REVISION,
-    );
-
-    const revision: RevisionEntity = new RevisionEntity();
-    revision.company = company;
-    revision.creator = creator;
-    revision.status = REVISION_STATUS.NEW;
-    revision.save();
-
-    // this.revisionCompanyService.createSelfRevisionCompany(
-    //   createRevisionOwnCompanyDto,
-    //   revision,
-    //   company,
-    // );
+  async getRevisionList(company: CompanyEntity): Promise<GetRevisionListDto> {
+    const list = await this.revisionRepository.getRevisionList(company);
+    return { list };
   }
 
-  async updateRevisionReview(
+  async getRevision(revision: RevisionEntity): Promise<RevisionEntity> {
+    return await this.revisionRepository.getRevision(revision);
+  }
+
+  async getAdminRevisionList(): Promise<GetRevisionListDto> {
+    const list: RevisionEntity[] =
+      await this.revisionRepository.getAdminRevisionList();
+    return { list };
+  }
+
+  async getAdminRevision(revision: RevisionEntity): Promise<RevisionEntity> {
+    return await this.revisionRepository.getAdminRevision(revision);
+  }
+
+  async updateRevision(
     updateRevisionDto: UpdateRevisionDto,
     revision: RevisionEntity,
   ): Promise<void> {
-    await this.revisionRepository.updateRevisionReview(
+    const result = await this.revisionRepository.updateRevision(
       revision,
       updateRevisionDto,
     );
 
-    const ids: number[] = updateRevisionDto.fileReviewIdList;
-    if (ids && ids.length > 0) {
-      for (const i in ids) {
-        await this.fileRepository.assignFileToRevisionReviewById(
-          revision,
-          ids[i],
-        );
-      }
-    }
+    await this.fileRepository.assignFileToRevisionReviewById(
+      result,
+      updateRevisionDto.filesReview,
+    );
   }
 
-  async getCompanyRevisionList(
-    company: CompanyEntity,
-  ): Promise<GetCompanyRevisionListDto> {
-    const list: GetCompanyRevisionListItemDto[] =
-      await this.revisionRepository.getRevisionListByCompany(company);
-
-    return { list };
-  }
-
-  async getAccountRevisionReview(
-    revision: RevisionEntity,
-  ): Promise<RevisionEntity> {
-    const fullRevison = await this.revisionRepository
-      .createQueryBuilder('revision')
-      .leftJoin('revision.revisionCompanies', 'revisionCompanies')
-      .leftJoin('revisionCompanies.fileDescription', 'fileDescription')
-      .leftJoin('revisionCompanies.year', 'year')
-      .where('revision.id = :id', { id: revision.id })
-      .select([
-        'revision.id',
-        'revision.additionPrice',
-        'revision.createDate',
-        'revision.status',
-        'revision.review',
-        'revision.additionPrice',
-        'fileReview',
-        'revisionCompanies',
-        'year',
-        'fileDescription',
-      ])
-      .getOne();
-
-    return fullRevison;
-  }
-
-  async getAdminRevisionReview(
-    revision: RevisionEntity,
-  ): Promise<RevisionEntity> {
-    const adminRevison = await this.revisionRepository
-      .createQueryBuilder('revision')
-      .leftJoin('revision.company', 'company')
-      .leftJoin('revision.creator', 'creator')
-      .leftJoin('revision.revisionCompanies', 'revisionCompanies')
-      .leftJoin('revisionCompanies.fileDescription', 'fileDescription')
-      .leftJoin('revisionCompanies.year', 'year')
-      .where('revision.id = :id', { id: revision.id })
-      .select([
-        'revision.id',
-        'revision.createDate',
-        'revision.additionPrice',
-        'revision.status',
-        'revision.review',
-        'fileReview',
-        'company',
-        'creator',
-        'revisionCompanies',
-        'year',
-        'fileDescription',
-      ])
-      .getOne();
-
-    return adminRevison;
-  }
-
-  async getRevisionList(): Promise<GetRevisionListInfoDto> {
-    const list: RevisionEntity[] =
-      await this.revisionRepository.getRevisionList();
-    return { list };
-  }
-
-  async createRevisionReviewPayment(
+  async createRevisionPayment(
     revision: RevisionEntity,
     company: CompanyEntity,
   ): Promise<void> {
-    if (revision.status !== REVISION_STATUS.PAY) {
-      throw new BadRequestException(
-        REVISION_ERROR.REVISION_STATUS_IS_NOT_PAYMENT,
+    try {
+      if (revision.status !== REVISION_STATUS.PAY) {
+        throw new BadRequestException(
+          REVISION_ERROR.REVISION_STATUS_IS_NOT_PAYMENT,
+        );
+      }
+
+      await this.companyBalanceService.createCompanyBalancePayment(
+        company,
+        revision.price,
       );
+
+      revision.status = REVISION_STATUS.PAID;
+      revision.price = 0;
+      await revision.save();
+    } catch (error) {
+      throw new InternalServerErrorException(error);
     }
-
-    await this.companyBalanceService.createCompanyBalancePayment(
-      company,
-      revision.price,
-    );
-
-    revision.status = REVISION_STATUS.PAID;
-    await revision.save();
   }
 }
