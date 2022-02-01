@@ -9,12 +9,8 @@ import {
 import { FILE_ERROR } from './enum/file-error.enum';
 import { RevisionEntity } from '../revision/revision.entity';
 import { PostEntity } from '../post/post.entity';
-import { RevisionCompanyEntity } from '../revision-company/revision-company.entity';
 import { BillEntity } from '../bill/bill.entity';
-
 import { NotificationEntity } from '../notification/notification.entity';
-import { AwsUploadFile } from '../../common/utils/aws';
-
 import { FeedbackEntity } from '../feedback/feedback.entity';
 
 @EntityRepository(FileEntity)
@@ -46,20 +42,20 @@ export class FileRepository extends Repository<FileEntity> {
     }
   }
 
-  async assignFileToRevisionCompanyDescriptionById(
-    revisionCompany: RevisionCompanyEntity,
-    fileId: number,
-  ): Promise<void> {
-    const file = await this.findOne({ where: { id: fileId } });
+  // async assignFileToRevisionCompanyDescriptionById(
+  //   revisionCompany: RevisionCompanyEntity,
+  //   fileId: number,
+  // ): Promise<void> {
+  //   const file = await this.findOne({ where: { id: fileId } });
 
-    if (!file) {
-      throw new BadRequestException(FILE_ERROR.FILE_NOT_FOUND);
-    }
+  //   if (!file) {
+  //     throw new BadRequestException(FILE_ERROR.FILE_NOT_FOUND);
+  //   }
 
-    file.revisionDescription = revisionCompany;
+  //   file.revisionDescription = revisionCompany;
 
-    await file.save();
-  }
+  //   await file.save();
+  // }
 
   async assignFileToRevisionReviewById(
     revision: RevisionEntity,
@@ -70,8 +66,6 @@ export class FileRepository extends Repository<FileEntity> {
     if (!file) {
       throw new BadRequestException(FILE_ERROR.FILE_NOT_FOUND);
     }
-
-    file.revisionReview = revision;
 
     await file.save();
   }
@@ -102,8 +96,7 @@ export class FileRepository extends Repository<FileEntity> {
 
     return file;
   }
-  
- 
+
   async assignFileToFeedbackById(
     feedback: FeedbackEntity,
     fileId: number,

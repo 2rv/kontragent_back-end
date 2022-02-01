@@ -11,18 +11,19 @@ import { CompanyEntity } from '../company/company.entity';
 import { CompanyRepository } from '../company/company.repository';
 import { FileRepository } from '../file/file.repository';
 import { PaymentRepository } from '../payment/payment.repository';
+import { RevisionKontragentModule } from '../revision-kontragent/revision-kontragent.module';
+import { RevisionSelfModule } from '../revision-self/revision-self.module';
 import { RevisionController } from './revision.controller';
 import { RevisionEntity } from './revision.entity';
 import { RevisionRepository } from './revision.repository';
 import { RevisionService } from './revision.service';
-import { RevisionCompanyService } from '../revision-company/revision-company.service';
-import { RevisionCompanyRepository } from '../revision-company/revision-company.repository';
-import { RevisionCompanyYearRepository } from '../revision-company-year/revision-company-year.repository';
 
 @Module({
   imports: [
     AuthModule,
     CompanyBalanceModule,
+    RevisionSelfModule,
+    RevisionKontragentModule,
     TypeOrmModule.forFeature([
       FileRepository,
       RevisionRepository,
@@ -34,11 +35,9 @@ import { RevisionCompanyYearRepository } from '../revision-company-year/revision
       CompanyBalanceRepository,
       CompanyBalanceEntity,
       PaymentRepository,
-      RevisionCompanyRepository,
-      RevisionCompanyYearRepository,
     ]),
   ],
   controllers: [RevisionController],
-  providers: [RevisionService, CompanyBalanceService, RevisionCompanyService],
+  providers: [RevisionService, CompanyBalanceService],
 })
 export class RevisionModule {}

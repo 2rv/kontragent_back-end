@@ -7,10 +7,11 @@ import {
   Column,
   OneToMany,
   CreateDateColumn,
+  JoinColumn,
 } from 'typeorm';
 import { CompanyEntity } from '../company/company.entity';
 import { FileEntity } from '../file/file.entity';
-import { RevisionCompanyEntity } from '../revision-company/revision-company.entity';
+import { RevisionEntity } from '../revision/revision.entity';
 
 @Entity({ name: 'review' })
 export class ReviewEntity extends BaseEntity {
@@ -22,21 +23,18 @@ export class ReviewEntity extends BaseEntity {
   })
   createDate: string;
 
+  @Column({ name: 'review' })
+  review: string;
+
+  @OneToMany(() => FileEntity, (file) => file.fileReview, { nullable: true })
+  fileReview: FileEntity[];
+
   @ManyToOne(() => CompanyEntity, (company) => company.review, {
     onDelete: 'CASCADE',
   })
   company: CompanyEntity;
 
-  @Column({ name: 'review' })
-  review: string;
-
-  @OneToMany(() => FileEntity, (file) => file.fileReview, { nullable: true })
-  fileReview?: FileEntity[];
-
-  @OneToOne(
-    () => RevisionCompanyEntity,
-    (revisionCompany) => revisionCompany.review,
-    { nullable: true },
-  )
-  revisionCompany?: RevisionCompanyEntity;
+  @OneToOne(() => RevisionEntity, (review) => review.review)
+  @JoinColumn()
+  revision: RevisionEntity;
 }

@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
   IsNotEmpty,
@@ -7,9 +8,8 @@ import {
   IsString,
   MaxLength,
   Matches,
+  ValidateNested,
 } from 'class-validator';
-
-import { CreateRevisionYearDto } from '../../revision-company-year/dto/create-revision-company-year.dto';
 
 export class CreateRevisionCompanyDto {
   @IsNotEmpty()
@@ -32,8 +32,27 @@ export class CreateRevisionCompanyDto {
   @ArrayMaxSize(10, { message: 'MAXIMUM_OF_FILES_10' })
   fileIdList?: number[];
 
+  @ValidateNested()
+  @Type(() => CreateRevisionYearDto)
+  companies: CreateRevisionYearDto[];
   year: CreateRevisionYearDto[];
 
   @IsString()
   createDate: string;
+}
+class CreateRevisionYearDto {
+  @IsNotEmpty()
+  year: string;
+
+  @IsBoolean()
+  firstPeriod: boolean;
+
+  @IsBoolean()
+  secondPeriod: boolean;
+
+  @IsBoolean()
+  thirdPeriod: boolean;
+
+  @IsBoolean()
+  fourthPeriod: boolean;
 }

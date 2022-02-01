@@ -17,8 +17,6 @@ import { USER_ROLE } from '../user/enum/user-role.enum';
 import { AccountGuard } from '../user/guard/account.guard';
 import { GetRevision } from './decorator/get-revision.decorator';
 import { GetAccount } from '../user/decorator/get-account.decorator';
-import { CreateRevisionCompanyDto } from '../revision-company/dto/create-revision-company.dto';
-import { CreateRevisionOwnCompanyDto } from '../revision-company/dto/create-revision-own-company.dto';
 import { GetCompanyRevisionListDto } from './dto/get-company-revision-list.dto';
 import { GetRevisionListInfoDto } from './dto/get-revision-list-info.dto';
 import { UpdateRevisionDto } from './dto/update-revision-info.dto';
@@ -26,32 +24,34 @@ import { RevisionGuard } from './guard/revision.guard';
 import { RevisionEntity } from './revision.entity';
 import { RevisionService } from './revision.service';
 import { UserEntity } from '../user/user.entity';
+import { CreateRevisionKontragentDto } from './dto/create-revision-kontragent.dto';
 
 @Controller('revision')
 export class RevisionController {
   constructor(private revisionService: RevisionService) {}
 
-  @Post('/company/:companyId')
+  @Post('/kontragent/:companyId')
   @Roles(USER_ROLE.USER)
   @UseGuards(AuthGuard(), AccountGuard, CompanyGuard, CompanyMemberGuard)
-  async createRevision(
-    @Body(ValidationPipe) createRevisionCompanyDto: CreateRevisionCompanyDto[],
+  async createRevisionKontragent(
+    @Body(ValidationPipe)
+    createRevisionKontragentDto: CreateRevisionKontragentDto,
     @GetCompany() company: CompanyEntity,
     @GetAccount() creator: UserEntity,
   ): Promise<void> {
-    return this.revisionService.createRevision(
-      createRevisionCompanyDto,
+    return this.revisionService.createRevisionKontragent(
+      createRevisionKontragentDto,
       company,
       creator,
     );
   }
 
-  @Post('/own-company/:companyId')
+  @Post('/self/:companyId')
   @Roles(USER_ROLE.USER)
   @UseGuards(AuthGuard(), AccountGuard, CompanyGuard, CompanyMemberGuard)
-  async createOwnCompanyRevision(
+  async createRevisionSelf(
     @Body(ValidationPipe)
-    createRevisionOwnCompanyDto: CreateRevisionOwnCompanyDto,
+    createRevisionOwnCompanyDto: any,
     @GetCompany() company: CompanyEntity,
     @GetAccount() creator: UserEntity,
   ): Promise<void> {

@@ -12,7 +12,6 @@ import { GetAdminCompanyListDto } from './dto/get-admin-company-list.dto';
 import { GetCompanyInfoDto } from './dto/get-company-info.dto';
 import { CreateCompanyInfoDto } from './dto/create-company-info.dto';
 import { ImportCompaniesDto } from './dto/import-companies.dto';
-import { RevisionCompanyRepository } from '../revision-company/revision-company.repository';
 import { ReviewRepository } from '../review/review.repository';
 
 @Injectable()
@@ -26,8 +25,6 @@ export class CompanyService {
     private companyBalanceRepository: CompanyBalanceRepository,
     @InjectRepository(ReviewRepository)
     private reviewRepository: ReviewRepository,
-    @InjectRepository(RevisionCompanyRepository)
-    private revisionCompanyRepository: RevisionCompanyRepository,
   ) {}
 
   async createCompany(

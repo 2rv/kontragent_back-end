@@ -4,9 +4,39 @@ import { InternalServerErrorException } from '@nestjs/common';
 import { RevisionEntity } from './revision.entity';
 import { UpdateRevisionDto } from './dto/update-revision-info.dto';
 import { REVISION_STATUS } from './enum/revision-status.enum';
+import { CreateRevisionKontragentDto } from './dto/create-revision-kontragent.dto';
+import { UserEntity } from '../user/user.entity';
 
 @EntityRepository(RevisionEntity)
 export class RevisionRepository extends Repository<RevisionEntity> {
+  async createRevisionNew(
+    newRevisionData: CreateRevisionKontragentDto,
+    company: CompanyEntity,
+    creator: UserEntity,
+  ) {
+    const revisionKontragent = newRevisionData.kontragents.map((item) => {
+      return {
+        kontragent: { id: item.kontragentId },
+        period: item.years,
+        description: item.description,
+        files: item.fileIdList.map((id) => ({ id })),
+      };
+    });
+
+    try {
+      await this.save({
+        status: REVISION_STATUS.NEW,
+        price: 0,
+        creator: creator,
+        company: company,
+        revisionKontragent: revisionKontragent,
+      });
+    } catch (error) {
+      console.log(error);
+      // throw new InternalServerErrorException();
+    }
+  }
+
   async createRevision(company: CompanyEntity): Promise<RevisionEntity> {
     const revision: RevisionEntity = new RevisionEntity();
 
@@ -30,7 +60,7 @@ export class RevisionRepository extends Repository<RevisionEntity> {
     }
 
     if (updateRevisionDto.additionPrice) {
-      revision.additionPrice = updateRevisionDto.additionPrice;
+      revision.price = updateRevisionDto.additionPrice;
     }
 
     await revision.save();

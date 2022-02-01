@@ -10,7 +10,6 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { FileEntity } from '../file/file.entity';
-import { RevisionEntity } from '../revision/revision.entity';
 import { RevisionCompanyYearEntity } from '../revision-company-year/revision-company-year.entity';
 import { ReviewEntity } from '../review/review.entity';
 
@@ -39,13 +38,10 @@ export class RevisionCompanyEntity extends BaseEntity {
   )
   year: RevisionCompanyYearEntity[];
 
-  @ManyToOne(() => RevisionEntity, (revision) => revision.revisionCompanies)
-  revision: RevisionEntity;
-
-  @OneToMany(() => FileEntity, (file) => file.revisionDescription)
+  // @OneToMany(() => FileEntity, (file) => file.revisionDescription)
   fileDescription: FileEntity[];
 
-  @OneToOne(() => ReviewEntity, (review) => review.revisionCompany)
+  // @OneToOne(() => ReviewEntity, (review) => review.revisionCompany)
   @JoinColumn()
   review: ReviewEntity;
 }

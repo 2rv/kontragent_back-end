@@ -7,8 +7,10 @@ import {
   CreateDateColumn,
   Column,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { CompanyEntity } from '../company/company.entity';
+import { RevisionKontragentEntity } from '../revision-kontragent/revision-kontragent.entity';
 
 @Entity({ name: 'kontragent' })
 export class KontragentEntity extends BaseEntity {
@@ -31,4 +33,10 @@ export class KontragentEntity extends BaseEntity {
   @OneToOne(() => CompanyEntity, { onDelete: 'CASCADE' })
   @JoinColumn()
   contractor: CompanyEntity; // это компания на которую ссылкается consumer
+
+  @OneToMany(
+    () => RevisionKontragentEntity,
+    (revisionKontragent) => revisionKontragent.kontragent,
+  )
+  revisionKontragent: RevisionKontragentEntity[];
 }

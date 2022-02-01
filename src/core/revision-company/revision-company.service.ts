@@ -43,10 +43,10 @@ export class RevisionCompanyService {
 
       if (ids && ids.length > 0) {
         for (const i in ids) {
-          await this.fileRepository.assignFileToRevisionCompanyDescriptionById(
-            revisionCompany,
-            ids[i],
-          );
+          // await this.fileRepository.assignFileToRevisionCompanyDescriptionById(
+          //   revisionCompany,
+          //   ids[i],
+          // );
         }
       }
     });
@@ -56,12 +56,12 @@ export class RevisionCompanyService {
     createRevisionOwnCompanyDto: CreateRevisionOwnCompanyDto,
     revision: RevisionEntity,
     company: CompanyEntity,
-    ): Promise<void> {
+  ): Promise<void> {
     const revisionCompany =
       await this.revisionCompanyRepository.createSelfRevisionCompany(
         createRevisionOwnCompanyDto,
         revision,
-        company
+        company,
       );
 
     const years: CreateRevisionYearDto[] = createRevisionOwnCompanyDto.year;
@@ -76,10 +76,10 @@ export class RevisionCompanyService {
 
     if (ids && ids.length > 0) {
       for (const i in ids) {
-        await this.fileRepository.assignFileToRevisionCompanyDescriptionById(
-          revisionCompany,
-          ids[i],
-        );
+        // await this.fileRepository.assignFileToRevisionCompanyDescriptionById(
+        //   revisionCompany,
+        //   ids[i],
+        // );
       }
     }
   }

@@ -4,11 +4,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   BaseEntity,
-  JoinColumn,
 } from 'typeorm';
-
-import { UserEntity } from '../user/user.entity';
-import { RevisionEntity } from '../revision/revision.entity';
 import { RevisionCompanyEntity } from '../revision-company/revision-company.entity';
 
 @Entity({ name: 'revision-company-year' })
