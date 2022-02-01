@@ -53,15 +53,15 @@ export class FileRepository extends Repository<FileEntity> {
 
   async assignFileToRevisionReviewById(
     revision: RevisionEntity,
-    fileId: number,
+    filesId: number[],
   ): Promise<void> {
-    const file = await this.findOne({ where: { id: fileId } });
-
-    if (!file) {
-      throw new BadRequestException(FILE_ERROR.FILE_NOT_FOUND);
+    for (const fileId of filesId) {
+      try {
+        await this.update({ id: fileId }, { revisionFilesReview: revision });
+      } catch (error) {
+        throw new BadRequestException(error);
+      }
     }
-
-    await file.save();
   }
 
   async assignFileToBillById(bill: BillEntity, fileId: number): Promise<void> {

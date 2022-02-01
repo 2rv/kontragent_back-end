@@ -6,7 +6,6 @@ import {
   OneToMany,
   ManyToOne,
   CreateDateColumn,
-  OneToOne,
 } from 'typeorm';
 
 import { REVISION_STATUS } from './enum/revision-status.enum';
@@ -14,7 +13,6 @@ import { REVISION_STATUS } from './enum/revision-status.enum';
 import { CompanyEntity } from '../company/company.entity';
 import { UserEntity } from '../user/user.entity';
 import { RevisionKontragentEntity } from '../revision-kontragent/revision-kontragent.entity';
-import { ReviewEntity } from '../review/review.entity';
 import { FileEntity } from '../file/file.entity';
 
 @Entity({ name: 'revision' })

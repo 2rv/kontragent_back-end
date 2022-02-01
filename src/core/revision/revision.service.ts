@@ -1,5 +1,9 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { CompanyBalanceService } from '../company-balance/company-balance.service';
 import { CompanyEntity } from '../company/company.entity';
 import { FileRepository } from '../file/file.repository';
@@ -81,41 +85,42 @@ export class RevisionService {
     return await this.revisionRepository.getAdminRevision(revision);
   }
 
-  // --------------- старый код
-
   async updateRevision(
     updateRevisionDto: UpdateRevisionDto,
     revision: RevisionEntity,
   ): Promise<void> {
-    await this.revisionRepository.updateRevision(revision, updateRevisionDto);
+    const result = await this.revisionRepository.updateRevision(
+      revision,
+      updateRevisionDto,
+    );
 
-    const ids: number[] = updateRevisionDto.fileReviewIdList;
-    if (ids && ids.length > 0) {
-      for (const i in ids) {
-        await this.fileRepository.assignFileToRevisionReviewById(
-          revision,
-          ids[i],
-        );
-      }
-    }
+    await this.fileRepository.assignFileToRevisionReviewById(
+      result,
+      updateRevisionDto.filesReview,
+    );
   }
 
   async createRevisionPayment(
     revision: RevisionEntity,
     company: CompanyEntity,
   ): Promise<void> {
-    if (revision.status !== REVISION_STATUS.PAY) {
-      throw new BadRequestException(
-        REVISION_ERROR.REVISION_STATUS_IS_NOT_PAYMENT,
+    try {
+      if (revision.status !== REVISION_STATUS.PAY) {
+        throw new BadRequestException(
+          REVISION_ERROR.REVISION_STATUS_IS_NOT_PAYMENT,
+        );
+      }
+
+      await this.companyBalanceService.createCompanyBalancePayment(
+        company,
+        revision.price,
       );
+
+      revision.status = REVISION_STATUS.PAID;
+      revision.price = 0;
+      await revision.save();
+    } catch (error) {
+      throw new InternalServerErrorException(error);
     }
-
-    await this.companyBalanceService.createCompanyBalancePayment(
-      company,
-      revision.price,
-    );
-
-    revision.status = REVISION_STATUS.PAID;
-    await revision.save();
   }
 }

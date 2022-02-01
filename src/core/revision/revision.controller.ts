@@ -87,18 +87,7 @@ export class RevisionController {
     return this.revisionService.getAdminRevision(revision);
   }
 
-  //------- старый код
-
-  @Get('/admin/company/:companyId/')
-  @Roles(USER_ROLE.ADMIN)
-  @UseGuards(AuthGuard(), AccountGuard, CompanyGuard)
-  getAdminCompanyRevisionList(
-    @GetCompany() company: CompanyEntity,
-  ): Promise<GetRevisionListDto> {
-    return this.revisionService.getRevisionList(company);
-  }
-
-  @Patch('/revision/:revisionId')
+  @Patch('/admin/revision/:revisionId/review')
   @Roles(USER_ROLE.ADMIN)
   @UseGuards(AuthGuard(), AccountGuard, RevisionGuard)
   updateRevisionReview(
@@ -122,5 +111,14 @@ export class RevisionController {
     @GetCompany() company: CompanyEntity,
   ): Promise<void> {
     return this.revisionService.createRevisionPayment(revision, company);
+  }
+
+  @Get('/admin/company/:companyId/')
+  @Roles(USER_ROLE.ADMIN)
+  @UseGuards(AuthGuard(), AccountGuard, CompanyGuard)
+  getAdminCompanyRevisionList(
+    @GetCompany() company: CompanyEntity,
+  ): Promise<GetRevisionListDto> {
+    return this.revisionService.getRevisionList(company);
   }
 }

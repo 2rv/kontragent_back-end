@@ -110,22 +110,26 @@ export class RevisionRepository extends Repository<RevisionEntity> {
     return query.getOne();
   }
 
-  // старый код
-
   async updateRevision(
     revision: RevisionEntity,
     updateRevisionDto: UpdateRevisionDto,
   ): Promise<RevisionEntity> {
-    if (updateRevisionDto.status) {
-      revision.status = updateRevisionDto.status;
+    try {
+      if (updateRevisionDto.status) {
+        revision.status = +updateRevisionDto.status;
+      }
+
+      if (typeof updateRevisionDto.price === 'number') {
+        revision.price = updateRevisionDto.price;
+      }
+
+      if (updateRevisionDto.review) {
+        revision.review = updateRevisionDto.review;
+      }
+      revision.filesReview = [];
+      return await revision.save();
+    } catch (error) {
+      console.log(error);
     }
-
-    if (updateRevisionDto.additionPrice) {
-      revision.price = updateRevisionDto.additionPrice;
-    }
-
-    await revision.save();
-
-    return revision;
   }
 }
