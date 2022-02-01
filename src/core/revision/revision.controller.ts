@@ -15,92 +15,48 @@ import { CompanyGuard } from '../company/guard/company.guard';
 import { Roles } from '../user/decorator/role.decorator';
 import { USER_ROLE } from '../user/enum/user-role.enum';
 import { AccountGuard } from '../user/guard/account.guard';
-import { GetRevision } from './decorator/get-revision.decorator';
 import { GetAccount } from '../user/decorator/get-account.decorator';
-import { GetCompanyRevisionListDto } from './dto/get-company-revision-list.dto';
-import { GetRevisionListInfoDto } from './dto/get-revision-list-info.dto';
-import { UpdateRevisionDto } from './dto/update-revision-info.dto';
-import { RevisionGuard } from './guard/revision.guard';
+import { UserEntity } from '../user/user.entity';
+
 import { RevisionEntity } from './revision.entity';
 import { RevisionService } from './revision.service';
-import { UserEntity } from '../user/user.entity';
-import { CreateRevisionKontragentDto } from './dto/create-revision-kontragent.dto';
+import { RevisionGuard } from './guard/revision.guard';
+import { GetRevision } from './decorator/get-revision.decorator';
+
+import { GetRevisionListDto } from './dto/get-revision-list.dto';
+import { UpdateRevisionDto } from './dto/update-revision.dto';
+import { CreateRevisionDto } from './dto/create-revision.dto';
 
 @Controller('revision')
 export class RevisionController {
   constructor(private revisionService: RevisionService) {}
 
-  @Post('/kontragent/:companyId')
+  @Post('/company/:companyId')
   @Roles(USER_ROLE.USER)
   @UseGuards(AuthGuard(), AccountGuard, CompanyGuard, CompanyMemberGuard)
-  async createRevisionKontragent(
+  createRevision(
     @Body(ValidationPipe)
-    createRevisionKontragentDto: CreateRevisionKontragentDto,
+    createRevisionDto: CreateRevisionDto,
     @GetCompany() company: CompanyEntity,
     @GetAccount() creator: UserEntity,
   ): Promise<void> {
-    return this.revisionService.createRevisionKontragent(
-      createRevisionKontragentDto,
+    return this.revisionService.createRevision(
+      createRevisionDto,
       company,
       creator,
-    );
-  }
-
-  @Post('/self/:companyId')
-  @Roles(USER_ROLE.USER)
-  @UseGuards(AuthGuard(), AccountGuard, CompanyGuard, CompanyMemberGuard)
-  async createRevisionSelf(
-    @Body(ValidationPipe)
-    createRevisionOwnCompanyDto: any,
-    @GetCompany() company: CompanyEntity,
-    @GetAccount() creator: UserEntity,
-  ): Promise<void> {
-    return this.revisionService.createSelfRevision(
-      createRevisionOwnCompanyDto,
-      company,
-      creator,
-    );
-  }
-
-  @Patch('/review/:revisionId')
-  @Roles(USER_ROLE.ADMIN)
-  @UseGuards(AuthGuard(), AccountGuard, RevisionGuard)
-  async updateRevisionReview(
-    @Body(ValidationPipe) updateRevisionDto: UpdateRevisionDto,
-    @GetRevision() revision: RevisionEntity,
-  ): Promise<void> {
-    return this.revisionService.updateRevisionReview(
-      updateRevisionDto,
-      revision,
     );
   }
 
   @Get('/company/:companyId/')
   @Roles(USER_ROLE.USER)
   @UseGuards(AuthGuard(), AccountGuard, CompanyGuard, CompanyMemberGuard)
-  getCompanyRevisionList(
+  getRevisionList(
     @GetCompany() company: CompanyEntity,
-  ): Promise<GetCompanyRevisionListDto> {
-    return this.revisionService.getCompanyRevisionList(company);
+  ): Promise<GetRevisionListDto> {
+    return this.revisionService.getRevisionList(company);
   }
 
-  @Get('/admin/company/:companyId/')
-  @Roles(USER_ROLE.ADMIN)
-  @UseGuards(AuthGuard(), AccountGuard, CompanyGuard)
-  getAdminCompanyRevisionList(
-    @GetCompany() company: CompanyEntity,
-  ): Promise<GetCompanyRevisionListDto> {
-    return this.revisionService.getCompanyRevisionList(company);
-  }
-
-  @Get('/admin')
-  @Roles(USER_ROLE.ADMIN)
-  @UseGuards(AuthGuard(), AccountGuard)
-  getAdminRevisionList(): Promise<GetRevisionListInfoDto> {
-    return this.revisionService.getRevisionList();
-  }
-
-  @Get('/company/:companyId/revision/:revisionId/review')
+  @Get('/company/:companyId/revision/:revisionId')
   @Roles(USER_ROLE.USER)
   @UseGuards(
     AuthGuard(),
@@ -109,22 +65,50 @@ export class RevisionController {
     CompanyMemberGuard,
     RevisionGuard,
   )
-  async getRevisionReview(
+  getRevision(
     @GetRevision() revision: RevisionEntity,
   ): Promise<RevisionEntity> {
-    return this.revisionService.getAccountRevisionReview(revision);
+    return this.revisionService.getRevision(revision);
   }
 
-  @Get('/admin/revision/:revisionId/review')
+  @Get('/admin')
+  @Roles(USER_ROLE.ADMIN)
+  @UseGuards(AuthGuard(), AccountGuard)
+  getAdminRevisionList(): Promise<GetRevisionListDto> {
+    return this.revisionService.getAdminRevisionList();
+  }
+
+  @Get('/admin/revision/:revisionId')
   @Roles(USER_ROLE.ADMIN)
   @UseGuards(AuthGuard(), AccountGuard, RevisionGuard)
-  async getAdminRevisionReview(
+  getAdminRevision(
     @GetRevision() revision: RevisionEntity,
   ): Promise<RevisionEntity> {
-    return this.revisionService.getAdminRevisionReview(revision);
+    return this.revisionService.getAdminRevision(revision);
   }
 
-  @Post('/company/:companyId/revision/:revisionId/review/payment')
+  //------- старый код
+
+  @Get('/admin/company/:companyId/')
+  @Roles(USER_ROLE.ADMIN)
+  @UseGuards(AuthGuard(), AccountGuard, CompanyGuard)
+  getAdminCompanyRevisionList(
+    @GetCompany() company: CompanyEntity,
+  ): Promise<GetRevisionListDto> {
+    return this.revisionService.getRevisionList(company);
+  }
+
+  @Patch('/revision/:revisionId')
+  @Roles(USER_ROLE.ADMIN)
+  @UseGuards(AuthGuard(), AccountGuard, RevisionGuard)
+  updateRevisionReview(
+    @Body(ValidationPipe) updateRevisionDto: UpdateRevisionDto,
+    @GetRevision() revision: RevisionEntity,
+  ): Promise<void> {
+    return this.revisionService.updateRevision(updateRevisionDto, revision);
+  }
+
+  @Post('/company/:companyId/revision/:revisionId/payment')
   @Roles(USER_ROLE.USER, USER_ROLE.ADMIN)
   @UseGuards(
     AuthGuard(),
@@ -133,10 +117,10 @@ export class RevisionController {
     CompanyMemberGuard,
     RevisionGuard,
   )
-  async createRevisionReviewPayment(
+  createRevisionPayment(
     @GetRevision() revision: RevisionEntity,
     @GetCompany() company: CompanyEntity,
   ): Promise<void> {
-    return this.revisionService.createRevisionReviewPayment(revision, company);
+    return this.revisionService.createRevisionPayment(revision, company);
   }
 }

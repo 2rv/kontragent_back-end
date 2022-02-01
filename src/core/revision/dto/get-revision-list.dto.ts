@@ -1,5 +1,5 @@
 import { RevisionEntity } from '../revision.entity';
 
-export interface GetRevisionListInfoDto {
+export interface GetRevisionListDto {
   list: RevisionEntity[];
 }

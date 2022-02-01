@@ -1,20 +1,21 @@
 import { Repository, EntityRepository } from 'typeorm';
-import { CompanyEntity } from '../company/company.entity';
 import { InternalServerErrorException } from '@nestjs/common';
-import { RevisionEntity } from './revision.entity';
-import { UpdateRevisionDto } from './dto/update-revision-info.dto';
-import { REVISION_STATUS } from './enum/revision-status.enum';
-import { CreateRevisionKontragentDto } from './dto/create-revision-kontragent.dto';
+import { CompanyEntity } from '../company/company.entity';
 import { UserEntity } from '../user/user.entity';
+import { RevisionEntity } from './revision.entity';
+
+import { REVISION_STATUS } from './enum/revision-status.enum';
+import { UpdateRevisionDto } from './dto/update-revision.dto';
+import { CreateRevisionDto } from './dto/create-revision.dto';
 
 @EntityRepository(RevisionEntity)
 export class RevisionRepository extends Repository<RevisionEntity> {
-  async createRevisionNew(
-    newRevisionData: CreateRevisionKontragentDto,
+  async createRevision(
+    createRevisionDto: CreateRevisionDto,
     company: CompanyEntity,
     creator: UserEntity,
   ): Promise<RevisionEntity> {
-    const revisionKontragent = newRevisionData.kontragents.map((item) => {
+    const revisionKontragent = createRevisionDto.kontragents.map((item) => {
       return {
         kontragent: { id: item.kontragentId },
         period: item.years,
@@ -26,32 +27,92 @@ export class RevisionRepository extends Repository<RevisionEntity> {
     try {
       return await this.save({
         status: REVISION_STATUS.NEW,
-        price: 0,
         creator: creator,
         company: company,
         revisionKontragent: revisionKontragent,
       });
     } catch (error) {
-      console.log(error);
-      // throw new InternalServerErrorException();
+      throw new InternalServerErrorException(error);
     }
   }
 
-  async createRevision(company: CompanyEntity): Promise<RevisionEntity> {
-    const revision: RevisionEntity = new RevisionEntity();
-
-    revision.company = company;
-    revision.status = REVISION_STATUS.NEW;
-
-    try {
-      await revision.save();
-      return revision;
-    } catch (error) {
-      throw new InternalServerErrorException();
-    }
+  async getRevisionList(company: CompanyEntity): Promise<RevisionEntity[]> {
+    const query = this.createQueryBuilder('revision');
+    query.leftJoin('revision.company', 'company');
+    query.where('company.id = :id', { id: company.id });
+    query.select(['revision.id', 'revision.createDate', 'revision.status']);
+    return query.getMany();
   }
 
-  async updateRevisionReview(
+  async getRevision(revision: RevisionEntity): Promise<RevisionEntity> {
+    const query = this.createQueryBuilder('revision');
+    query.leftJoin('revision.filesReview', 'filesReview');
+    query.leftJoin('revision.revisionKontragent', 'revisionKontragent');
+    query.leftJoin('revisionKontragent.files', 'revisionKontragentFiles');
+    query.leftJoin(
+      'revisionKontragent.kontragent',
+      'revisionKontragentKontragent',
+    );
+    query.where('revision.id = :id', { id: revision.id });
+    query.select([
+      'revision.id',
+      'revision.createDate',
+      'revision.price',
+      'revision.status',
+      'revision.review',
+      'filesReview',
+      'revisionKontragent.id',
+      'revisionKontragent.period',
+      'revisionKontragent.description',
+      'revisionKontragentFiles',
+      'revisionKontragentKontragent',
+    ]);
+    return query.getOne();
+  }
+
+  async getAdminRevisionList() {
+    const query = this.createQueryBuilder('revision');
+    query.select(['revision.id', 'revision.createDate', 'revision.status']);
+    return query.getMany();
+  }
+
+  async getAdminRevision(revision: RevisionEntity): Promise<RevisionEntity> {
+    const query = this.createQueryBuilder('revision');
+    query.leftJoin('revision.company', 'company');
+    query.leftJoin('revision.creator', 'creator');
+    query.leftJoin('revision.filesReview', 'filesReview');
+    query.leftJoin('revision.revisionKontragent', 'revisionKontragent');
+    query.leftJoin('revisionKontragent.files', 'revisionKontragentFiles');
+    query.leftJoin(
+      'revisionKontragent.kontragent',
+      'revisionKontragentKontragent',
+    );
+    query.where('revision.id = :id', { id: revision.id });
+    query.select([
+      'revision.id',
+      'revision.createDate',
+      'revision.price',
+      'revision.status',
+      'revision.review',
+      'filesReview',
+      'company',
+      'creator.id',
+      'creator.login',
+      'creator.firstname',
+      'creator.lastname',
+      'revisionKontragent.id',
+      'revisionKontragent.period',
+      'revisionKontragent.description',
+      'revisionKontragentFiles',
+      'revisionKontragentKontragent',
+    ]);
+
+    return query.getOne();
+  }
+
+  // старый код
+
+  async updateRevision(
     revision: RevisionEntity,
     updateRevisionDto: UpdateRevisionDto,
   ): Promise<RevisionEntity> {
@@ -66,44 +127,5 @@ export class RevisionRepository extends Repository<RevisionEntity> {
     await revision.save();
 
     return revision;
-  }
-
-  async getRevisionListByCompany(company: CompanyEntity) {
-    const query = this.createQueryBuilder('revision');
-    query.leftJoin('revision.company', 'company');
-    query.where('company.id = :id', { id: company.id });
-    query.select(['revision.id', 'revision.createDate', 'revision.status']);
-    return query.getMany();
-  }
-
-  async getRevisionList() {
-    const query = this.createQueryBuilder('revision');
-    query.select(['revision.id', 'revision.createDate', 'revision.status']);
-    return query.getMany();
-  }
-
-  async getAccountRevisionReview(
-    revision: RevisionEntity,
-  ): Promise<RevisionEntity> {
-    const query = this.createQueryBuilder('revision');
-    query.leftJoin('revision.revisionKontragent', 'revisionKontragent');
-    query.leftJoin('revisionKontragent.files', 'revisionKontragentFiles');
-    query.leftJoin(
-      'revisionKontragent.kontragent',
-      'revisionKontragentKontragent',
-    );
-    query.where('revision.id = :id', { id: revision.id });
-    query.select([
-      'revision.id',
-      'revision.createDate',
-      'revision.price',
-      'revision.status',
-      'revisionKontragent.id',
-      'revisionKontragent.period',
-      'revisionKontragent.description',
-      'revisionKontragentFiles',
-      'revisionKontragentKontragent',
-    ]);
-    return query.getOne();
   }
 }

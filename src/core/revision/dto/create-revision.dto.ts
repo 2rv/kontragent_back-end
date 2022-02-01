@@ -30,7 +30,7 @@ class RevisionKontragentDto {
   years: CreateRevisionKontragentPeriodDto[];
 }
 
-export class CreateRevisionKontragentDto {
+export class CreateRevisionDto {
   @ValidateNested()
   @Type(() => RevisionKontragentDto)
   kontragents: RevisionKontragentDto[];

@@ -14,8 +14,8 @@ import { REVISION_STATUS } from './enum/revision-status.enum';
 import { CompanyEntity } from '../company/company.entity';
 import { UserEntity } from '../user/user.entity';
 import { RevisionKontragentEntity } from '../revision-kontragent/revision-kontragent.entity';
-import { RevisionSelfEntity } from '../revision-self/revision-self.entity';
 import { ReviewEntity } from '../review/review.entity';
+import { FileEntity } from '../file/file.entity';
 
 @Entity({ name: 'revision' })
 export class RevisionEntity extends BaseEntity {
@@ -53,9 +53,11 @@ export class RevisionEntity extends BaseEntity {
   )
   revisionKontragent: RevisionKontragentEntity[];
 
-  @OneToOne(() => RevisionSelfEntity, (company) => company.revision)
-  revisionSelf: RevisionSelfEntity;
+  @Column({ name: 'review', nullable: true })
+  review: string;
 
-  @OneToOne(() => ReviewEntity, (review) => review.revision)
-  review: ReviewEntity;
+  @OneToMany(() => FileEntity, (file) => file.revisionFilesReview, {
+    nullable: true,
+  })
+  filesReview: FileEntity[];
 }

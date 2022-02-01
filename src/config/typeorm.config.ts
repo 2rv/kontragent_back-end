@@ -20,7 +20,6 @@ import { NotificationEntity } from 'src/core/notification/notification.entity';
 import { FeedbackEntity } from 'src/core/feedback/feedback.entity';
 import { ReviewEntity } from 'src/core/review/review.entity';
 import { RevisionKontragentEntity } from 'src/core/revision-kontragent/revision-kontragent.entity';
-import { RevisionSelfEntity } from 'src/core/revision-self/revision-self.entity';
 
 const DATABASE_CONFIG = config.get('DATABASE');
 
@@ -45,7 +44,6 @@ export const ApiEntities = [
   FeedbackEntity,
   ReviewEntity,
   RevisionKontragentEntity,
-  RevisionSelfEntity,
 ];
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
