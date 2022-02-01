@@ -13,7 +13,7 @@ export class RevisionRepository extends Repository<RevisionEntity> {
     newRevisionData: CreateRevisionKontragentDto,
     company: CompanyEntity,
     creator: UserEntity,
-  ) {
+  ): Promise<RevisionEntity> {
     const revisionKontragent = newRevisionData.kontragents.map((item) => {
       return {
         kontragent: { id: item.kontragentId },
@@ -24,7 +24,7 @@ export class RevisionRepository extends Repository<RevisionEntity> {
     });
 
     try {
-      await this.save({
+      return await this.save({
         status: REVISION_STATUS.NEW,
         price: 0,
         creator: creator,
@@ -80,5 +80,30 @@ export class RevisionRepository extends Repository<RevisionEntity> {
     const query = this.createQueryBuilder('revision');
     query.select(['revision.id', 'revision.createDate', 'revision.status']);
     return query.getMany();
+  }
+
+  async getAccountRevisionReview(
+    revision: RevisionEntity,
+  ): Promise<RevisionEntity> {
+    const query = this.createQueryBuilder('revision');
+    query.leftJoin('revision.revisionKontragent', 'revisionKontragent');
+    query.leftJoin('revisionKontragent.files', 'revisionKontragentFiles');
+    query.leftJoin(
+      'revisionKontragent.kontragent',
+      'revisionKontragentKontragent',
+    );
+    query.where('revision.id = :id', { id: revision.id });
+    query.select([
+      'revision.id',
+      'revision.createDate',
+      'revision.price',
+      'revision.status',
+      'revisionKontragent.id',
+      'revisionKontragent.period',
+      'revisionKontragent.description',
+      'revisionKontragentFiles',
+      'revisionKontragentKontragent',
+    ]);
+    return query.getOne();
   }
 }

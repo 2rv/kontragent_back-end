@@ -32,11 +32,41 @@ export class RevisionService {
     company: CompanyEntity,
     creator: UserEntity,
   ): Promise<void> {
-    await this.revisionRepository.createRevisionNew(
-      newRevisionData,
-      company,
-      creator,
-    );
+    try {
+      const price = newRevisionData.kontragents.reduce((acc, item) => {
+        item.years.forEach((period) => {
+          if (period.kvartal1) acc += 500;
+          if (period.kvartal2) acc += 500;
+          if (period.kvartal3) acc += 500;
+          if (period.kvartal4) acc += 500;
+        });
+        return acc;
+      }, 0);
+
+      await this.companyBalanceService.createCompanyBalancePayment(
+        company,
+        price,
+        PAYMENT_TYPE.REVISION,
+      );
+
+      const result = await this.revisionRepository.createRevisionNew(
+        newRevisionData,
+        company,
+        creator,
+      );
+
+      result.revisionKontragent.map((item) => {
+        this.fileRepository.assignFileToRevisionKontragentDescriptionById(item);
+      });
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
+  }
+
+  async getAccountRevisionReview(
+    revision: RevisionEntity,
+  ): Promise<RevisionEntity> {
+    return await this.revisionRepository.getAccountRevisionReview(revision);
   }
 
   // --------------- старый код
@@ -144,32 +174,6 @@ export class RevisionService {
       await this.revisionRepository.getRevisionListByCompany(company);
 
     return { list };
-  }
-
-  async getAccountRevisionReview(
-    revision: RevisionEntity,
-  ): Promise<RevisionEntity> {
-    const fullRevison = await this.revisionRepository
-      .createQueryBuilder('revision')
-      .leftJoin('revision.revisionCompanies', 'revisionCompanies')
-      .leftJoin('revisionCompanies.fileDescription', 'fileDescription')
-      .leftJoin('revisionCompanies.year', 'year')
-      .where('revision.id = :id', { id: revision.id })
-      .select([
-        'revision.id',
-        'revision.additionPrice',
-        'revision.createDate',
-        'revision.status',
-        'revision.review',
-        'revision.additionPrice',
-        'fileReview',
-        'revisionCompanies',
-        'year',
-        'fileDescription',
-      ])
-      .getOne();
-
-    return fullRevison;
   }
 
   async getAdminRevisionReview(

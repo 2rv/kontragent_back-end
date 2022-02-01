@@ -12,6 +12,7 @@ import { PostEntity } from '../post/post.entity';
 import { BillEntity } from '../bill/bill.entity';
 import { NotificationEntity } from '../notification/notification.entity';
 import { FeedbackEntity } from '../feedback/feedback.entity';
+import { RevisionKontragentEntity } from '../revision-kontragent/revision-kontragent.entity';
 
 @EntityRepository(FileEntity)
 export class FileRepository extends Repository<FileEntity> {
@@ -42,20 +43,13 @@ export class FileRepository extends Repository<FileEntity> {
     }
   }
 
-  // async assignFileToRevisionCompanyDescriptionById(
-  //   revisionCompany: RevisionCompanyEntity,
-  //   fileId: number,
-  // ): Promise<void> {
-  //   const file = await this.findOne({ where: { id: fileId } });
-
-  //   if (!file) {
-  //     throw new BadRequestException(FILE_ERROR.FILE_NOT_FOUND);
-  //   }
-
-  //   file.revisionDescription = revisionCompany;
-
-  //   await file.save();
-  // }
+  async assignFileToRevisionKontragentDescriptionById(
+    revisionKontragent: RevisionKontragentEntity,
+  ): Promise<void> {
+    for (const fileId of revisionKontragent.files) {
+      await this.update(fileId, { revisionKontragent: revisionKontragent });
+    }
+  }
 
   async assignFileToRevisionReviewById(
     revision: RevisionEntity,
