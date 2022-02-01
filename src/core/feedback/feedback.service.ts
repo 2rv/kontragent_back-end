@@ -40,6 +40,12 @@ export class FeedbackService {
     return { list };
   }
 
+  async getAdminFeedbackListToday(): Promise<GetAdminFeedbackListDto> {
+    const list: FeedbackEntity[] =
+      await this.feedbackRepository.getAdminFeedbackListToday();
+    return { list };
+  }
+
   async getAdminFeedbackInfo(
     feedback: FeedbackEntity,
   ): Promise<FeedbackEntity> {

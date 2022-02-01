@@ -36,7 +36,7 @@ export class NotificationEntity extends BaseEntity {
   })
   createDate: string;
 
-  @OneToOne(() => UserEntity, (user) => user.notification)
+  @OneToOne(() => UserEntity, (user) => user.notification, { nullable: true })
   user: UserEntity;
 
   @OneToMany(() => FileEntity, (file) => file.notification)

@@ -6,20 +6,26 @@ import {
   OneToMany,
   ManyToOne,
   CreateDateColumn,
+  OneToOne,
 } from 'typeorm';
 
 import { REVISION_STATUS } from './enum/revision-status.enum';
 
 import { CompanyEntity } from '../company/company.entity';
-import { RevisionCompanyEntity } from '../revision-company/revision-company.entity';
-import { FileEntity } from '../file/file.entity';
 import { UserEntity } from '../user/user.entity';
+import { RevisionKontragentEntity } from '../revision-kontragent/revision-kontragent.entity';
+import { RevisionSelfEntity } from '../revision-self/revision-self.entity';
 import { ReviewEntity } from '../review/review.entity';
 
 @Entity({ name: 'revision' })
 export class RevisionEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @CreateDateColumn({
+    type: 'timestamptz',
+  })
+  createDate: string;
 
   @Column({
     type: 'enum',
@@ -29,37 +35,27 @@ export class RevisionEntity extends BaseEntity {
   })
   status: REVISION_STATUS;
 
-  @Column({ nullable: true })
-  review: string;
-
   @Column({ nullable: false, default: 0, type: 'decimal' })
-  additionPrice: number;
+  price: number;
 
-  @OneToMany(() => FileEntity, (file) => file.revisionReview)
-  fileReview: FileEntity[];
-
-  @OneToMany(
-    () => RevisionCompanyEntity,
-    (revisionCompany) => revisionCompany.revision,
-  )
-  revisionCompanies: RevisionCompanyEntity[];
-
-  @OneToMany(() => ReviewEntity, (review) => review.revision)
-  revisionReview: ReviewEntity[];
+  @ManyToOne(() => UserEntity, (user) => user.revision)
+  creator: UserEntity;
 
   @ManyToOne(() => CompanyEntity, (company) => company.revision, {
     onDelete: 'SET NULL',
   })
   company: CompanyEntity;
 
-  @ManyToOne(() => UserEntity, (user) => user.revision)
-  creator: UserEntity;
+  @OneToMany(
+    () => RevisionKontragentEntity,
+    (kontragent) => kontragent.revision,
+    { cascade: true },
+  )
+  revisionKontragent: RevisionKontragentEntity[];
 
-  @CreateDateColumn({
-    type: 'timestamptz',
-  })
-  createDate: string;
+  @OneToOne(() => RevisionSelfEntity, (company) => company.revision)
+  revisionSelf: RevisionSelfEntity;
 
-  @Column({ default: false })
-  selfRevision: boolean;
+  @OneToOne(() => ReviewEntity, (review) => review.revision)
+  review: ReviewEntity;
 }

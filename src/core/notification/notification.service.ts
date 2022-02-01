@@ -9,6 +9,7 @@ import { NOTIFICATION_ERROR } from './enum/notification-error.enum';
 import { USER_ROLE } from '../user/enum/user-role.enum';
 import { NotificationRepository } from './notification.repository';
 import { FileService } from '../file/file.service';
+import { CreateNotificationEveryoneDto } from './dto/create-notification-everyone.dto';
 
 @Injectable()
 export class NotificationService {
@@ -67,5 +68,43 @@ export class NotificationService {
     if (addressee) {
       this.mailService.sendNotificationEmail(createNotificationEmailDto);
     }
+  }
+
+  async createNotificationEveryone(
+    createNotificationEveryone: CreateNotificationEveryoneDto,
+  ): Promise<void> {
+    const addressee = await this.userRepository.find({
+      where: { subscribeMailing: true },
+      select: ['id', 'email'],
+    });
+
+    if (!addressee.length) {
+      throw new BadRequestException(
+        NOTIFICATION_ERROR.ADDRESSEE_EMAIL_NOT_FOUND,
+      );
+    }
+
+    const notification =
+      await this.noticationRepository.createNotificationEveryOne(
+        createNotificationEveryone,
+      );
+
+    const fileList = [];
+    const ids: number[] = createNotificationEveryone.fileList;
+    if (ids && ids.length) {
+      for (const i in ids) {
+        fileList[i] = await this.fileRepository.assignFileToNotificationById(
+          notification,
+          ids[i],
+        );
+      }
+    }
+
+    createNotificationEveryone.fileList = fileList;
+
+    this.mailService.sendNotificationEveryone(
+      addressee,
+      createNotificationEveryone,
+    );
   }
 }

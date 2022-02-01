@@ -9,13 +9,13 @@ import {
 } from 'typeorm';
 
 import { UserEntity } from '../user/user.entity';
-import { RevisionEntity } from '../revision/revision.entity';
-import { RevisionCompanyEntity } from '../revision-company/revision-company.entity';
 import { PostEntity } from '../post/post.entity';
 import { BillEntity } from '../bill/bill.entity';
 import { NotificationEntity } from '../notification/notification.entity';
 import { FeedbackEntity } from '../feedback/feedback.entity';
 import { ReviewEntity } from '../review/review.entity';
+import { RevisionKontragentEntity } from '../revision-kontragent/revision-kontragent.entity';
+import { RevisionSelfEntity } from '../revision-self/revision-self.entity';
 
 @Entity({ name: 'file' })
 export class FileEntity extends BaseEntity {
@@ -44,16 +44,18 @@ export class FileEntity extends BaseEntity {
   user: UserEntity;
 
   @ManyToOne(
-    () => RevisionCompanyEntity,
-    (revisionCompany: RevisionCompanyEntity) => revisionCompany.fileDescription,
+    () => RevisionKontragentEntity,
+    (revisionKontragent: RevisionKontragentEntity) => revisionKontragent.files,
+    { onDelete: 'CASCADE' },
   )
-  revisionDescription: RevisionCompanyEntity;
+  revisionKontragent: RevisionKontragentEntity;
 
   @ManyToOne(
-    () => RevisionEntity,
-    (revision: RevisionEntity) => revision.fileReview,
+    () => RevisionSelfEntity,
+    (revisionSelf: RevisionSelfEntity) => revisionSelf.files,
+    { onDelete: 'CASCADE' },
   )
-  revisionReview: RevisionEntity;
+  revisionSelf: RevisionSelfEntity;
 
   @OneToOne(() => PostEntity, (post: PostEntity) => post.image)
   post: PostEntity;
@@ -68,7 +70,7 @@ export class FileEntity extends BaseEntity {
     (notification: NotificationEntity) => notification.fileList,
   )
   notification: NotificationEntity;
-  
+
   @ManyToOne(() => FeedbackEntity, (feedback: FeedbackEntity) => feedback.files)
   feedback: FeedbackEntity;
 

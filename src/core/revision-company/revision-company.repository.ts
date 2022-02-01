@@ -20,7 +20,7 @@ export class RevisionCompanyRepository extends Repository<RevisionCompanyEntity>
     revisionCompany.name = createRevisionCompanyDto.name;
     revisionCompany.inn = createRevisionCompanyDto.inn;
     revisionCompany.description = createRevisionCompanyDto.description;
-    revisionCompany.revision = revision;
+
     revisionCompany.createDate = createRevisionCompanyDto.createDate;
     try {
       await revisionCompany.save();
@@ -40,7 +40,6 @@ export class RevisionCompanyRepository extends Repository<RevisionCompanyEntity>
     revisionCompany.name = company.name;
     revisionCompany.inn = company.inn;
     revisionCompany.description = createRevisionOwnCompanyDto.description;
-    revisionCompany.revision = revision;
 
     try {
       await revisionCompany.save();

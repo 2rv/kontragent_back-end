@@ -14,6 +14,7 @@ import { CreateNotificationEmailDto } from './dto/create-notification-email.dto'
 import { NotificationService } from './notification.service';
 import { Roles } from '../user/decorator/role.decorator';
 import { USER_ROLE } from '../user/enum/user-role.enum';
+import { CreateNotificationEveryoneDto } from './dto/create-notification-everyone.dto';
 
 @Controller('notification')
 export class NotificationController {
@@ -30,6 +31,18 @@ export class NotificationController {
     return this.notificationService.createNotification(
       user,
       createNotificationEmailDto,
+    );
+  }
+
+  @Post('/everyone')
+  @Roles(USER_ROLE.ADMIN)
+  @UseGuards(AuthGuard(), AccountGuard)
+  createNotificationEveryone(
+    @Body(ValidationPipe)
+    createNotificationEveryone: CreateNotificationEveryoneDto,
+  ): Promise<void> {
+    return this.notificationService.createNotificationEveryone(
+      createNotificationEveryone,
     );
   }
 }
