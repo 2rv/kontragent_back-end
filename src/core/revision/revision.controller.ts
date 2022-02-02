@@ -26,6 +26,9 @@ import { GetRevision } from './decorator/get-revision.decorator';
 import { GetRevisionListDto } from './dto/get-revision-list.dto';
 import { UpdateRevisionDto } from './dto/update-revision.dto';
 import { CreateRevisionDto } from './dto/create-revision.dto';
+import { KontragentGuard } from '../kontragent/guard/kontragent.guard';
+import { GetKontragent } from '../kontragent/decorators/get-kontragent.decorator';
+import { KontragentEntity } from '../kontragent/kontragent.entity';
 
 @Controller('revision')
 export class RevisionController {
@@ -120,5 +123,21 @@ export class RevisionController {
     @GetCompany() company: CompanyEntity,
   ): Promise<GetRevisionListDto> {
     return this.revisionService.getRevisionList(company);
+  }
+
+  @Get('/company/:companyId/kontragent/:kontragentId')
+  @Roles(USER_ROLE.USER)
+  @UseGuards(
+    AuthGuard(),
+    AccountGuard,
+    CompanyGuard,
+    CompanyMemberGuard,
+    KontragentGuard,
+  )
+  getRevisionKontragentList(
+    @GetCompany() company: CompanyEntity,
+    @GetKontragent() kontragent: KontragentEntity,
+  ): Promise<GetRevisionListDto> {
+    return this.revisionService.getRevisionKontragentList(company, kontragent);
   }
 }

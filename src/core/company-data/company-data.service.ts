@@ -41,6 +41,7 @@ import { getSites } from './actions/get-sites';
 import { checkPassport } from './actions/get-check-passport';
 import { KontragentRepository } from '../kontragent/kontragent.repository';
 import { KontragentEntity } from '../kontragent/kontragent.entity';
+import { getBriefReportPdf } from './actions/get-brief-report-pdf';
 
 @Injectable()
 export class CompanyDataService {
@@ -77,6 +78,10 @@ export class CompanyDataService {
 
   async getExcerpt(inn: string): Promise<Readable> {
     return await getExcerpt(inn);
+  }
+
+  async getBriefReportPdf(inn: string): Promise<Readable> {
+    return await getBriefReportPdf(inn);
   }
 
   async getAnalytics(inn: string): Promise<any> {

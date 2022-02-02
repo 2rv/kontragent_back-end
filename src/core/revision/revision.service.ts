@@ -19,6 +19,8 @@ import { REVISION_STATUS } from './enum/revision-status.enum';
 import { CreateRevisionDto } from './dto/create-revision.dto';
 import { GetRevisionListDto } from './dto/get-revision-list.dto';
 import { UpdateRevisionDto } from './dto/update-revision.dto';
+import { revisionPeriodPrice } from '../../common/utils/revison-price';
+import { KontragentEntity } from '../kontragent/kontragent.entity';
 
 @Injectable()
 export class RevisionService {
@@ -37,14 +39,12 @@ export class RevisionService {
   ): Promise<void> {
     try {
       const price = createRevisionDto.kontragents.reduce((acc, item) => {
-        item.years.forEach((period) => {
-          if (period.kvartal1) acc += 500;
-          if (period.kvartal2) acc += 500;
-          if (period.kvartal3) acc += 500;
-          if (period.kvartal4) acc += 500;
-        });
-        return acc;
+        return (acc += revisionPeriodPrice(item.years));
       }, 0);
+
+      if (!price || price === 0) {
+        throw new BadRequestException(REVISION_ERROR.PRICE_IS_NULL);
+      }
 
       await this.companyBalanceService.createCompanyBalancePayment(
         company,
@@ -122,5 +122,16 @@ export class RevisionService {
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
+  }
+
+  async getRevisionKontragentList(
+    company: CompanyEntity,
+    kontragent: KontragentEntity,
+  ): Promise<GetRevisionListDto> {
+    const list = await this.revisionRepository.getRevisionKontragentList(
+      company,
+      kontragent,
+    );
+    return { list };
   }
 }

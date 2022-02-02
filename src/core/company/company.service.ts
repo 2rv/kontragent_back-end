@@ -13,6 +13,7 @@ import { GetCompanyInfoDto } from './dto/get-company-info.dto';
 import { CreateCompanyInfoDto } from './dto/create-company-info.dto';
 import { ImportCompaniesDto } from './dto/import-companies.dto';
 import { ReviewRepository } from '../review/review.repository';
+import { COMPANY_TYPE } from './enum/company-type.enum';
 
 @Injectable()
 export class CompanyService {
@@ -87,6 +88,7 @@ export class CompanyService {
           name: item.name ? item.name : `Компания ИНН ${item.inn}`,
           inn: item.inn,
           createDate: item.createDate,
+          type: companiesData.type,
         });
 
         await this.reviewRepository.createReview({
@@ -132,8 +134,10 @@ export class CompanyService {
     return { list };
   }
 
-  async getAdminCompanyUnregisteredList(): Promise<CompanyEntity[]> {
-    return await this.companyRepository.getCompanyUnregisteredList();
+  async getAdminCompanyUnregisteredList(
+    type: COMPANY_TYPE,
+  ): Promise<CompanyEntity[]> {
+    return await this.companyRepository.getCompanyUnregisteredList(type);
   }
 
   async verifyCompanyInfo(company: CompanyEntity): Promise<void> {

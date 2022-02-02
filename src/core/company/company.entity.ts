@@ -18,6 +18,7 @@ import { BillEntity } from '../bill/bill.entity';
 import { KontragentEntity } from '../kontragent/kontragent.entity';
 import { ReviewEntity } from '../review/review.entity';
 import { RevisionSelfEntity } from '../revision-self/revision-self.entity';
+import { COMPANY_TYPE } from './enum/company-type.enum';
 
 @Entity({ name: 'company' })
 export class CompanyEntity extends BaseEntity {
@@ -43,6 +44,13 @@ export class CompanyEntity extends BaseEntity {
 
   @Column({ default: false })
   registered: boolean;
+
+  @Column({
+    type: 'enum',
+    enum: COMPANY_TYPE,
+    nullable: true,
+  })
+  type: COMPANY_TYPE;
 
   @ManyToOne(() => UserEntity, (user) => user.company)
   user: UserEntity;

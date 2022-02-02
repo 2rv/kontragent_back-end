@@ -6,6 +6,7 @@ import {
   Patch,
   UseGuards,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 
 import { AuthGuard } from '@nestjs/passport';
@@ -32,6 +33,7 @@ import { GetAccountCompanyListDto } from './dto/get-account-company-list.dto';
 import { UserGuard } from '../user/guard/user.guard';
 import { GetUser } from '../user/decorator/get-user.decorator';
 import { ImportCompaniesDto } from './dto/import-companies.dto';
+import { COMPANY_TYPE } from './enum/company-type.enum';
 
 @Controller('company')
 export class CompanyController {
@@ -87,8 +89,10 @@ export class CompanyController {
   @Get('/admin/get/unregistered')
   @Roles(USER_ROLE.ADMIN)
   @UseGuards(AuthGuard(), AccountGuard)
-  getAdminCompanyUnregisteredList(): Promise<CompanyEntity[]> {
-    return this.companyService.getAdminCompanyUnregisteredList();
+  getAdminCompanyUnregisteredList(
+    @Query('type') type: COMPANY_TYPE,
+  ): Promise<CompanyEntity[]> {
+    return this.companyService.getAdminCompanyUnregisteredList(type);
   }
 
   @Patch('/admin/verificateInfo/:companyId')

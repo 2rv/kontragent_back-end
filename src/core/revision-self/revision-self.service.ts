@@ -16,6 +16,7 @@ import { REVISION_SELF_ERROR } from './enum/revision-self-error.enum';
 import { REVISION_SELF_STATUS } from './enum/revision-self-status.enum';
 import { RevisionSelfEntity } from './revision-self.entity';
 import { RevisionSelfRepository } from './revision-self.repository';
+import { revisionPeriodPrice } from '../../common/utils/revison-price';
 
 @Injectable()
 export class RevisionSelfService {
@@ -33,13 +34,11 @@ export class RevisionSelfService {
     creator: UserEntity,
   ): Promise<void> {
     try {
-      const price = createRevisionSelfDto.period.reduce((acc, period) => {
-        if (period.kvartal1) acc += 500;
-        if (period.kvartal2) acc += 500;
-        if (period.kvartal3) acc += 500;
-        if (period.kvartal4) acc += 500;
-        return acc;
-      }, 0);
+      const price = revisionPeriodPrice(createRevisionSelfDto.period);
+
+      if (!price || price === 0) {
+        throw new BadRequestException(REVISION_SELF_ERROR.PRICE_IS_NULL);
+      }
 
       await this.companyBalanceService.createCompanyBalancePayment(
         company,

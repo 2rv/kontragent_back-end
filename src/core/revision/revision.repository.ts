@@ -7,6 +7,7 @@ import { RevisionEntity } from './revision.entity';
 import { REVISION_STATUS } from './enum/revision-status.enum';
 import { UpdateRevisionDto } from './dto/update-revision.dto';
 import { CreateRevisionDto } from './dto/create-revision.dto';
+import { KontragentEntity } from '../kontragent/kontragent.entity';
 
 @EntityRepository(RevisionEntity)
 export class RevisionRepository extends Repository<RevisionEntity> {
@@ -131,5 +132,25 @@ export class RevisionRepository extends Repository<RevisionEntity> {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async getRevisionKontragentList(
+    company: CompanyEntity,
+    kontragent: KontragentEntity,
+  ): Promise<RevisionEntity[]> {
+    const query = this.createQueryBuilder('revision');
+    query.leftJoin('revision.company', 'company');
+    query.leftJoin('revision.revisionKontragent', 'revisionKontragent');
+    query.leftJoin('revisionKontragent.kontragent', 'kontragent');
+    query.where('company.id = :id', { id: company.id });
+    query.andWhere('kontragent.id = :id', { id: kontragent.id });
+    query.select([
+      'revision.id',
+      'revision.createDate',
+      'revision.status',
+      'company.id',
+      'kontragent.id',
+    ]);
+    return query.getMany();
   }
 }

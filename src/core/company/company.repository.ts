@@ -9,6 +9,7 @@ import { CompanyEntity } from './company.entity';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { CreateUnregisteredCompanyDto } from './dto/create-company.dto copy';
 import { COMPANY_ERROR } from './enum/company-error.enum';
+import { COMPANY_TYPE } from './enum/company-type.enum';
 
 @EntityRepository(CompanyEntity)
 export class CompanyRepository extends Repository<CompanyEntity> {
@@ -120,7 +121,9 @@ export class CompanyRepository extends Repository<CompanyEntity> {
     return await query.getMany();
   }
 
-  async getCompanyUnregisteredList(): Promise<CompanyEntity[]> {
+  async getCompanyUnregisteredList(
+    type: COMPANY_TYPE,
+  ): Promise<CompanyEntity[]> {
     const query = this.createQueryBuilder('company');
 
     query.leftJoin('company.companyBalance', 'companyBalance');
@@ -136,6 +139,11 @@ export class CompanyRepository extends Repository<CompanyEntity> {
 
     query.where('company.registered = false');
 
+    if (type) {
+      query.andWhere('company.type = :type', {
+        type: type,
+      });
+    }
     return await query.getMany();
   }
 

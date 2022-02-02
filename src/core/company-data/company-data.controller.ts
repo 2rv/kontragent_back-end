@@ -48,6 +48,14 @@ export class CompanyDataController {
     stream.pipe(res);
   }
 
+  //Это экспресс аналитика пдф
+  @Get('/brief-report-pdf/:companyId')
+  @UseGuards(AuthGuard(), AccountGuard, CompanyGuard)
+  async getBriefReportPdf(@GetCompany() company: CompanyEntity, @Res() res) {
+    const stream = await this.companyDataService.getBriefReportPdf(company.inn);
+    stream.pipe(res);
+  }
+
   @Get('/analytics/:companyId')
   @UseGuards(AuthGuard(), AccountGuard, CompanyGuard)
   getAnalytics(@GetCompany() company: CompanyEntity) {
