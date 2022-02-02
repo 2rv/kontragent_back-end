@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Patch,
   Post,
   UseGuards,
   ValidationPipe,
@@ -19,6 +20,7 @@ import { UserEntity } from '../user/user.entity';
 import { GetRevisionSelf } from './decorator/get-revision-self.decorator';
 import { CreateRevisionSelfDto } from './dto/create-revision-self.dto';
 import { GetRevisionSelfListDto } from './dto/get-revision-self-list.dto';
+import { UpdateRevisionSelfDto } from './dto/update-revision-self.dto';
 import { RevisionSelfGuard } from './guard/revision-self.guard';
 import { RevisionSelfEntity } from './revision-self.entity';
 import { RevisionSelfService } from './revision-self.service';
@@ -65,5 +67,53 @@ export class RevisionSelfController {
     @GetRevisionSelf() revision: RevisionSelfEntity,
   ): Promise<RevisionSelfEntity> {
     return this.revisionSelfService.getRevisionSelf(revision);
+  }
+
+  @Get('/admin')
+  @Roles(USER_ROLE.ADMIN)
+  @UseGuards(AuthGuard(), AccountGuard)
+  getAdminRevisionSelfList(): Promise<GetRevisionSelfListDto> {
+    return this.revisionSelfService.getAdminRevisionSelfList();
+  }
+
+  @Get('/admin/revision/:revisionSelfId')
+  @Roles(USER_ROLE.ADMIN)
+  @UseGuards(AuthGuard(), AccountGuard, RevisionSelfGuard)
+  getAdminRevisionSelf(
+    @GetRevisionSelf() revision: RevisionSelfEntity,
+  ): Promise<RevisionSelfEntity> {
+    return this.revisionSelfService.getAdminRevisionSelf(revision);
+  }
+
+  @Patch('/admin/revision/:revisionSelfId/review')
+  @Roles(USER_ROLE.ADMIN)
+  @UseGuards(AuthGuard(), AccountGuard, RevisionSelfGuard)
+  updateRevisionSelfReview(
+    @Body(ValidationPipe) updateRevisionDto: UpdateRevisionSelfDto,
+    @GetRevisionSelf() revisionSelf: RevisionSelfEntity,
+  ): Promise<void> {
+    return this.revisionSelfService.updateRevisionSelf(
+      updateRevisionDto,
+      revisionSelf,
+    );
+  }
+
+  @Post('/company/:companyId/revision/:revisionSelfId/payment')
+  @Roles(USER_ROLE.USER, USER_ROLE.ADMIN)
+  @UseGuards(
+    AuthGuard(),
+    AccountGuard,
+    CompanyGuard,
+    CompanyMemberGuard,
+    RevisionSelfGuard,
+  )
+  createRevisionSelfPayment(
+    @GetRevisionSelf() revisionSelf: RevisionSelfEntity,
+    @GetCompany() company: CompanyEntity,
+  ): Promise<void> {
+    return this.revisionSelfService.createRevisionSelfPayment(
+      revisionSelf,
+      company,
+    );
   }
 }

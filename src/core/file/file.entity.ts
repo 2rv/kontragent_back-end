@@ -67,7 +67,7 @@ export class FileEntity extends BaseEntity {
     () => RevisionSelfEntity,
     (revision: RevisionSelfEntity) => revision.filesReview,
   )
-  revisionSelfFilesReview;
+  revisionSelfFilesReview: RevisionSelfEntity;
 
   @OneToOne(() => PostEntity, (post: PostEntity) => post.image)
   post: PostEntity;

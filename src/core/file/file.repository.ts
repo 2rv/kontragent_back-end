@@ -74,6 +74,22 @@ export class FileRepository extends Repository<FileEntity> {
     }
   }
 
+  async assignFileToRevisionSelfReviewById(
+    revisionSelf: RevisionSelfEntity,
+    filesId: number[],
+  ): Promise<void> {
+    for (const fileId of filesId) {
+      try {
+        await this.update(
+          { id: fileId },
+          { revisionSelfFilesReview: revisionSelf },
+        );
+      } catch (error) {
+        throw new BadRequestException(error);
+      }
+    }
+  }
+
   async assignFileToBillById(bill: BillEntity, fileId: number): Promise<void> {
     const file = await this.findOne({ where: { id: fileId } });
     if (!file) {

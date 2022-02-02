@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CompanyBalanceService } from '../company-balance/company-balance.service';
 import { CompanyEntity } from '../company/company.entity';
@@ -7,6 +11,9 @@ import { PAYMENT_TYPE } from '../payment/enum/payment-type.enum';
 import { UserEntity } from '../user/user.entity';
 import { CreateRevisionSelfDto } from './dto/create-revision-self.dto';
 import { GetRevisionSelfListDto } from './dto/get-revision-self-list.dto';
+import { UpdateRevisionSelfDto } from './dto/update-revision-self.dto';
+import { REVISION_SELF_ERROR } from './enum/revision-self-error.enum';
+import { REVISION_SELF_STATUS } from './enum/revision-self-status.enum';
 import { RevisionSelfEntity } from './revision-self.entity';
 import { RevisionSelfRepository } from './revision-self.repository';
 
@@ -66,5 +73,56 @@ export class RevisionSelfService {
     revisionSelf: RevisionSelfEntity,
   ): Promise<RevisionSelfEntity> {
     return await this.revisionSelfRepository.getRevisionSelf(revisionSelf);
+  }
+
+  async getAdminRevisionSelfList(): Promise<GetRevisionSelfListDto> {
+    const list: RevisionSelfEntity[] =
+      await this.revisionSelfRepository.getAdminRevisionSelfList();
+    return { list };
+  }
+
+  async getAdminRevisionSelf(
+    revisionSelf: RevisionSelfEntity,
+  ): Promise<RevisionSelfEntity> {
+    return await this.revisionSelfRepository.getAdminRevisionSelf(revisionSelf);
+  }
+
+  async updateRevisionSelf(
+    updateRevisionSelfDto: UpdateRevisionSelfDto,
+    revision: RevisionSelfEntity,
+  ): Promise<void> {
+    const result = await this.revisionSelfRepository.updateRevisionSelf(
+      revision,
+      updateRevisionSelfDto,
+    );
+
+    await this.fileRepository.assignFileToRevisionSelfReviewById(
+      result,
+      updateRevisionSelfDto.filesReview,
+    );
+  }
+
+  async createRevisionSelfPayment(
+    revisionSelf: RevisionSelfEntity,
+    company: CompanyEntity,
+  ): Promise<void> {
+    try {
+      if (revisionSelf.status !== REVISION_SELF_STATUS.PAY) {
+        throw new BadRequestException(
+          REVISION_SELF_ERROR.REVISION_STATUS_IS_NOT_PAYMENT,
+        );
+      }
+
+      await this.companyBalanceService.createCompanyBalancePayment(
+        company,
+        revisionSelf.price,
+      );
+
+      revisionSelf.status = REVISION_SELF_STATUS.PAID;
+      revisionSelf.price = 0;
+      await revisionSelf.save();
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 }

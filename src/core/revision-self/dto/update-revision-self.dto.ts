@@ -10,7 +10,7 @@ import {
 import { REVISION_SELF_STATUS } from '../enum/revision-self-status.enum';
 import { REVISION_SELF_VALIDATION_ERROR } from '../enum/revision-self-validation.enum';
 
-export class UpdateRevisionDto {
+export class UpdateRevisionSelfDto {
   @IsOptional()
   @IsIn(Object.values(REVISION_SELF_STATUS))
   status: REVISION_SELF_STATUS;
