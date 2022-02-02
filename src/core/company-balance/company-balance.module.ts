@@ -30,5 +30,6 @@ import { CompanyBalanceService } from './company-balance.service';
     ]),
     AuthModule,
   ],
+  exports: [CompanyBalanceService],
 })
 export class CompanyBalanceModule {}

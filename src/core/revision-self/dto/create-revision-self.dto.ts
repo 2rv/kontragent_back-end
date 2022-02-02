@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
   IsNotEmpty,
@@ -5,11 +6,12 @@ import {
   IsOptional,
   IsString,
   MaxLength,
+  ValidateNested,
 } from 'class-validator';
 
-import { CreateRevisionYearDto } from '../../revision-company-year/dto/create-revision-company-year.dto';
+import { CreateRevisionSelfPeriodDto } from './revision-self-period.dto';
 
-export class CreateRevisionOwnCompanyDto {
+export class CreateRevisionSelfDto {
   @IsNotEmpty()
   @IsString()
   @MaxLength(10000)
@@ -18,7 +20,9 @@ export class CreateRevisionOwnCompanyDto {
   @IsOptional()
   @IsNumber({}, { each: true })
   @ArrayMaxSize(10, { message: 'MAXIMUM_OF_FILES_10' })
-  fileIdList?: number[];
+  files?: number[];
 
-  year: CreateRevisionYearDto[];
+  @ValidateNested()
+  @Type(() => CreateRevisionSelfPeriodDto)
+  period: CreateRevisionSelfPeriodDto[];
 }

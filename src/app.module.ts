@@ -25,6 +25,7 @@ import { CompanyDataModule } from './core/company-data/company-data.module';
 import { NotificationModule } from './core/notification/notification.module';
 import { FeedbackModule } from './core/feedback/feedback.module';
 import { ReviewModule } from './core/review/review.module';
+import { RevisionSelfModule } from './core/revision-self/revision-self.module';
 
 @Module({
   providers: [],
@@ -55,6 +56,7 @@ import { ReviewModule } from './core/review/review.module';
     NotificationModule,
     FeedbackModule,
     ReviewModule,
+    RevisionSelfModule,
   ],
 })
 export class AppModule {}

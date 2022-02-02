@@ -17,6 +17,7 @@ import { UserEntity } from '../user/user.entity';
 import { BillEntity } from '../bill/bill.entity';
 import { KontragentEntity } from '../kontragent/kontragent.entity';
 import { ReviewEntity } from '../review/review.entity';
+import { RevisionSelfEntity } from '../revision-self/revision-self.entity';
 
 @Entity({ name: 'company' })
 export class CompanyEntity extends BaseEntity {
@@ -57,6 +58,9 @@ export class CompanyEntity extends BaseEntity {
 
   @OneToMany(() => RevisionEntity, (revision) => revision.company)
   revision: RevisionEntity[];
+
+  @OneToMany(() => RevisionSelfEntity, (revision) => revision.company)
+  revisionSelf: RevisionSelfEntity[];
 
   @OneToMany(() => KontragentEntity, (kontragent) => kontragent.consumer)
   kontragents: KontragentEntity[]; // удаляется каскадом или если её contractor был удалён

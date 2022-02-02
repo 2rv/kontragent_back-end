@@ -16,6 +16,7 @@ import { FeedbackEntity } from '../feedback/feedback.entity';
 import { ReviewEntity } from '../review/review.entity';
 import { RevisionKontragentEntity } from '../revision-kontragent/revision-kontragent.entity';
 import { RevisionEntity } from '../revision/revision.entity';
+import { RevisionSelfEntity } from '../revision-self/revision-self.entity';
 
 @Entity({ name: 'file' })
 export class FileEntity extends BaseEntity {
@@ -55,6 +56,18 @@ export class FileEntity extends BaseEntity {
     (revision: RevisionEntity) => revision.filesReview,
   )
   revisionFilesReview: RevisionEntity;
+
+  @ManyToOne(
+    () => RevisionSelfEntity,
+    (revision: RevisionSelfEntity) => revision.files,
+  )
+  revisionSelf: RevisionSelfEntity;
+
+  @ManyToOne(
+    () => RevisionSelfEntity,
+    (revision: RevisionSelfEntity) => revision.filesReview,
+  )
+  revisionSelfFilesReview: RevisionSelfEntity;
 
   @OneToOne(() => PostEntity, (post: PostEntity) => post.image)
   post: PostEntity;
