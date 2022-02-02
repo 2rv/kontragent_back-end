@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { FileEntity } from '../file/file.entity';
 import { UserEntity } from '../user/user.entity';
+import { FEEDBACK_STATUS } from './enum/feedback-status.enum';
 
 @Entity({ name: 'feedback' })
 export class FeedbackEntity extends BaseEntity {
@@ -20,6 +21,14 @@ export class FeedbackEntity extends BaseEntity {
     name: 'title',
   })
   title: string;
+
+  @Column({
+    type: 'enum',
+    enum: FEEDBACK_STATUS,
+    default: FEEDBACK_STATUS.NEW,
+    nullable: false,
+  })
+  status: FEEDBACK_STATUS;
 
   @Column({
     type: 'varchar',

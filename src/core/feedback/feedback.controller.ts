@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Patch,
   Post,
   UseGuards,
   ValidationPipe,
@@ -18,6 +19,7 @@ import { GetFeedback } from './decorator/get-feedback.decorator';
 import { FeedbackEntity } from './feedback.entity';
 import { GetAdminFeedbackListDto } from './dto/get-admin-feedback-list.dto';
 import { FeedbackGuard } from './guard/feedback.guard';
+import { UpdateFeedbackStatusDto } from './dto/update-feedback-status.dto';
 
 @Controller('feedback')
 export class FeedbackController {
@@ -53,5 +55,18 @@ export class FeedbackController {
     @GetFeedback() feedback: FeedbackEntity,
   ): Promise<FeedbackEntity> {
     return this.feedbackService.getAdminFeedbackInfo(feedback);
+  }
+
+  @Patch('/:feedbackId')
+  @Roles(USER_ROLE.ADMIN)
+  @UseGuards(AuthGuard(), AccountGuard, FeedbackGuard)
+  updateAdminFeedbackStatus(
+    @GetFeedback() feedback: FeedbackEntity,
+    @Body(ValidationPipe) updateFeedbackStatusDto: UpdateFeedbackStatusDto,
+  ): Promise<void> {
+    return this.feedbackService.updateAdminFeedbackStatus(
+      feedback,
+      updateFeedbackStatusDto,
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FeedbackRepository } from './feedback.repository';
 import { FileRepository } from '../file/file.repository';
@@ -6,7 +6,7 @@ import { UserEntity } from '../user/user.entity';
 import { FeedbackCreateDto } from './dto/create-feedback.dto';
 import { FeedbackEntity } from './feedback.entity';
 import { GetAdminFeedbackListDto } from './dto/get-admin-feedback-list.dto';
-import { FeedbackGuard } from './guard/feedback.guard';
+import { UpdateFeedbackStatusDto } from './dto/update-feedback-status.dto';
 
 @Injectable()
 export class FeedbackService {
@@ -51,5 +51,13 @@ export class FeedbackService {
   ): Promise<FeedbackEntity> {
     const res = await this.feedbackRepository.getAdminFeedbackInfo(feedback);
     return res;
+  }
+
+  async updateAdminFeedbackStatus(
+    feedback: FeedbackEntity,
+    updateFeedbackStatusDto: UpdateFeedbackStatusDto,
+  ): Promise<void> {
+    feedback.status = updateFeedbackStatusDto.status;
+    feedback.save();
   }
 }

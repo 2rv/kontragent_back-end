@@ -60,7 +60,7 @@ export function revisionPeriodPrice(
 
     const totalPrice = price.map((i) => (x += i), (x = 0)).reverse()[0];
 
-    return totalPrice;
+    return totalPrice || 0;
   } catch (error) {
     console.log(error);
   }

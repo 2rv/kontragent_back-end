@@ -1,12 +1,8 @@
-import {
-  InternalServerErrorException,
-  ConflictException,
-  BadRequestException,
-} from '@nestjs/common';
 import { Repository, EntityRepository } from 'typeorm';
 import { FeedbackCreateDto } from './dto/create-feedback.dto';
 import { UserEntity } from '../user/user.entity';
 import { FeedbackEntity } from './feedback.entity';
+import { FEEDBACK_STATUS } from './enum/feedback-status.enum';
 
 @EntityRepository(FeedbackEntity)
 export class FeedbackRepository extends Repository<FeedbackEntity> {
@@ -20,7 +16,6 @@ export class FeedbackRepository extends Repository<FeedbackEntity> {
 
     feedback.title = title;
     feedback.description = description;
-
     feedback.user = user;
 
     await feedback.save();
@@ -31,15 +26,27 @@ export class FeedbackRepository extends Repository<FeedbackEntity> {
   async getAdminFeedbackList(): Promise<FeedbackEntity[]> {
     const query = this.createQueryBuilder('feedback');
 
-    query.select(['feedback.id', 'feedback.title', 'feedback.createDate']);
+    query.select([
+      'feedback.id',
+      'feedback.title',
+      'feedback.createDate',
+      'feedback.status',
+    ]);
     return await query.getMany();
   }
 
   async getAdminFeedbackListToday(): Promise<FeedbackEntity[]> {
-    const thisDay = new Intl.DateTimeFormat().format(new Date());
+    // const thisDay = new Intl.DateTimeFormat().format(new Date());
     const query = this.createQueryBuilder('feedback')
-      .select(['feedback.id', 'feedback.title', 'feedback.createDate'])
-      .where('feedback.createDate >= :today', { today: thisDay });
+      .select([
+        'feedback.id',
+        'feedback.title',
+        'feedback.createDate',
+        'feedback.status',
+      ])
+      .where('feedback.status = :status', {
+        status: FEEDBACK_STATUS.NEW,
+      });
     return await query.getMany();
   }
 
@@ -54,6 +61,7 @@ export class FeedbackRepository extends Repository<FeedbackEntity> {
         'feedback.title',
         'feedback.description',
         'feedback.createDate',
+        'feedback.status',
         'files',
       ])
       .getOne();
