@@ -2,14 +2,17 @@ import {
   Entity,
   BaseEntity,
   PrimaryGeneratedColumn,
-  JoinColumn,
-  OneToOne,
   OneToMany,
   Column,
   CreateDateColumn,
+  ManyToOne,
 } from 'typeorm';
+
 import { CompanyEntity } from '../company/company.entity';
+import { UserEntity } from '../user/user.entity';
 import { FileEntity } from '../file/file.entity';
+
+import { REVISION_SELF_STATUS } from './enum/revision-self-status.enum';
 import { CreateRevisionSelfPeriodDto } from './dto/revision-self-period.dto';
 
 @Entity({ name: 'revision-self' })
@@ -22,30 +25,39 @@ export class RevisionSelfEntity extends BaseEntity {
   })
   createDate: string;
 
-  // @Column({
-  //   type: 'enum',
-  //   enum: REVISION_STATUS,
-  //   default: REVISION_STATUS.NEW,
-  //   nullable: false,
-  // })
-  // status: REVISION_STATUS;
+  @Column({
+    type: 'enum',
+    enum: REVISION_SELF_STATUS,
+    default: REVISION_SELF_STATUS.NEW,
+    nullable: false,
+  })
+  status: REVISION_SELF_STATUS;
 
   @Column({ nullable: false, default: 0, type: 'decimal' })
   price: number;
 
-  // @ManyToOne(() => UserEntity, (user) => user.revision)
-  // creator: UserEntity;
+  @ManyToOne(() => UserEntity, (user) => user.revisionSelf)
+  creator: UserEntity;
 
-  @OneToOne(() => CompanyEntity, { onDelete: 'SET NULL' }) // ссылаемся на компанию не создавая на другой стороне поля
-  @JoinColumn()
+  @ManyToOne(() => CompanyEntity, (company) => company.revisionSelf, {
+    onDelete: 'SET NULL',
+  })
   company: CompanyEntity;
 
-  @Column({ name: 'period', type: 'json' })
+  @Column({ name: 'period', type: 'json', nullable: false })
   period: CreateRevisionSelfPeriodDto[];
 
   @Column({ nullable: false })
   description: string;
 
-  // @OneToMany(() => FileEntity, (file) => file.revisionSelf)
-  // files: FileEntity[];
+  @OneToMany(() => FileEntity, (file) => file.revisionSelf)
+  files: FileEntity[];
+
+  @Column({ name: 'review', nullable: true })
+  review: string;
+
+  @OneToMany(() => FileEntity, (file) => file.revisionSelfFilesReview, {
+    nullable: true,
+  })
+  filesReview: FileEntity[];
 }

@@ -24,6 +24,7 @@ import { CommentEntity } from '../comment/comment.entity';
 import { PostEntity } from '../post/post.entity';
 import { NotificationEntity } from '../notification/notification.entity';
 import { FeedbackEntity } from '../feedback/feedback.entity';
+import { RevisionSelfEntity } from '../revision-self/revision-self.entity';
 
 @Entity({ name: 'user' })
 export class UserEntity extends BaseEntity {
@@ -89,6 +90,9 @@ export class UserEntity extends BaseEntity {
 
   @OneToMany(() => RevisionEntity, (revision) => revision.creator)
   revision: RevisionEntity[];
+
+  @OneToMany(() => RevisionSelfEntity, (revision) => revision.creator)
+  revisionSelf: RevisionSelfEntity[];
 
   @OneToMany(() => CommentEntity, (comment) => comment.user)
   comments: CommentEntity[];

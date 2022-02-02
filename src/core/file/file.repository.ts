@@ -13,6 +13,7 @@ import { BillEntity } from '../bill/bill.entity';
 import { NotificationEntity } from '../notification/notification.entity';
 import { FeedbackEntity } from '../feedback/feedback.entity';
 import { RevisionKontragentEntity } from '../revision-kontragent/revision-kontragent.entity';
+import { RevisionSelfEntity } from '../revision-self/revision-self.entity';
 
 @EntityRepository(FileEntity)
 export class FileRepository extends Repository<FileEntity> {
@@ -61,6 +62,15 @@ export class FileRepository extends Repository<FileEntity> {
       } catch (error) {
         throw new BadRequestException(error);
       }
+    }
+  }
+
+  async assignFileToRevisionSelfDescriptionById(
+    revisionSelf: RevisionSelfEntity,
+    filesId: number[],
+  ): Promise<void> {
+    for (const fileId of filesId) {
+      await this.update({ id: fileId }, { revisionSelf: revisionSelf });
     }
   }
 
