@@ -48,7 +48,7 @@ export class CompanyController {
     return this.companyService.createCompany(companyCreateDto, user);
   }
 
-  @Post('/import')
+  @Post('/admin/import')
   @Roles(USER_ROLE.ADMIN)
   @UseGuards(AuthGuard(), AccountGuard)
   importCompanies(

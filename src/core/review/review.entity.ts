@@ -10,6 +10,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { CompanyEntity } from '../company/company.entity';
+import { COMPANY_TYPE } from '../company/enum/company-type.enum';
 import { FileEntity } from '../file/file.entity';
 import { RevisionEntity } from '../revision/revision.entity';
 
@@ -37,4 +38,11 @@ export class ReviewEntity extends BaseEntity {
   @OneToOne(() => RevisionEntity, (review) => review.review)
   @JoinColumn()
   revision: RevisionEntity;
+
+  @Column({
+    type: 'enum',
+    enum: COMPANY_TYPE,
+    nullable: true,
+  })
+  type: COMPANY_TYPE;
 }
