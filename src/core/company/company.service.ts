@@ -83,7 +83,6 @@ export class CompanyService {
         if (!item.inn) {
           continue;
         }
-        console.log(item);
 
         const companyByInn = await this.companyRepository.findOne({
           where: { inn: item.inn },
@@ -93,7 +92,6 @@ export class CompanyService {
           const company = await this.companyRepository.save({
             name: item.name ? item.name : `Компания ИНН ${item.inn}`,
             inn: item.inn,
-            createDate: item.createDate,
             type: companiesData.type,
           });
 
