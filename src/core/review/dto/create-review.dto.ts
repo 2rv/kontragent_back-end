@@ -1,5 +1,6 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { CompanyEntity } from 'src/core/company/company.entity';
+import { COMPANY_TYPE } from 'src/core/company/enum/company-type.enum';
 
 export class CreateReviewDto {
   @IsNotEmpty()
@@ -12,4 +13,8 @@ export class CreateReviewDto {
   @IsOptional()
   @IsString()
   createDate?: string;
+
+  @IsOptional()
+  @IsIn(Object.values(COMPANY_TYPE))
+  type?: COMPANY_TYPE;
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CompanyBalanceRepository } from '../company-balance/company-balance.repository';
 import { CompanyMemberRepository } from '../company-member/company-member.repository';
@@ -78,39 +78,54 @@ export class CompanyService {
 
   async importCompanies(companiesData: ImportCompaniesDto): Promise<void> {
     const { companies } = companiesData;
-    for (const item of companies) {
-      const companyByInn = await this.companyRepository.findOne({
-        where: { inn: item.inn },
-      });
-
-      if (!companyByInn) {
-        const company = await this.companyRepository.save({
-          name: item.name ? item.name : `Компания ИНН ${item.inn}`,
-          inn: item.inn,
-          createDate: item.createDate,
-          type: companiesData.type,
-        });
-
-        await this.reviewRepository.createReview({
-          company: company,
-          review: item.review,
-          createDate: item.createDate,
-        });
-
-        console.log(`${company.id}: ${company.name} создана`);
-      } else {
-        if (item.createDate) {
-          companyByInn.createDate = item.createDate;
+    try {
+      for (const item of companies) {
+        if (!item.inn) {
+          continue;
         }
 
-        await this.reviewRepository.createReview({
-          company: companyByInn,
-          review: item.review,
-          createDate: item.createDate,
+        const companyByInn = await this.companyRepository.findOne({
+          where: { inn: item.inn },
         });
 
-        await companyByInn.save();
+        if (!companyByInn) {
+          const company = await this.companyRepository.save({
+            name: item.name ? item.name : `Компания ИНН ${item.inn}`,
+            inn: item.inn,
+            type: companiesData.type,
+          });
+
+          if (!item.review) {
+            continue;
+          }
+
+          await this.reviewRepository.createReview({
+            company: company,
+            review: item.review,
+            createDate: item.createDate,
+            type: companiesData.type,
+          });
+        } else {
+          if (!item.review) {
+            continue;
+          }
+
+          if (item.createDate) {
+            companyByInn.createDate = item.createDate;
+          }
+
+          await this.reviewRepository.createReview({
+            company: companyByInn,
+            review: item.review,
+            createDate: item.createDate,
+            type: companiesData.type,
+          });
+
+          await companyByInn.save();
+        }
       }
+    } catch (error) {
+      throw new BadRequestException(error);
     }
   }
 
