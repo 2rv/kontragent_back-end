@@ -153,4 +153,9 @@ export class RevisionRepository extends Repository<RevisionEntity> {
     ]);
     return query.getMany();
   }
+
+  async getRevisionCount(): Promise<number> {
+    const query = this.createQueryBuilder('revision');
+    return await query.getCount();
+  }
 }

@@ -154,4 +154,9 @@ export class CompanyRepository extends Repository<CompanyEntity> {
       throw new BadRequestException(COMPANY_ERROR.CANT_VERIFICATE_COMPANY_INFO);
     }
   }
+
+  async getCompanyCount(): Promise<number> {
+    const query = this.createQueryBuilder('company');
+    return await query.getCount();
+  }
 }

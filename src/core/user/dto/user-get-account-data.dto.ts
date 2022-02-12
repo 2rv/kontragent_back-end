@@ -1,4 +1,4 @@
-import {USER_ROLE} from '../enum/user-role.enum'
+import { USER_ROLE } from '../enum/user-role.enum';
 
 export class UserGetAccountDataDto {
   login: string;
@@ -8,5 +8,6 @@ export class UserGetAccountDataDto {
   email: string;
   confirmEmail: boolean;
   confirmPhone: boolean;
+  createDate: string;
   role: USER_ROLE;
 }

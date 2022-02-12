@@ -26,6 +26,7 @@ import { NotificationModule } from './core/notification/notification.module';
 import { FeedbackModule } from './core/feedback/feedback.module';
 import { ReviewModule } from './core/review/review.module';
 import { RevisionSelfModule } from './core/revision-self/revision-self.module';
+import { AnalyticsModule } from './core/analytics/analytics.module';
 
 @Module({
   providers: [],
@@ -57,6 +58,7 @@ import { RevisionSelfModule } from './core/revision-self/revision-self.module';
     FeedbackModule,
     ReviewModule,
     RevisionSelfModule,
+    AnalyticsModule,
   ],
 })
 export class AppModule {}

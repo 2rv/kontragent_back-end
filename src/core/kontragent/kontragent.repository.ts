@@ -33,4 +33,9 @@ export class KontragentRepository extends Repository<KontragentEntity> {
       .where('kontragent.id = :id', { id: kontragent.id })
       .getOne();
   }
+
+  async getKontragentCount(): Promise<number> {
+    const query = this.createQueryBuilder('kontragent');
+    return await query.getCount();
+  }
 }
