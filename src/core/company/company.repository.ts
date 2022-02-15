@@ -8,6 +8,7 @@ import { UserEntity } from '../user/user.entity';
 import { CompanyEntity } from './company.entity';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { CreateUnregisteredCompanyDto } from './dto/create-company.dto copy';
+import { GetCompanyListParamsDto } from './dto/get-company-list.dto';
 import { COMPANY_ERROR } from './enum/company-error.enum';
 import { COMPANY_TYPE } from './enum/company-type.enum';
 
@@ -103,48 +104,41 @@ export class CompanyRepository extends Repository<CompanyEntity> {
     return await query.getMany();
   }
 
-  async getCompanyList(): Promise<CompanyEntity[]> {
-    const query = this.createQueryBuilder('company');
+  async getCompanyList(
+    params: GetCompanyListParamsDto,
+  ): Promise<[CompanyEntity[], number]> {
+    const { skip, take, type, registered = true } = params;
 
-    query.leftJoin('company.companyBalance', 'companyBalance');
-    query.where('company.registered = :registered', { registered: true });
-
-    query.select([
-      'company.id',
-      'company.name',
-      'company.inn',
-      'company.verificatePayment',
-      'company.verificateInfo',
-      'companyBalance.amount',
-    ]);
-
-    return await query.getMany();
-  }
-
-  async getCompanyUnregisteredList(
-    type: COMPANY_TYPE,
-  ): Promise<CompanyEntity[]> {
     const query = this.createQueryBuilder('company');
 
     query.leftJoin('company.companyBalance', 'companyBalance');
 
-    query.select([
-      'company.id',
-      'company.name',
-      'company.inn',
-      'company.verificatePayment',
-      'company.verificateInfo',
-      'companyBalance.amount',
-    ]);
+    query.where('company.registered = :registered', { registered });
 
-    query.where('company.registered = false');
+    if (skip) {
+      query.offset(skip);
+    }
+
+    if (take) {
+      query.limit(take);
+    }
 
     if (type) {
-      query.andWhere('company.type = :type', {
-        type: type,
-      });
+      query.andWhere('company.type = :type', { type });
     }
-    return await query.getMany();
+
+    query.orderBy('company.id', 'DESC');
+
+    query.select([
+      'company.id',
+      'company.name',
+      'company.inn',
+      'company.verificatePayment',
+      'company.verificateInfo',
+      'companyBalance.amount',
+    ]);
+
+    return await query.getManyAndCount();
   }
 
   async verifyCompanyInfo(company: CompanyEntity): Promise<void> {

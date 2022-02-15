@@ -7,13 +7,15 @@ import { UserEntity } from '../user/user.entity';
 import { CompanyEntity } from './company.entity';
 import { CompanyRepository } from './company.repository';
 import { CreateCompanyDto } from './dto/create-company.dto';
-import { GetAccountCompanyListDto } from './dto/get-account-company-list.dto';
-import { GetAdminCompanyListDto } from './dto/get-admin-company-list.dto';
+import {
+  GetCompanyAdminListDto,
+  GetCompanyListDto,
+  GetCompanyListParamsDto,
+} from './dto/get-company-list.dto';
 import { GetCompanyInfoDto } from './dto/get-company-info.dto';
 import { CreateCompanyInfoDto } from './dto/create-company-info.dto';
 import { ImportCompaniesDto } from './dto/import-companies.dto';
 import { ReviewRepository } from '../review/review.repository';
-import { COMPANY_TYPE } from './enum/company-type.enum';
 
 @Injectable()
 export class CompanyService {
@@ -139,20 +141,22 @@ export class CompanyService {
     };
   }
 
-  async getAccountCompanyList(user): Promise<GetAccountCompanyListDto> {
+  async getCompanyUserList(user): Promise<GetCompanyListDto> {
     const list = await this.companyRepository.getCompanyListByUser(user);
     return { list };
   }
 
-  async getAdminCompanyList(): Promise<GetAdminCompanyListDto> {
-    const list = await this.companyRepository.getCompanyList();
-    return { list };
-  }
-
-  async getAdminCompanyUnregisteredList(
-    type: COMPANY_TYPE,
-  ): Promise<CompanyEntity[]> {
-    return await this.companyRepository.getCompanyUnregisteredList(type);
+  async getCompanyAdminList(
+    params: GetCompanyListParamsDto,
+  ): Promise<GetCompanyAdminListDto> {
+    const [list, count] = await this.companyRepository.getCompanyList(params);
+    return {
+      list: list,
+      count: count,
+      skip: params.skip,
+      take: params.take,
+      type: params.type,
+    };
   }
 
   async verifyCompanyInfo(company: CompanyEntity): Promise<void> {
