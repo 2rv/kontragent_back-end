@@ -8,6 +8,7 @@ import { CompanyEntity } from '../company/company.entity';
 import { GetKontragentInfoDto } from './dto/get-kontragent-info.dto';
 import { KONTRAGENT_ERROR } from './enum/kontragent-error.enum';
 import { ImportKontragentsDto } from './dto/import-kontragents.dto';
+import { UpdateKontragentInfoDto } from './dto/update-kontragent-info.dto';
 
 @Injectable()
 export class KontragentService {
@@ -124,5 +125,15 @@ export class KontragentService {
 
   async deleteKontragent(kontragent: KontragentEntity) {
     await this.kontragentRepository.delete(kontragent.id);
+  }
+
+  async updateKonragentInfo(
+    kontragent: KontragentEntity,
+    updateKontragentInfoDto: UpdateKontragentInfoDto,
+  ) {
+    kontragent.email = updateKontragentInfoDto.email;
+    kontragent.rating = updateKontragentInfoDto.rating;
+    kontragent.comment = updateKontragentInfoDto.comment;
+    await kontragent.save();
   }
 }

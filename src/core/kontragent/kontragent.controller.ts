@@ -6,6 +6,7 @@ import {
   UseGuards,
   Delete,
   ValidationPipe,
+  Patch,
 } from '@nestjs/common';
 
 import { AuthGuard } from '@nestjs/passport';
@@ -25,6 +26,7 @@ import { GetKontragentInfoDto } from './dto/get-kontragent-info.dto';
 import { USER_ROLE } from '../user/enum/user-role.enum';
 import { Roles } from '../user/decorator/role.decorator';
 import { ImportKontragentsDto } from './dto/import-kontragents.dto';
+import { UpdateKontragentInfoDto } from './dto/update-kontragent-info.dto';
 
 @Controller('kontragent')
 export class KontragentController {
@@ -87,5 +89,24 @@ export class KontragentController {
   )
   deleteKontragent(@GetKontragent() kontragent: KontragentEntity) {
     return this.kontragentService.deleteKontragent(kontragent);
+  }
+
+  @Patch('/info/:companyId/:kontragentId')
+  @UseGuards(
+    AuthGuard(),
+    AccountGuard,
+    CompanyGuard,
+    CompanyMemberGuard,
+    KontragentGuard,
+    KontragentConsumerGuard,
+  )
+  updateKontragentInfo(
+    @GetKontragent() kontragent: KontragentEntity,
+    @Body(ValidationPipe) updateKontragentInfoDto: UpdateKontragentInfoDto,
+  ) {
+    return this.kontragentService.updateKonragentInfo(
+      kontragent,
+      updateKontragentInfoDto,
+    );
   }
 }
