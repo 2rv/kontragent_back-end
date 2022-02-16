@@ -53,12 +53,17 @@ export class CompanyDataService {
   ) {}
 
   async getInfo(inn: string): Promise<any> {
-    const req = await this.getReq(inn);
-    const egrDetails = await this.getEgrDetails(inn);
-    return {
-      req: req[0],
-      egrDetails: egrDetails[0],
-    };
+    try {
+      const req = await this.getReq(inn);
+      const egrDetails = await this.getEgrDetails(inn);
+      return {
+        req: req[0],
+        egrDetails: egrDetails[0],
+      };
+    } catch (error) {
+      console.log(error);
+      new BadRequestException('Не удалось получить дополнительную информацию');
+    }
   }
 
   async getKontragentInfo(kontragent: KontragentEntity): Promise<any> {
