@@ -2,8 +2,8 @@ DATABASE:
   URL: postgres://dfxmqmwrzejxxd:e8b14cb8f98eea6aef3d01365c4c746a4a83bd57b7fb07fb8a5303e0e9a3b020@ec2-3-248-103-75.eu-west-1.compute.amazonaws.com:5432/d93eba91dp4u0h
 
 CACHE:
-  HOST: 'ec2-50-16-236-99.compute-1.amazonaws.com'
-  PORT: 16569
+  HOST: 'ec2-34-194-14-196.compute-1.amazonaws.com'
+  PORT: 25019
   PASSWORD: 'pdeb811685305cf8c1bb28d6541d08d8b84190ca075f7189558595b5848891508'
   TTL: 6000000
 

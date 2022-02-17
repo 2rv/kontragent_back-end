@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
+  IsBoolean,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -34,4 +35,8 @@ export class CreateRevisionDto {
   @ValidateNested()
   @Type(() => RevisionKontragentDto)
   kontragents: RevisionKontragentDto[];
+
+  @IsBoolean()
+  @IsOptional()
+  isUseReferalBalance: boolean;
 }

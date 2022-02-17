@@ -10,6 +10,7 @@ import { CompanyRepository } from '../company/company.repository';
 import { FileRepository } from '../file/file.repository';
 import { KontragentRepository } from '../kontragent/kontragent.repository';
 import { PaymentRepository } from '../payment/payment.repository';
+import { ReferalModule } from '../referal/referal.module';
 import { RevisionKontragentModule } from '../revision-kontragent/revision-kontragent.module';
 import { RevisionController } from './revision.controller';
 import { RevisionEntity } from './revision.entity';
@@ -21,6 +22,7 @@ import { RevisionService } from './revision.service';
     AuthModule,
     CompanyBalanceModule,
     RevisionKontragentModule,
+    ReferalModule,
     TypeOrmModule.forFeature([
       RevisionEntity,
       RevisionRepository,

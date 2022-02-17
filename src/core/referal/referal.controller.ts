@@ -14,4 +14,10 @@ export class ReferalController {
   getReferalInfo(@GetAccount() user: UserEntity): Promise<ReferalEntity> {
     return this.referalService.getUserReferalInfoByUser(user);
   }
+
+  @Get('/balance')
+  @UseGuards(AuthGuard(), AccountGuard)
+  getReferalBalance(@GetAccount() user: UserEntity): Promise<ReferalEntity> {
+    return this.referalService.getReferalBalance(user);
+  }
 }

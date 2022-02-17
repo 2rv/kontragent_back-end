@@ -6,6 +6,7 @@ import { CompanyMemberRepository } from '../company-member/company-member.reposi
 import { CompanyMemberEntity } from '../company-member/company-memeber.entity';
 import { CompanyRepository } from '../company/company.repository';
 import { FileRepository } from '../file/file.repository';
+import { ReferalModule } from '../referal/referal.module';
 import { RevisionSelfController } from './revision-self.controller';
 import { RevisionSelfEntity } from './revision-self.entity';
 import { RevisionSelfRepository } from './revision-self.repository';
@@ -15,6 +16,7 @@ import { RevisionSelfService } from './revision-self.service';
   imports: [
     AuthModule,
     CompanyBalanceModule,
+    ReferalModule,
     TypeOrmModule.forFeature([
       RevisionSelfRepository,
       RevisionSelfEntity,

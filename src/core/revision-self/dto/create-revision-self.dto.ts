@@ -7,6 +7,7 @@ import {
   IsString,
   MaxLength,
   ValidateNested,
+  IsBoolean,
 } from 'class-validator';
 
 import { CreateRevisionSelfPeriodDto } from './revision-self-period.dto';
@@ -25,4 +26,8 @@ export class CreateRevisionSelfDto {
   @ValidateNested()
   @Type(() => CreateRevisionSelfPeriodDto)
   period: CreateRevisionSelfPeriodDto[];
+
+  @IsBoolean()
+  @IsOptional()
+  isUseReferalBalance: boolean;
 }

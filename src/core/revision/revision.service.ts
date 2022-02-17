@@ -21,6 +21,7 @@ import { GetRevisionListDto } from './dto/get-revision-list.dto';
 import { UpdateRevisionDto } from './dto/update-revision.dto';
 import { revisionPeriodPrice } from '../../common/utils/revison-price';
 import { KontragentEntity } from '../kontragent/kontragent.entity';
+import { ReferalService } from '../referal/referal.service';
 
 @Injectable()
 export class RevisionService {
@@ -30,6 +31,7 @@ export class RevisionService {
     @InjectRepository(FileRepository)
     private fileRepository: FileRepository,
     private companyBalanceService: CompanyBalanceService,
+    private referalService: ReferalService,
   ) {}
 
   async createRevision(
@@ -38,12 +40,19 @@ export class RevisionService {
     creator: UserEntity,
   ): Promise<void> {
     try {
-      const price = createRevisionDto.kontragents.reduce((acc, item) => {
+      let price = createRevisionDto.kontragents.reduce((acc, item) => {
         return (acc += revisionPeriodPrice(item.years));
       }, 0);
 
       if (!price || price === 0) {
         throw new BadRequestException(REVISION_ERROR.PRICE_IS_NULL);
+      }
+
+      if (createRevisionDto.isUseReferalBalance) {
+        price = await this.referalService.createReferalBalancePayment(
+          creator,
+          price,
+        );
       }
 
       await this.companyBalanceService.createCompanyBalancePayment(

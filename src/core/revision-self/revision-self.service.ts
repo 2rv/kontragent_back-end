@@ -17,6 +17,7 @@ import { REVISION_SELF_STATUS } from './enum/revision-self-status.enum';
 import { RevisionSelfEntity } from './revision-self.entity';
 import { RevisionSelfRepository } from './revision-self.repository';
 import { revisionPeriodPrice } from '../../common/utils/revison-price';
+import { ReferalService } from '../referal/referal.service';
 
 @Injectable()
 export class RevisionSelfService {
@@ -26,6 +27,7 @@ export class RevisionSelfService {
     @InjectRepository(FileRepository)
     private fileRepository: FileRepository,
     private companyBalanceService: CompanyBalanceService,
+    private referalService: ReferalService,
   ) {}
 
   async createRevisionSelf(
@@ -34,10 +36,17 @@ export class RevisionSelfService {
     creator: UserEntity,
   ): Promise<void> {
     try {
-      const price = revisionPeriodPrice(createRevisionSelfDto.period);
+      let price = revisionPeriodPrice(createRevisionSelfDto.period);
 
       if (!price || price === 0) {
         throw new BadRequestException(REVISION_SELF_ERROR.PRICE_IS_NULL);
+      }
+
+      if (createRevisionSelfDto.isUseReferalBalance) {
+        price = await this.referalService.createReferalBalancePayment(
+          creator,
+          price,
+        );
       }
 
       await this.companyBalanceService.createCompanyBalancePayment(

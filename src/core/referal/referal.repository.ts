@@ -50,4 +50,11 @@ export class ReferalRepository extends Repository<ReferalEntity> {
 
     return await query.getOne();
   }
+
+  async getReferalBalance(user: UserEntity): Promise<ReferalEntity> {
+    const query = this.createQueryBuilder('referal');
+    query.leftJoin('referal.user', 'user');
+    query.where('user.id = :id', { id: user.id });
+    return await query.getOne();
+  }
 }
