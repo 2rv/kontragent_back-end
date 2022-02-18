@@ -50,10 +50,10 @@ export const ApiEntities = [
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: DATABASE_CONFIG.TYPE,
-  // url: 'postgres://postgres:pasha1neo@localhost:5432/kontragent',
-  url: process.env.DATABASE_URL || DATABASE_CONFIG.URL,
-  ssl: { rejectUnauthorized: false },
-  logging: ['query', 'error'],
+  url: 'postgres://postgres:pasha1neo@localhost:5432/kontragent',
+  // url: process.env.DATABASE_URL || DATABASE_CONFIG.URL,
+  // ssl: { rejectUnauthorized: false },
+  // logging: ['query', 'error'],
   entities: ApiEntities,
   synchronize: process.env.TYPEORM_SYNC || DATABASE_CONFIG.SYNCHRONIZE,
 };

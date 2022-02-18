@@ -117,6 +117,15 @@ export class MailService {
       });
   }
 
+  async sendPdfShareReview(email: string, data: any) {
+    return await this.mailerService.sendMail({
+      to: email,
+      subject: `Сообщение от администраци платформы Контрагент`,
+      template: this.getTemplateLink('send-share-review'),
+      context: { url: data.url },
+    });
+  }
+
   private getTemplateLink(name: string) {
     return path.join(path.resolve(), `src/template/${name}.pug`);
   }
