@@ -117,12 +117,16 @@ export class MailService {
       });
   }
 
-  async sendPdfShareReview(email: string, data: any) {
+  async sendReviewPdf(email: string, data: any) {
     return await this.mailerService.sendMail({
-      to: email,
-      subject: `Сообщение от администраци платформы Контрагент`,
-      template: this.getTemplateLink('send-share-review'),
-      context: { url: data.url },
+      to: email.split(','),
+      subject: `Отчёт`,
+      attachments: [
+        {
+          filename: `review.pdf`,
+          path: data.url,
+        },
+      ],
     });
   }
 

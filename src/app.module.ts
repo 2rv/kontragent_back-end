@@ -27,7 +27,7 @@ import { FeedbackModule } from './core/feedback/feedback.module';
 import { ReviewModule } from './core/review/review.module';
 import { RevisionSelfModule } from './core/revision-self/revision-self.module';
 import { AnalyticsModule } from './core/analytics/analytics.module';
-import { PdfShareModule } from './core/pdf-share/pdf-share.module';
+import { RevisionShare } from './core/revision-share/revision-share.module';
 
 @Module({
   providers: [],
@@ -60,7 +60,7 @@ import { PdfShareModule } from './core/pdf-share/pdf-share.module';
     ReviewModule,
     RevisionSelfModule,
     AnalyticsModule,
-    PdfShareModule,
+    RevisionShare,
   ],
 })
 export class AppModule {}
