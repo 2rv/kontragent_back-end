@@ -121,6 +121,10 @@ export class MailService {
     return await this.mailerService.sendMail({
       to: email.split(','),
       subject: `Отчёт`,
+      template: this.getTemplateLink('send-share-review'),
+      context: {
+        url: data.url,
+      },
       attachments: [
         {
           filename: `review.pdf`,
