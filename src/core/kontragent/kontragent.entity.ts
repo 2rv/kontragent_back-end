@@ -34,6 +34,12 @@ export class KontragentEntity extends BaseEntity {
   @Column({ name: 'rating', type: 'int', nullable: true })
   rating: number;
 
+  @Column({ nullable: true })
+  contactInfo: string;
+
+  @Column({ type: 'bool', nullable: true })
+  infoAdded: boolean;
+
   @ManyToOne(() => CompanyEntity, (company) => company.kontragents, {
     onDelete: 'CASCADE',
   })

@@ -31,16 +31,4 @@ export class AnalyticsService {
       company: company * 2,
     };
   }
-
-  async getAdminAnalytics(): Promise<GetAnalyticsData> {
-    const revision = await this.revisionRepository.getRevisionCount();
-    const kontragent = await this.kontragentRepository.getKontragentCount();
-    const company = await this.companyRepository.getCompanyCount();
-
-    return {
-      revision: revision,
-      kontragent: kontragent,
-      company: company,
-    };
-  }
 }

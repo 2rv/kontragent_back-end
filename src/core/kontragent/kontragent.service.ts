@@ -134,6 +134,8 @@ export class KontragentService {
     kontragent.email = updateKontragentInfoDto.email;
     kontragent.rating = updateKontragentInfoDto.rating;
     kontragent.comment = updateKontragentInfoDto.comment;
+    kontragent.contactInfo = updateKontragentInfoDto.contactInfo;
+    kontragent.infoAdded = true;
     await kontragent.save();
   }
 }

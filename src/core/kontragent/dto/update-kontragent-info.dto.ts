@@ -2,6 +2,7 @@ import {
   IsEmail,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   Max,
   Min,
@@ -21,4 +22,8 @@ export class UpdateKontragentInfoDto {
   @Min(1)
   @Max(5)
   rating: number;
+
+  @IsOptional()
+  @IsString()
+  contactInfo;
 }

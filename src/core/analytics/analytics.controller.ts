@@ -21,11 +21,4 @@ export class AnalyticsController {
   getAnalytics(): Promise<GetAnalyticsData> {
     return this.analyticsService.getAnalytics();
   }
-
-  @Get('/admin')
-  @Roles(USER_ROLE.ADMIN)
-  @UseGuards(AuthGuard())
-  getAdminAnalytics(): Promise<GetAnalyticsData> {
-    return this.analyticsService.getAdminAnalytics();
-  }
 }
