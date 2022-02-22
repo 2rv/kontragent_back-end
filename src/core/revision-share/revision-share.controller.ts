@@ -7,30 +7,22 @@ import { USER_ROLE } from '../user/enum/user-role.enum';
 import { GetAccount } from '../user/decorator/get-account.decorator';
 import { UserEntity } from '../user/user.entity';
 import { CreatePdfDto } from './dto/create-revision-share.dto';
+import { RevisionGuard } from '../revision/guard/revision.guard';
+import { RevisionEntity } from '../revision/revision.entity';
+import { GetRevision } from '../revision/decorator/get-revision.decorator';
 
 @Controller('revision-share')
 export class RevisionController {
   constructor(private readonly revisionService: RevisionService) {}
 
-  @Post('/kontragent')
+  @Post('/kontragent/:revisionId')
   @Roles(USER_ROLE.ADMIN)
-  @UseGuards(AuthGuard(), AccountGuard)
+  @UseGuards(AuthGuard(), AccountGuard, RevisionGuard)
   createKontragent(
-    @Body() body: CreatePdfDto,
-    @Res() res,
     @GetAccount() user: UserEntity,
-  ) {
-    this.revisionService.createKontragent(user, body, res);
-  }
-
-  @Post('/self')
-  @Roles(USER_ROLE.ADMIN)
-  @UseGuards(AuthGuard(), AccountGuard)
-  createSelf(
+    @GetRevision() revision: RevisionEntity,
     @Body() body: CreatePdfDto,
-    @Res() res,
-    @GetAccount() user: UserEntity,
-  ) {
-    this.revisionService.createSelf(user, body, res);
+  ): Promise<void> {
+    return this.revisionService.createKontragent(user, revision, body);
   }
 }

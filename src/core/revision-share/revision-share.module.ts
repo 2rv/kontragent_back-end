@@ -4,9 +4,16 @@ import { RevisionService } from './revision-share.service';
 import { AuthModule } from '../auth/auth.module';
 import { FileModule } from '../file/file.module';
 import { MailModule } from '../mail/mail.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { RevisionRepository } from '../revision/revision.repository';
 
 @Module({
-  imports: [AuthModule, FileModule, MailModule],
+  imports: [
+    AuthModule,
+    FileModule,
+    MailModule,
+    TypeOrmModule.forFeature([RevisionRepository]),
+  ],
   providers: [RevisionService],
   exports: [RevisionService],
   controllers: [RevisionController],
