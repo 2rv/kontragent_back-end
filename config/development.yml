@@ -15,11 +15,14 @@ AWS:
   ACL: 'public-read'
 
 MAIL:
-  MAIL_LOGIN: 'kontragent-heroku@mail.ru'
-  MAIL_PASSWORD: 'ZiN7kUNHiwk2Qeh17rP4'
-  MAIL_HOST: 'smtp.mail.ru'
-  MAIL_PORT: 465
-  MAIL_SERVICE: 'Mail.ru'
+  MAIL_LOGIN: 'pasha1nova@gmail.com'
+  MAIL_PASSWORD: 'tibwszywjgxvmmci'
+  MAIL_HOST: 'smtp.gmail.com'
+  # MAIL_LOGIN: 'kontragent-heroku@mail.ru'
+  # MAIL_PASSWORD: 'ZiN7kUNHiwk2Qeh17rP4'
+  # MAIL_HOST: 'smtp.mail.ru'
+  # MAIL_PORT: 465
+  # MAIL_SERVICE: 'Mail.ru'
 
 UNITPAY:
   PAYMENT_SIGNATURE: '195491-152f657aa68fc45b302b4bd46f8ec856'

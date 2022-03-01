@@ -16,7 +16,8 @@ const miniConfig = {
 
 export const MailConfig = {
   transport: {
-    service: miniConfig.mailConfig.service,
+    // service: miniConfig.mailConfig.service,
+    host: miniConfig.mailConfig.host,
     auth: {
       user: miniConfig.mailLogin,
       pass: miniConfig.mailPassword,
