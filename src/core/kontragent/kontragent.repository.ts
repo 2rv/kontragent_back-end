@@ -2,6 +2,7 @@ import { InternalServerErrorException } from '@nestjs/common';
 import { Repository, EntityRepository } from 'typeorm';
 import { KontragentEntity } from './kontragent.entity';
 import { CompanyEntity } from '../company/company.entity';
+import { UpdateKontragentInfoDto } from './dto/update-kontragent-info.dto';
 
 @EntityRepository(KontragentEntity)
 export class KontragentRepository extends Repository<KontragentEntity> {
@@ -37,5 +38,22 @@ export class KontragentRepository extends Repository<KontragentEntity> {
   async getKontragentCount(): Promise<number> {
     const query = this.createQueryBuilder('kontragent');
     return await query.getCount();
+  }
+
+  async updateKontragentAdditionalData(
+    kontragent,
+    updateKontragentInfoDto: UpdateKontragentInfoDto,
+  ): Promise<KontragentEntity> {
+    kontragent.email = updateKontragentInfoDto.email;
+    kontragent.rating = updateKontragentInfoDto.rating;
+    kontragent.comment = updateKontragentInfoDto.comment;
+    kontragent.contactInfo = updateKontragentInfoDto.contactInfo;
+    kontragent.infoAdded = true;
+
+    try {
+      return await kontragent.save();
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
   }
 }

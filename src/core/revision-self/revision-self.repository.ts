@@ -13,6 +13,7 @@ export class RevisionSelfRepository extends Repository<RevisionSelfEntity> {
     createRevisionSelfDto: CreateRevisionSelfDto,
     company: CompanyEntity,
     creator: UserEntity,
+    price: number,
   ): Promise<RevisionSelfEntity> {
     try {
       const revisionSelf = new RevisionSelfEntity();
@@ -21,6 +22,7 @@ export class RevisionSelfRepository extends Repository<RevisionSelfEntity> {
       revisionSelf.status = REVISION_SELF_STATUS.NEW;
       revisionSelf.description = createRevisionSelfDto.description;
       revisionSelf.period = createRevisionSelfDto.period;
+      revisionSelf.paymentPrice = price;
       return revisionSelf.save();
     } catch (error) {
       throw new InternalServerErrorException(error);
@@ -52,6 +54,7 @@ export class RevisionSelfRepository extends Repository<RevisionSelfEntity> {
       'revision-self.id',
       'revision-self.createDate',
       'revision-self.price',
+      'revision-self.paymentPrice',
       'revision-self.status',
       'revision-self.review',
       'filesReview',
@@ -85,6 +88,7 @@ export class RevisionSelfRepository extends Repository<RevisionSelfEntity> {
       'revision-self.id',
       'revision-self.createDate',
       'revision-self.price',
+      'revision-self.paymentPrice',
       'revision-self.status',
       'revision-self.review',
       'filesReview',

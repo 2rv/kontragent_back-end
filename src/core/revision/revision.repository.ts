@@ -15,6 +15,7 @@ export class RevisionRepository extends Repository<RevisionEntity> {
     createRevisionDto: CreateRevisionDto,
     company: CompanyEntity,
     creator: UserEntity,
+    price: number,
   ): Promise<RevisionEntity> {
     const revisionKontragent = createRevisionDto.kontragents.map((item) => {
       return {
@@ -30,6 +31,7 @@ export class RevisionRepository extends Repository<RevisionEntity> {
         status: REVISION_STATUS.NEW,
         creator: creator,
         company: company,
+        paymentPrice: price,
         revisionKontragent: revisionKontragent,
       });
     } catch (error) {
@@ -59,6 +61,7 @@ export class RevisionRepository extends Repository<RevisionEntity> {
       'revision.id',
       'revision.createDate',
       'revision.price',
+      'revision.paymentPrice',
       'revision.status',
       'revision.review',
       'filesReview',
@@ -93,6 +96,7 @@ export class RevisionRepository extends Repository<RevisionEntity> {
       'revision.id',
       'revision.createDate',
       'revision.price',
+      'revision.paymentPrice',
       'revision.status',
       'revision.review',
       'filesReview',

@@ -18,16 +18,23 @@ import { RevisionSelfEntity } from './revision-self.entity';
 import { RevisionSelfRepository } from './revision-self.repository';
 import { revisionPeriodPrice } from '../../common/utils/revison-price';
 import { ReferalService } from '../referal/referal.service';
+import { REFERAL_PAYMENT_TYPE } from '../referal-payment/enum/referal-payment-type.enum';
+import { UserRepository } from '../user/user.repository';
+import { MailService } from '../mail/mail.service';
+import { USER_ROLE } from '../user/enum/user-role.enum';
 
 @Injectable()
 export class RevisionSelfService {
   constructor(
+    @InjectRepository(UserRepository)
+    private userRepository: UserRepository,
     @InjectRepository(RevisionSelfRepository)
     private revisionSelfRepository: RevisionSelfRepository,
     @InjectRepository(FileRepository)
     private fileRepository: FileRepository,
     private companyBalanceService: CompanyBalanceService,
     private referalService: ReferalService,
+    private mailService: MailService,
   ) {}
 
   async createRevisionSelf(
@@ -45,6 +52,7 @@ export class RevisionSelfService {
       if (createRevisionSelfDto.isUseReferalBalance) {
         price = await this.referalService.createReferalBalancePayment(
           creator,
+          REFERAL_PAYMENT_TYPE.USER_TO_REVISION_SELF_PAY,
           price,
         );
       }
@@ -52,19 +60,26 @@ export class RevisionSelfService {
       await this.companyBalanceService.createCompanyBalancePayment(
         company,
         price,
-        PAYMENT_TYPE.REVISION,
+        PAYMENT_TYPE.REVISION_SELF,
       );
 
       const result = await this.revisionSelfRepository.createRevisionSelf(
         createRevisionSelfDto,
         company,
         creator,
+        price,
       );
 
       await this.fileRepository.assignFileToRevisionSelfDescriptionById(
         result,
         createRevisionSelfDto.files,
       );
+
+      const admins = await this.userRepository.getUserListByRole(
+        USER_ROLE.ADMIN,
+      );
+
+      await this.mailService.sendNotificationNewRevisionSelf(admins, result);
     } catch (error) {
       throw new BadRequestException(error);
     }

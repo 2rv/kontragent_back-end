@@ -1,37 +1,41 @@
-import { InjectRepository } from '@nestjs/typeorm';
 import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CompanyBalanceService } from '../company-balance/company-balance.service';
 import { CompanyEntity } from '../company/company.entity';
 import { FileRepository } from '../file/file.repository';
 import { PAYMENT_TYPE } from '../payment/enum/payment-type.enum';
 import { UserEntity } from '../user/user.entity';
-
 import { RevisionRepository } from './revision.repository';
 import { RevisionEntity } from './revision.entity';
-
 import { REVISION_ERROR } from './enum/revision-error.enum';
 import { REVISION_STATUS } from './enum/revision-status.enum';
-
 import { CreateRevisionDto } from './dto/create-revision.dto';
 import { GetRevisionListDto } from './dto/get-revision-list.dto';
 import { UpdateRevisionDto } from './dto/update-revision.dto';
 import { revisionPeriodPrice } from '../../common/utils/revison-price';
 import { KontragentEntity } from '../kontragent/kontragent.entity';
 import { ReferalService } from '../referal/referal.service';
+import { REFERAL_PAYMENT_TYPE } from '../referal-payment/enum/referal-payment-type.enum';
+import { UserRepository } from '../user/user.repository';
+import { USER_ROLE } from '../user/enum/user-role.enum';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class RevisionService {
   constructor(
+    @InjectRepository(UserRepository)
+    private userRepository: UserRepository,
     @InjectRepository(RevisionRepository)
     private revisionRepository: RevisionRepository,
     @InjectRepository(FileRepository)
     private fileRepository: FileRepository,
     private companyBalanceService: CompanyBalanceService,
     private referalService: ReferalService,
+    private mailService: MailService,
   ) {}
 
   async createRevision(
@@ -51,6 +55,7 @@ export class RevisionService {
       if (createRevisionDto.isUseReferalBalance) {
         price = await this.referalService.createReferalBalancePayment(
           creator,
+          REFERAL_PAYMENT_TYPE.USER_TO_REVISION_KONTRAGENT_PAY,
           price,
         );
       }
@@ -58,18 +63,29 @@ export class RevisionService {
       await this.companyBalanceService.createCompanyBalancePayment(
         company,
         price,
-        PAYMENT_TYPE.REVISION,
+        PAYMENT_TYPE.REVISION_KONTRAGENT,
       );
 
       const result = await this.revisionRepository.createRevision(
         createRevisionDto,
         company,
         creator,
+        price,
       );
 
-      result.revisionKontragent.map((item) => {
-        this.fileRepository.assignFileToRevisionKontragentDescriptionById(item);
-      });
+      for (const item of result.revisionKontragent) {
+        await this.fileRepository.assignFileToRevisionKontragentDescriptionById(
+          item,
+        );
+      }
+      const admins = await this.userRepository.getUserListByRole(
+        USER_ROLE.ADMIN,
+      );
+
+      await this.mailService.sendNotificationNewRevisionKontragent(
+        admins,
+        result,
+      );
     } catch (error) {
       throw new BadRequestException(error);
     }

@@ -25,8 +25,8 @@ export class UserVerificationService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
-    private referalMemberService: ReferalMemberService,
     private mailService: MailService,
+    private referalMemberService: ReferalMemberService,
   ) {}
 
   async getEmailVerificationCode(user: UserEntity): Promise<void> {
@@ -129,11 +129,12 @@ export class UserVerificationService {
 
     const userVerificationPhonePayload: UserVerificationPhonePayload =
       JSON.parse(rawUserVerificationPhonePayload);
-    await this.userRepository.confirmPhoneById(
+    const resultUser = await this.userRepository.confirmPhoneById(
       userVerificationPhonePayload.userId,
     );
+
     this.cacheManager.del(code);
 
-    this.referalMemberService.createReferalMember(referal, user, true);
+    this.referalMemberService.createReferalMember(referal, resultUser, true);
   }
 }

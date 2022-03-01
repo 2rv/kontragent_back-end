@@ -10,7 +10,6 @@ import { UserEntity } from '../core/user/user.entity';
 import { InviteEntity } from '../core/invite/invite.entity';
 import { ReferalEntity } from '../core/referal/referal.entity';
 import { ReferalMemberEntity } from '../core/referal-member/referal-member.entity';
-import { ReferalAchievementEntity } from '../core/referal-achievement/referal-achievement.entity';
 import { PostEntity } from '../core/post/post.entity';
 import { CommentEntity } from '../core/comment/comment.entity';
 import { BillEntity } from 'src/core/bill/bill.entity';
@@ -21,6 +20,7 @@ import { FeedbackEntity } from 'src/core/feedback/feedback.entity';
 import { ReviewEntity } from 'src/core/review/review.entity';
 import { RevisionKontragentEntity } from 'src/core/revision-kontragent/revision-kontragent.entity';
 import { RevisionSelfEntity } from 'src/core/revision-self/revision-self.entity';
+import { ReferalPaymentEntity } from 'src/core/referal-payment/referal-payment.entity';
 
 const DATABASE_CONFIG = config.get('DATABASE');
 
@@ -35,7 +35,6 @@ export const ApiEntities = [
   InviteEntity,
   ReferalEntity,
   ReferalMemberEntity,
-  ReferalAchievementEntity,
   PostEntity,
   CommentEntity,
   BillEntity,
@@ -46,6 +45,7 @@ export const ApiEntities = [
   ReviewEntity,
   RevisionKontragentEntity,
   RevisionSelfEntity,
+  ReferalPaymentEntity,
 ];
 
 export const typeOrmConfig: TypeOrmModuleOptions = {

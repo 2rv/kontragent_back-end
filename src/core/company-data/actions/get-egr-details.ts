@@ -12,6 +12,6 @@ export async function getEgrDetails(inn: string): Promise<any> {
     });
     return response.data;
   } catch (error) {
-    throw new InternalServerErrorException(error.response.data);
+    throw new InternalServerErrorException();
   }
 }

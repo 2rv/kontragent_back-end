@@ -27,6 +27,8 @@ import { USER_ROLE } from '../user/enum/user-role.enum';
 import { Roles } from '../user/decorator/role.decorator';
 import { ImportKontragentsDto } from './dto/import-kontragents.dto';
 import { UpdateKontragentInfoDto } from './dto/update-kontragent-info.dto';
+import { GetAccount } from '../user/decorator/get-account.decorator';
+import { UserEntity } from '../user/user.entity';
 
 @Controller('kontragent')
 export class KontragentController {
@@ -102,9 +104,11 @@ export class KontragentController {
   )
   updateKontragentInfo(
     @GetKontragent() kontragent: KontragentEntity,
+    @GetAccount() user: UserEntity,
     @Body(ValidationPipe) updateKontragentInfoDto: UpdateKontragentInfoDto,
   ) {
     return this.kontragentService.updateKonragentInfo(
+      user,
       kontragent,
       updateKontragentInfoDto,
     );

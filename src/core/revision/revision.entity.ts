@@ -34,6 +34,9 @@ export class RevisionEntity extends BaseEntity {
   status: REVISION_STATUS;
 
   @Column({ nullable: false, default: 0, type: 'decimal' })
+  paymentPrice: number;
+
+  @Column({ nullable: false, default: 0, type: 'decimal' })
   price: number;
 
   @ManyToOne(() => UserEntity, (user) => user.revision)
