@@ -10,6 +10,9 @@ import { CreatePdfDto } from './dto/create-revision-share.dto';
 import { RevisionGuard } from '../revision/guard/revision.guard';
 import { RevisionEntity } from '../revision/revision.entity';
 import { GetRevision } from '../revision/decorator/get-revision.decorator';
+import { GetRevisionSelf } from '../revision-self/decorator/get-revision-self.decorator';
+import { RevisionSelfEntity } from '../revision-self/revision-self.entity';
+import { RevisionSelfGuard } from '../revision-self/guard/revision-self.guard';
 
 @Controller('revision-share')
 export class RevisionController {
@@ -24,5 +27,16 @@ export class RevisionController {
     @Body() body: CreatePdfDto,
   ): Promise<void> {
     return this.revisionService.createKontragent(user, revision, body);
+  }
+
+  @Post('/self/:revisionSelfId')
+  @Roles(USER_ROLE.ADMIN)
+  @UseGuards(AuthGuard(), AccountGuard, RevisionSelfGuard)
+  createSelf(
+    @GetAccount() user: UserEntity,
+    @GetRevisionSelf() revisionSelf: RevisionSelfEntity,
+    @Body() body: CreatePdfDto,
+  ): Promise<void> {
+    return this.revisionService.createSelf(user, revisionSelf, body);
   }
 }

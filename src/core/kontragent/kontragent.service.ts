@@ -9,6 +9,10 @@ import { GetKontragentInfoDto } from './dto/get-kontragent-info.dto';
 import { KONTRAGENT_ERROR } from './enum/kontragent-error.enum';
 import { ImportKontragentsDto } from './dto/import-kontragents.dto';
 import { UpdateKontragentInfoDto } from './dto/update-kontragent-info.dto';
+import { ReferalPaymentService } from '../referal-payment/referal-payment.service';
+import { UserEntity } from '../user/user.entity';
+import { ReferalService } from '../referal/referal.service';
+import { REFERAL_PAYMENT_TYPE } from '../referal-payment/enum/referal-payment-type.enum';
 
 @Injectable()
 export class KontragentService {
@@ -17,6 +21,8 @@ export class KontragentService {
     private kontragentRepository: KontragentRepository,
     @InjectRepository(CompanyRepository)
     private companyRepository: CompanyRepository,
+    private referalPaymentService: ReferalPaymentService,
+    private referalService: ReferalService,
   ) {}
 
   async createKontragent(
@@ -128,14 +134,24 @@ export class KontragentService {
   }
 
   async updateKonragentInfo(
+    user: UserEntity,
     kontragent: KontragentEntity,
     updateKontragentInfoDto: UpdateKontragentInfoDto,
   ) {
-    kontragent.email = updateKontragentInfoDto.email;
-    kontragent.rating = updateKontragentInfoDto.rating;
-    kontragent.comment = updateKontragentInfoDto.comment;
-    kontragent.contactInfo = updateKontragentInfoDto.contactInfo;
-    kontragent.infoAdded = true;
-    await kontragent.save();
+    const isInfoAdded = kontragent.infoAdded;
+
+    await this.kontragentRepository.updateKontragentAdditionalData(
+      kontragent,
+      updateKontragentInfoDto,
+    );
+
+    if (!isInfoAdded) {
+      const referal = await this.referalService.getUserReferalInfoByUser(user);
+      await this.referalPaymentService.createReferalPayment(
+        5000,
+        REFERAL_PAYMENT_TYPE.ADDED_KONTRAGENT_INFO,
+        referal,
+      );
+    }
   }
 }

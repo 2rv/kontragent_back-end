@@ -1,6 +1,6 @@
-import { RevisionEntity } from 'src/core/revision/revision.entity';
+import { RevisionSelfEntity } from 'src/core/revision-self/revision-self.entity';
 
-export default function (revision: RevisionEntity) {
+export default function (revision: RevisionSelfEntity) {
   const {
     id,
     createDate,
@@ -9,9 +9,11 @@ export default function (revision: RevisionEntity) {
     paymentPrice,
     creator,
     company,
-    revisionKontragent,
     review,
     filesReview,
+    description,
+    files,
+    period,
   } = revision;
 
   return `
@@ -99,8 +101,8 @@ export default function (revision: RevisionEntity) {
       
       <div id="divider"></div>
 
-      <h2 style="font-size: 27px">Проверка контрагента №${id}</h2>
-      <h3>Информация о заказе на проверку выбранных контрагентов</h3>
+      <h2 style="font-size: 27px">Проверка компании №${id}</h2>
+      <h3>Информация о заказе на проверку компании</h3>
 
       <div id="divider"></div>
   
@@ -115,50 +117,45 @@ export default function (revision: RevisionEntity) {
 
       <div id="divider"></div>
 
-      <h2 style="font-size: 27px">Контрагенты</h2>
       <div id="list">
-        ${revisionKontragent.map((kontragent) => {
+      <div id="list-item">
+      <h2>ИНН Компании</h2>
+      <h3>${company.inn}</h3>
+
+      <h2>Описание</h2>
+      <h3>${description}</h3>
+
+      <h2>Файлы для описания проверки на компанию</h2>
+     ${
+       !!files?.length
+         ? files.map(
+             (file) => `
+        <a href="${file.url}" style="padding-right: 10px">
+          <span>${file.originalName}</span>
+        </a>
+     `,
+           )
+         : '<h3>Файлы не предоставлены</h3>'
+     }
+
+      <div>
+        <h2>Периоды проверки</h2>
+        ${period.map((period) => {
           return `
-            <div id="list-item">
-              <h2>ИНН Компании</h2>
-              <h3>${company.inn}</h3>
-      
-              <h2>Описание</h2>
-              <h3>${kontragent.description}</h3>
-      
-              <h2>Файлы для описания компании</h2>
-             ${
-               !!kontragent.files?.length
-                 ? kontragent.files.map(
-                     (file) => `
-                <a href="${file.url}" style="padding-right: 10px">
-                  <span>${file.originalName}</span>
-                </a>
-             `,
-                   )
-                 : '<h3>Файлы не предоставлены</h3>'
-             }
-    
-              <div>
-                <h2>Периоды проверки</h2>
-                ${kontragent.period.map((period) => {
-                  return `
-                    <div style="margin-top: 8px">
-                      <span
-                        >${period.year} Год (
-                          ${period.kvartal1 ? ' 1 квартал, ' : ''}
-                          ${period.kvartal2 ? ' 2 квартал, ' : ''}
-                          ${period.kvartal3 ? ' 3 квартал, ' : ''}
-                          ${period.kvartal4 ? ' 4 квартал' : ''}
-                        )</span
-                      >
-                    </div>
-                    `;
-                })}
-              </div>
+            <div style="margin-top: 8px">
+              <span
+                >${period.year} Год (
+                  ${period.kvartal1 ? ' 1 квартал, ' : ''}
+                  ${period.kvartal2 ? ' 2 квартал, ' : ''}
+                  ${period.kvartal3 ? ' 3 квартал, ' : ''}
+                  ${period.kvartal4 ? ' 4 квартал' : ''}
+                )</span
+              >
             </div>
             `;
         })}
+      </div>
+    </div>
       </div>
     </body>
   </html>

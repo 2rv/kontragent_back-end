@@ -9,15 +9,12 @@ import {
 
 import { UserEntity } from '../user/user.entity';
 import { ReferalMemberEntity } from '../referal-member/referal-member.entity';
-import { ReferalAchievementEntity } from '../referal-achievement/referal-achievement.entity';
+import { ReferalPaymentEntity } from '../referal-payment/referal-payment.entity';
 
 @Entity({ name: 'referal' })
 export class ReferalEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @OneToOne(() => UserEntity, (user) => user.referal)
-  user: UserEntity;
 
   @Column({
     type: 'decimal',
@@ -26,6 +23,9 @@ export class ReferalEntity extends BaseEntity {
   })
   balance: number;
 
+  @OneToOne(() => UserEntity, (user) => user.referal)
+  user: UserEntity;
+
   @OneToMany(
     () => ReferalMemberEntity,
     (referalMember) => referalMember.referal,
@@ -33,8 +33,8 @@ export class ReferalEntity extends BaseEntity {
   referalMember: ReferalMemberEntity[];
 
   @OneToMany(
-    () => ReferalAchievementEntity,
-    (referrerAchievement) => referrerAchievement.referal,
+    () => ReferalPaymentEntity,
+    (referalPaymentEntity) => referalPaymentEntity.referal,
   )
-  referalAchievement: ReferalAchievementEntity[];
+  referalPayment: ReferalPaymentEntity[];
 }

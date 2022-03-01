@@ -30,12 +30,12 @@ export class ReferalAchievementService {
         referalMember.referal,
       );
 
-    if (referalAchievement) {
-      this.referalRepository.updateReferalBalance(
-        referalMember.referal,
-        referalAchievement,
-      );
-    }
+    // if (referalAchievement) {
+    //   this.referalRepository.updateReferalBalance(
+    //     referalMember.referal,
+    //     referalAchievement,
+    //   );
+    // }
   }
 
   async getReferalAchievementListByUser(

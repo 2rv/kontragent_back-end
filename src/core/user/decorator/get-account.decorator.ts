@@ -6,7 +6,5 @@ export const GetAccount = createParamDecorator((data: string, context) => {
     .switchToHttp()
     .getRequest().userAccount;
 
-  console.log(userAccount);
-
   return data ? userAccount && userAccount[data] : userAccount;
 });

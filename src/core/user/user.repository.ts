@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { UserCreateDto } from './dto/user-create.dto';
 import { ChangeUserRoleDto } from './dto/change-user-role.dto';
+import { USER_ROLE } from './enum/user-role.enum';
 
 @EntityRepository(UserEntity)
 export class UserRepository extends Repository<UserEntity> {
@@ -42,9 +43,11 @@ export class UserRepository extends Repository<UserEntity> {
     }
   }
 
-  async confirmPhoneById(userId: number): Promise<void> {
+  async confirmPhoneById(userId: number): Promise<UserEntity> {
     try {
-      this.update(userId, { confirmPhone: true });
+      const user = await this.findOne({ id: userId });
+      user.confirmPhone = true;
+      return await user.save();
     } catch {
       throw new BadRequestException();
     }
@@ -65,6 +68,24 @@ export class UserRepository extends Repository<UserEntity> {
         'user.createDate',
         'user.role',
       ])
+      .getMany();
+  }
+
+  async getUserListByRole(role: USER_ROLE) {
+    return this.createQueryBuilder('user')
+      .select([
+        'user.id',
+        'user.login',
+        'user.firstname',
+        'user.lastname',
+        'user.phone',
+        'user.email',
+        'user.confirmEmail',
+        'user.confirmPhone',
+        'user.createDate',
+        'user.role',
+      ])
+      .where('user.role = :role', { role: role })
       .getMany();
   }
 

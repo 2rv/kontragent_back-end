@@ -61,7 +61,6 @@ export class CompanyDataService {
         egrDetails: egrDetails[0],
       };
     } catch (error) {
-      console.log(error);
       new BadRequestException('Не удалось получить дополнительную информацию');
     }
   }

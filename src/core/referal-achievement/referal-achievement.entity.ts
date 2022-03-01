@@ -29,12 +29,12 @@ export class ReferalAchievementEntity extends BaseEntity {
   })
   award: number;
 
-  @ManyToOne(
-    () => ReferalMemberEntity,
-    (referalMember) => referalMember.referalAchievement,
-  )
-  referalMember: ReferalMemberEntity;
+  // @ManyToOne(
+  //   () => ReferalMemberEntity,
+  //   (referalMember) => referalMember.referalAchievement,
+  // )
+  // referalMember: ReferalMemberEntity;
 
-  @ManyToOne(() => ReferalEntity, (referal) => referal.referalAchievement)
-  referal: ReferalEntity;
+  // @ManyToOne(() => ReferalEntity, (referal) => referal.referalAchievement)
+  // referal: ReferalEntity;
 }
