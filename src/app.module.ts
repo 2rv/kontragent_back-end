@@ -15,10 +15,19 @@ import { CompanyBalanceModule } from './core/company-balance/company-balance.mod
 import { FileModule } from './core/file/file.module';
 import { ReferalModule } from './core/referal/referal.module';
 import { ReferalMemberModule } from './core/referal-member/referal-member.module';
-import { ReferalAchievementModule } from './core/referal-achievement/referal-achievement.module';
 import { PostModule } from './core/post/post.module';
 import { CommentModule } from './core/comment/comment.module';
 import { InviteModule } from './core/invite/invite.module';
+import { BillModule } from './core/bill/bill.module';
+import { KontragentModule } from './core/kontragent/kontragent.module';
+import { CompanyDataModule } from './core/company-data/company-data.module';
+import { NotificationModule } from './core/notification/notification.module';
+import { FeedbackModule } from './core/feedback/feedback.module';
+import { ReviewModule } from './core/review/review.module';
+import { RevisionSelfModule } from './core/revision-self/revision-self.module';
+import { AnalyticsModule } from './core/analytics/analytics.module';
+import { RevisionShare } from './core/revision-share/revision-share.module';
+import { ReferalPaymentModule } from './core/referal-payment/referal-payment.module';
 
 @Module({
   providers: [],
@@ -39,10 +48,19 @@ import { InviteModule } from './core/invite/invite.module';
     FileModule,
     ReferalModule,
     ReferalMemberModule,
-    ReferalAchievementModule,
     InviteModule,
     PostModule,
     CommentModule,
+    BillModule,
+    KontragentModule,
+    CompanyDataModule,
+    NotificationModule,
+    FeedbackModule,
+    ReviewModule,
+    RevisionSelfModule,
+    AnalyticsModule,
+    RevisionShare,
+    ReferalPaymentModule,
   ],
 })
 export class AppModule {}

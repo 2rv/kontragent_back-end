@@ -10,6 +10,7 @@ import { CompanyMemberRepository } from '../company-member/company-member.reposi
 import { CompanyBalanceRepository } from '../company-balance/company-balance.repository';
 import { CompanyBalanceEntity } from '../company-balance/company-balance.entity';
 import { UserEntity } from '../user/user.entity';
+import { ReviewRepository } from '../review/review.repository';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { UserEntity } from '../user/user.entity';
       CompanyBalanceRepository,
       CompanyBalanceEntity,
       UserEntity,
+      ReviewRepository,
     ]),
     AuthModule,
   ],

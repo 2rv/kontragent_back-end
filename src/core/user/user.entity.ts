@@ -22,6 +22,9 @@ import { ReferalMemberEntity } from '../referal-member/referal-member.entity';
 import { RevisionEntity } from '../revision/revision.entity';
 import { CommentEntity } from '../comment/comment.entity';
 import { PostEntity } from '../post/post.entity';
+import { NotificationEntity } from '../notification/notification.entity';
+import { FeedbackEntity } from '../feedback/feedback.entity';
+import { RevisionSelfEntity } from '../revision-self/revision-self.entity';
 
 @Entity({ name: 'user' })
 export class UserEntity extends BaseEntity {
@@ -54,7 +57,9 @@ export class UserEntity extends BaseEntity {
   })
   role: USER_ROLE;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    type: 'timestamptz',
+  })
   createDate: string;
 
   @Column({ default: false })
@@ -62,6 +67,9 @@ export class UserEntity extends BaseEntity {
 
   @Column({ default: false })
   confirmPhone: boolean;
+
+  @Column({ default: true })
+  subscribeMailing: boolean;
 
   @OneToMany(() => CompanyEntity, (company) => company.user)
   company: CompanyEntity[];
@@ -83,11 +91,21 @@ export class UserEntity extends BaseEntity {
   @OneToMany(() => RevisionEntity, (revision) => revision.creator)
   revision: RevisionEntity[];
 
+  @OneToMany(() => RevisionSelfEntity, (revision) => revision.creator)
+  revisionSelf: RevisionSelfEntity[];
+
   @OneToMany(() => CommentEntity, (comment) => comment.user)
   comments: CommentEntity[];
 
   @OneToMany(() => PostEntity, (post: PostEntity) => post.creator)
   post: PostEntity[];
+
+  @OneToOne(() => NotificationEntity, (notification) => notification.user)
+  @JoinColumn()
+  notification: NotificationEntity;
+
+  @OneToMany(() => FeedbackEntity, (feedback: FeedbackEntity) => feedback.user)
+  feedback: FeedbackEntity[];
 
   static async hashPassword(password: string): Promise<string> {
     const salt = await generatePasswordSalt(password);

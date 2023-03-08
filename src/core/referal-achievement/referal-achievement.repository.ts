@@ -23,8 +23,8 @@ export class ReferalAchievementRepository extends Repository<ReferalAchievementE
       new ReferalAchievementEntity();
     referalAchievement.award = award;
     referalAchievement.type = type;
-    referalAchievement.referalMember = referalMember;
-    referalAchievement.referal = referal;
+    // referalAchievement.referalMember = referalMember;
+    // referalAchievement.referal = referal;
 
     try {
       await referalAchievement.save();

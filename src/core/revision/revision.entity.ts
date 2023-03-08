@@ -11,14 +11,19 @@ import {
 import { REVISION_STATUS } from './enum/revision-status.enum';
 
 import { CompanyEntity } from '../company/company.entity';
-import { RevisionCompanyEntity } from '../revision-company/revision-company.entity';
-import { FileEntity } from '../file/file.entity';
 import { UserEntity } from '../user/user.entity';
+import { RevisionKontragentEntity } from '../revision-kontragent/revision-kontragent.entity';
+import { FileEntity } from '../file/file.entity';
 
 @Entity({ name: 'revision' })
 export class RevisionEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @CreateDateColumn({
+    type: 'timestamptz',
+  })
+  createDate: string;
 
   @Column({
     type: 'enum',
@@ -28,30 +33,32 @@ export class RevisionEntity extends BaseEntity {
   })
   status: REVISION_STATUS;
 
-  @Column({ nullable: true })
-  review: string;
+  @Column({ nullable: false, default: 0, type: 'decimal' })
+  paymentPrice: number;
 
   @Column({ nullable: false, default: 0, type: 'decimal' })
-  additionPrice: number;
-
-  @OneToMany(() => FileEntity, (file) => file.revisionReview)
-  fileReview: FileEntity[];
-
-  @OneToMany(
-    () => RevisionCompanyEntity,
-    (revisionCompany) => revisionCompany.revision,
-  )
-  revisionCompanies: RevisionCompanyEntity[];
-
-  @ManyToOne(() => CompanyEntity, (company) => company.revision)
-  company: CompanyEntity;
+  price: number;
 
   @ManyToOne(() => UserEntity, (user) => user.revision)
   creator: UserEntity;
 
-  @CreateDateColumn()
-  createDate: string;
+  @ManyToOne(() => CompanyEntity, (company) => company.revision, {
+    onDelete: 'SET NULL',
+  })
+  company: CompanyEntity;
 
-  @Column({ default: false })
-  selfRevision: boolean;
+  @OneToMany(
+    () => RevisionKontragentEntity,
+    (kontragent) => kontragent.revision,
+    { cascade: true },
+  )
+  revisionKontragent: RevisionKontragentEntity[];
+
+  @Column({ name: 'review', nullable: true })
+  review: string;
+
+  @OneToMany(() => FileEntity, (file) => file.revisionFilesReview, {
+    nullable: true,
+  })
+  filesReview: FileEntity[];
 }

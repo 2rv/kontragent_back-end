@@ -6,15 +6,21 @@ import { CompanyEntity } from 'src/core/company/company.entity';
 import { FileEntity } from 'src/core/file/file.entity';
 import { PaymentEntity } from 'src/core/payment/payment.entity';
 import { RevisionEntity } from '../core/revision/revision.entity';
-import { RevisionCompanyEntity } from 'src/core/revision-company/revision-company.entity';
-import { RevisionCompanyYearEntity } from '../core/revision-company-year/revision-company-year.entity';
 import { UserEntity } from '../core/user/user.entity';
 import { InviteEntity } from '../core/invite/invite.entity';
 import { ReferalEntity } from '../core/referal/referal.entity';
 import { ReferalMemberEntity } from '../core/referal-member/referal-member.entity';
-import { ReferalAchievementEntity } from '../core/referal-achievement/referal-achievement.entity';
 import { PostEntity } from '../core/post/post.entity';
 import { CommentEntity } from '../core/comment/comment.entity';
+import { BillEntity } from 'src/core/bill/bill.entity';
+import { KontragentEntity } from 'src/core/kontragent/kontragent.entity';
+import { CompanyDataEntity } from 'src/core/company-data/company-data.entity';
+import { NotificationEntity } from 'src/core/notification/notification.entity';
+import { FeedbackEntity } from 'src/core/feedback/feedback.entity';
+import { ReviewEntity } from 'src/core/review/review.entity';
+import { RevisionKontragentEntity } from 'src/core/revision-kontragent/revision-kontragent.entity';
+import { RevisionSelfEntity } from 'src/core/revision-self/revision-self.entity';
+import { ReferalPaymentEntity } from 'src/core/referal-payment/referal-payment.entity';
 
 const DATABASE_CONFIG = config.get('DATABASE');
 
@@ -24,23 +30,30 @@ export const ApiEntities = [
   CompanyMemberEntity,
   FileEntity,
   RevisionEntity,
-  RevisionCompanyEntity,
-  RevisionCompanyYearEntity,
   CompanyBalanceEntity,
   PaymentEntity,
   InviteEntity,
   ReferalEntity,
   ReferalMemberEntity,
-  ReferalAchievementEntity,
   PostEntity,
   CommentEntity,
+  BillEntity,
+  KontragentEntity,
+  CompanyDataEntity,
+  NotificationEntity,
+  FeedbackEntity,
+  ReviewEntity,
+  RevisionKontragentEntity,
+  RevisionSelfEntity,
+  ReferalPaymentEntity,
 ];
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: DATABASE_CONFIG.TYPE,
+  // url: 'postgres://postgres:pasha1neo@localhost:5432/kontragent',
   url: process.env.DATABASE_URL || DATABASE_CONFIG.URL,
-  entities: ApiEntities,
   ssl: { rejectUnauthorized: false },
-  // logging: ['query', 'error'],
+  logging: ['query', 'error'],
+  entities: ApiEntities,
   synchronize: process.env.TYPEORM_SYNC || DATABASE_CONFIG.SYNCHRONIZE,
 };

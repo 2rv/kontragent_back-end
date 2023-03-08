@@ -1,0 +1,81 @@
+html
+  head
+    meta(charset="UTF-8")
+    link(rel="preconnect", href="https://fonts.googleapis.com")
+    link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin)
+    link(
+      rel="stylesheet",
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+    )
+
+    style(type="text/css").
+      h1 {
+        font-size: 39px;
+        font-weight: 800;
+        font-style: normal;
+        font-family: "Inter", sans-serif;
+        color: #2d9cdb;
+        margin: 0;
+        line-height: 1;
+        margin-top: 0.6em;
+        margin-bottom: 0.6em;
+      }
+      h2 {
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 600;
+        font-family: "Inter", sans-serif;
+        color: #252525;
+        margin: 0;
+        line-height: 1;
+        margin-top: 0.6em;
+        margin-bottom: 0.6em;
+      }
+      h3 {
+        font-size: 21px;
+        font-style: normal;
+        font-family: "Inter", sans-serif;
+        color: #707070;
+        margin: 0;
+        font-weight: 400;
+        line-height: 1;
+        margin-top: 0.6em;
+        margin-bottom: 0.6em;
+      }
+      #divider {
+        margin-top: 24px;
+        margin-bottom: 24px;
+        border-radius: 15px;
+        height: 3px;
+        width: 100%;
+        background-color: #f3f3f3;
+      }
+      #list {
+      }
+      #list-item {
+        background-color: #f3f3f3;
+        padding: 24px;
+        border-radius: 15px;
+        margin-bottom: 32px;
+      }
+      span {
+        font-size: 16px;
+        color: #252525;
+        font-weight: 600;
+      }
+      a {
+        text-decoration: none;
+      }
+
+  body(style="margin: 48px")
+    a(href="https://контрагент.рф/", style="text-decoration: none")
+      h1(
+        style="background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent background: linear-gradient(126.21deg, #2d9cdb 21.14%, #0098ee 21.14%, #54b6ed 78.86%);"
+      ) Контрагент
+
+    #divider
+
+    h2(style="font-size: 27px") Создана проверка контрагента №#{ id }
+
+    a(href=`https://контрагент.рф/admin/revision/kontragent/${id}`)
+      h3 Перейти на проверку контрагента

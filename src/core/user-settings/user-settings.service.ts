@@ -33,10 +33,11 @@ export class UserSettingsService {
     if (user.email === email) {
       throw new BadRequestException(USER_SETTINGS_ERROR.SAME_NEW_EMAIL);
     } else {
+      user.email = email;
       try {
         await user.save();
       } catch {
-        new BadRequestException();
+        throw new BadRequestException(USER_SETTINGS_ERROR.EMAIL_ALREADY_EXISTS);
       }
     }
   }

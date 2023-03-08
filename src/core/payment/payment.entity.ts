@@ -14,7 +14,9 @@ export class PaymentEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => CompanyEntity, (company) => company.payment)
+  @ManyToOne(() => CompanyEntity, (company) => company.payment, {
+    onDelete: 'CASCADE',
+  })
   company: CompanyEntity;
 
   @Column({
@@ -24,7 +26,9 @@ export class PaymentEntity extends BaseEntity {
   })
   amount: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    type: 'timestamptz',
+  })
   createDate: number;
 
   @Column({

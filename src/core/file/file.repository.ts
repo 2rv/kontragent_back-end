@@ -9,7 +9,11 @@ import {
 import { FILE_ERROR } from './enum/file-error.enum';
 import { RevisionEntity } from '../revision/revision.entity';
 import { PostEntity } from '../post/post.entity';
-import { RevisionCompanyEntity } from '../revision-company/revision-company.entity';
+import { BillEntity } from '../bill/bill.entity';
+import { NotificationEntity } from '../notification/notification.entity';
+import { FeedbackEntity } from '../feedback/feedback.entity';
+import { RevisionKontragentEntity } from '../revision-kontragent/revision-kontragent.entity';
+import { RevisionSelfEntity } from '../revision-self/revision-self.entity';
 
 @EntityRepository(FileEntity)
 export class FileRepository extends Repository<FileEntity> {
@@ -40,32 +44,89 @@ export class FileRepository extends Repository<FileEntity> {
     }
   }
 
-  async assignFileToRevisionCompanyDescriptionById(
-    revisionCompany: RevisionCompanyEntity,
-    fileId: number,
+  async assignFileToRevisionKontragentDescriptionById(
+    revisionKontragent: RevisionKontragentEntity,
   ): Promise<void> {
-    const file = await this.findOne({ where: { id: fileId } });
-
-    if (!file) {
-      throw new BadRequestException(FILE_ERROR.FILE_NOT_FOUND);
+    for (const fileId of revisionKontragent.files) {
+      await this.update(fileId, { revisionKontragent: revisionKontragent });
     }
-
-    file.revisionDescription = revisionCompany;
-
-    await file.save();
   }
 
   async assignFileToRevisionReviewById(
     revision: RevisionEntity,
-    fileId: number,
+    filesId: number[],
   ): Promise<void> {
-    const file = await this.findOne({ where: { id: fileId } });
+    for (const fileId of filesId) {
+      try {
+        await this.update({ id: fileId }, { revisionFilesReview: revision });
+      } catch (error) {
+        throw new BadRequestException(error);
+      }
+    }
+  }
 
+  async assignFileToRevisionSelfDescriptionById(
+    revisionSelf: RevisionSelfEntity,
+    filesId: number[],
+  ): Promise<void> {
+    for (const fileId of filesId) {
+      await this.update({ id: fileId }, { revisionSelf: revisionSelf });
+    }
+  }
+
+  async assignFileToRevisionSelfReviewById(
+    revisionSelf: RevisionSelfEntity,
+    filesId: number[],
+  ): Promise<void> {
+    for (const fileId of filesId) {
+      try {
+        await this.update(
+          { id: fileId },
+          { revisionSelfFilesReview: revisionSelf },
+        );
+      } catch (error) {
+        throw new BadRequestException(error);
+      }
+    }
+  }
+
+  async assignFileToBillById(bill: BillEntity, fileId: number): Promise<void> {
+    const file = await this.findOne({ where: { id: fileId } });
     if (!file) {
       throw new BadRequestException(FILE_ERROR.FILE_NOT_FOUND);
     }
 
-    file.revisionReview = revision;
+    file.bill = bill;
+
+    await file.save();
+  }
+
+  async assignFileToNotificationById(
+    notification: NotificationEntity,
+    fileId: number,
+  ): Promise<FileEntity> {
+    const file = await this.findOne({ where: { id: fileId } });
+    if (!file) {
+      throw new BadRequestException(FILE_ERROR.FILE_NOT_FOUND);
+    }
+
+    file.notification = notification;
+
+    await file.save();
+
+    return file;
+  }
+
+  async assignFileToFeedbackById(
+    feedback: FeedbackEntity,
+    fileId: number,
+  ): Promise<void> {
+    const file = await this.findOne({ where: { id: fileId } });
+    if (!file) {
+      throw new BadRequestException(FILE_ERROR.FILE_NOT_FOUND);
+    }
+
+    file.feedback = feedback;
 
     await file.save();
   }

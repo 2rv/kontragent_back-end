@@ -1,0 +1,29 @@
+DATABASE:
+  URL: postgres://postgres:TPYZ7ACD@localhost:5432/postgres
+
+CACHE:
+  HOST: 'localhost'
+  PORT: 6379
+  PASSWORD: 'pdeb811685305cf8c1bb28d6541d08d8b84190ca075f7189558595b5848891508'
+  TTL: 6000000
+
+AWS:
+  SECRET_ACCESS_KEY: 'dGApIL+MRcG5bFYmrze//3gOR25vAB0YFF2ydq8U'
+  ACCESS_KEY_ID: 'AKIAX7CIUBVQ6B4QXYEX'
+  REGION: 'us-east-2'
+  BUCKET_NAME: 'kontragent'
+  ACL: 'public-read'
+
+MAIL:
+  MAIL_LOGIN: 'pasha1nova@gmail.com'
+  MAIL_PASSWORD: 'tibwszywjgxvmmci'
+  MAIL_HOST: 'smtp.gmail.com'
+  # MAIL_LOGIN: 'kontragentrf@mail.ru'
+  # MAIL_PASSWORD: 'k24EcsEVNyL8MM0QAHMN'
+  # MAIL_HOST: 'smtp.mail.ru'
+  # MAIL_PORT: 465
+  # MAIL_SERVICE: 'Mail.ru'
+
+UNITPAY:
+  PAYMENT_SIGNATURE: 'ab9e5fac77bdfe33049d29ea9ff87b2a'
+  PAYMENT_ID: '437111-09b41'

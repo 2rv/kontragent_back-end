@@ -30,27 +30,33 @@ export class UserService {
       lastname: user.lastname,
       confirmEmail: user.confirmEmail,
       confirmPhone: user.confirmPhone,
+      createDate: user.createDate,
       phone: user.phone,
       role: user.role,
     };
     return userGetAccountDataDto;
   }
 
-  async getAdminUserList( account: UserEntity): Promise<UserGetAdminUserListDto> {
-    const list: UserEntity[] = await this.userRepository.getAdminUserList(account);
+  async getAdminUserList(
+    account: UserEntity,
+  ): Promise<UserGetAdminUserListDto> {
+    const list: UserEntity[] = await this.userRepository.getAdminUserList(
+      account,
+    );
     return { list };
   }
 
-
-  async changeUserRole(user: UserEntity, changeUserRoleDto: ChangeUserRoleDto, account: UserEntity): Promise<void> {
-
-    if(user.id === account.id)
-    {
+  async changeUserRole(
+    user: UserEntity,
+    changeUserRoleDto: ChangeUserRoleDto,
+    account: UserEntity,
+  ): Promise<void> {
+    if (user.id === account.id) {
       throw new BadRequestException(
         USER_ROLE_ERROR.CANNOT_CHANGE_THE_ROLE_OF_YOURSELF,
       );
     }
 
-   await this.userRepository.changeUserRole(user, changeUserRoleDto);
+    await this.userRepository.changeUserRole(user, changeUserRoleDto);
   }
 }

@@ -1,0 +1,15 @@
+<html >
+<head>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body style="margin: 20px;">
+	<div style="line-height: 1.5; font-size: 14px; font-family: 'Roboto', sans-serif; background-color: #F0F0F0; border-radius: 10px; padding: 15px; color: #5F5B5D;">
+		<div><span>#{message}</span></div>
+	</div>
+	<div style="line-height: 1.5; font-size: 14px; font-family: 'Roboto', sans-serif; background-color: #F0F0F0; border-radius: 10px; padding: 15px; margin-top: 15px; color: #5F5B5D;">
+		<div>#{fileList.map(file => `${file.originalName} ${file.url}`).join(' ')}  </div>
+	</div>
+</body>
+</html>

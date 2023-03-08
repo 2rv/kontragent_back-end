@@ -5,6 +5,7 @@ import {
   ValidationPipe,
   UseGuards,
   Get,
+  UsePipes,
 } from '@nestjs/common';
 import { UserSignUpDto } from './dto/user-sign-up.dto';
 import { UserLoginDto } from './dto/user-login.dto';
@@ -19,17 +20,15 @@ import { UserEntity } from '../user/user.entity';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @UsePipes(new ValidationPipe({ transform: true }))
   @Post('/signup')
-  async signUp(
-    @Body(ValidationPipe) userSignUpDto: UserSignUpDto,
-  ): Promise<LoginInfoDto> {
+  async signUp(@Body() userSignUpDto: UserSignUpDto): Promise<LoginInfoDto> {
     return this.authService.signUp(userSignUpDto);
   }
 
+  @UsePipes(new ValidationPipe({ transform: true }))
   @Post('/login')
-  logIn(
-    @Body(ValidationPipe) userLoginDto: UserLoginDto,
-  ): Promise<LoginInfoDto> {
+  logIn(@Body() userLoginDto: UserLoginDto): Promise<LoginInfoDto> {
     return this.authService.login(userLoginDto);
   }
 

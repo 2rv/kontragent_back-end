@@ -11,25 +11,36 @@ import { ReferalMemberEntity } from './referal-member.entity';
 import { ReferalMemberRepository } from './referal-member.repository';
 import { REFERAL_MEMBER_ERROR } from './enum/referal-member-enum';
 import { USER_ROLE } from '../user/enum/user-role.enum';
+import { USER_ERROR } from '../user/enum/user-error.enum';
 import { CompanyRepository } from '../company/company.repository';
-import { REFERAL_ACHIEVEMENT_TYPE } from '../referal-achievement/enum/referal-achievement-type.enum';
-import { ReferalAchievementService } from '../referal-achievement/referal-achievement.service';
-import { TwilioSendSMS } from '../../common/utils/twilio';
+import { sendCodeSMS } from '../../common/utils/sms';
+import { ReferalPaymentService } from '../referal-payment/referal-payment.service';
+import { REFERAL_PAYMENT_TYPE } from '../referal-payment/enum/referal-payment-type.enum';
 
 @Injectable()
 export class ReferalMemberService {
   constructor(
     @InjectRepository(UserRepository)
     private userRepository: UserRepository,
+
     @InjectRepository(ReferalRepository)
     private referalRepository: ReferalRepository,
+
     @InjectRepository(ReferalMemberRepository)
     private referalMemberRepository: ReferalMemberRepository,
+
     @InjectRepository(CompanyRepository)
     private companyRepository: CompanyRepository,
-    private referalAchievementService: ReferalAchievementService,
+
     private mailService: MailService,
+    private referalPaymentService: ReferalPaymentService,
   ) {}
+
+  async getUserReferalMemberList(
+    user: UserEntity,
+  ): Promise<ReferalMemberEntity[]> {
+    return await this.referalMemberRepository.getReferalMemberList(user);
+  }
 
   async sendReferalMemberLink(
     user: UserEntity,
@@ -103,8 +114,8 @@ export class ReferalMemberService {
           referal,
         );
       } else {
-        TwilioSendSMS(
-          `${referal.user.firstname} ${referal.user.lastname} приглашает Вас!`,
+        sendCodeSMS(
+          `Приглашение присоединиться к реферальной системе: http://контрагент.рф/account/referal/${referal.id}`,
           sendReferalMemberLinkDto.credential,
         );
       }
@@ -115,23 +126,18 @@ export class ReferalMemberService {
           referal,
         );
       } else {
-        TwilioSendSMS(
-          `${referal.user.firstname} ${referal.user.lastname} приглашает Вас!`,
+        sendCodeSMS(
+          `Приглашение присоединиться к платформе Контрагент: http://контрагент.рф/auth/referal/${referal.id}`,
           sendReferalMemberLinkDto.credential,
         );
       }
     }
   }
 
-  async getUserReferalMemberList(
-    user: UserEntity,
-  ): Promise<ReferalMemberEntity[]> {
-    return await this.referalMemberRepository.getReferalMemberList(user);
-  }
-
   async createReferalMember(
     referal: ReferalEntity,
     user: UserEntity,
+    newUser: boolean,
   ): Promise<ReferalMemberEntity> {
     const query = this.userRepository
       .createQueryBuilder('user')
@@ -145,8 +151,14 @@ export class ReferalMemberService {
       );
 
     //ПРОВЕРКА НА АДМИНА
-    if (user.role === USER_ROLE.ADMIN)
+    if (user.role === USER_ROLE.ADMIN) {
       throw new BadRequestException(REFERAL_MEMBER_ERROR.CANNOT_JOIN_AS_ADMIN);
+    }
+
+    //ПРОВЕРКА НА ВЕРИФИЦИРОВАННОСТЬ
+    if (!user.confirmEmail || !user.confirmPhone) {
+      throw new BadRequestException(USER_ERROR.USER_NOT_VERIFIED);
+    }
 
     //ПРОВЕРКА НА СОТРУДНИКА КОМПАНИИ
     const referalUserCompany =
@@ -171,24 +183,33 @@ export class ReferalMemberService {
         REFERAL_MEMBER_ERROR.REFERAL_IS_MEMBER_OF_YOUR_COMPANY,
       );
 
-    //VALIDATE WHETHER USER HAS REFERAL MEMBER
-    const referalMember =
+    //Проверка что это пользователь не является рефералом
+    const isExistReferalMember =
       await this.referalMemberRepository.getReferalMemberByUser(user);
-
-    if (referalMember)
+    if (isExistReferalMember)
       throw new BadRequestException(
         REFERAL_MEMBER_ERROR.YOU_ALREADT_REFERAL_MEMBER,
       );
 
-    const newReferalMember =
+    const referalMember =
       await this.referalMemberRepository.createReferalMember(referal, user);
 
-    await this.referalAchievementService.createReferalAchievement(
-      1500,
-      REFERAL_ACHIEVEMENT_TYPE.SIGNUP,
-      newReferalMember,
-    );
+    if (newUser) {
+      await this.referalPaymentService.createReferalPayment(
+        1500,
+        REFERAL_PAYMENT_TYPE.NEW_REFERAL,
+        referal,
+        referalMember,
+      );
+    }
 
-    return newReferalMember;
+    // if (newUser)
+    //   await this.referalAchievementService.createReferalAchievement(
+    //     1500,
+    //     REFERAL_ACHIEVEMENT_TYPE.SIGNUP,
+    //     newReferalMember,
+    //   );
+
+    return referalMember;
   }
 }

@@ -10,7 +10,8 @@ import { USER_ERROR } from '../user/enum/user-error.enum';
 import { CompanyMemberRepository } from './company-member.repository';
 import { UserRepository } from '../user/user.repository';
 import { CompanyMemberEntity } from './company-memeber.entity';
-import { GetcompanyMemberListDto } from './dto/get-company-user-list.dto';
+import { GetCompanyMemberListDto } from './dto/get-company-user-list.dto';
+import { GetAdminCompanyMemberListDto } from './dto/get-admin-company-user-list.dto';
 import { COMPANY_MEMBER_ERROR } from './enum/company-member-error.enum';
 import { COMPANY_MEMBER_ROLE } from './enum/company-member-role.enum';
 
@@ -43,6 +44,9 @@ export class CompanyMemberService {
         COMPANY_MEMBER_ERROR.CANNOT_ADD_SUCH_A_USER,
       );
     }
+    if (!user.confirmEmail && !user.confirmPhone) {
+      throw new BadRequestException(USER_ERROR.USER_NOT_VERIFIED);
+    }
 
     const companyMember = await this.companyMemberRepository
       .createQueryBuilder('company-member')
@@ -72,8 +76,19 @@ export class CompanyMemberService {
 
   async getcompanyMemberList(
     company: CompanyEntity,
-  ): Promise<GetcompanyMemberListDto> {
+    companyMember: CompanyMemberEntity,
+  ): Promise<GetCompanyMemberListDto> {
     const list = await this.companyMemberRepository.getcompanyMemberList(
+      company,
+    );
+
+    return { list, companyMemberRole: companyMember.role };
+  }
+
+  async getAdminCompanyMemberList(
+    company: CompanyEntity,
+  ): Promise<GetAdminCompanyMemberListDto> {
+    const list = await this.companyMemberRepository.getAdminCompanyMemberList(
       company,
     );
 

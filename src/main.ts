@@ -12,6 +12,7 @@ export async function bootstrap() {
 
   app.enableCors();
   app.use(helmet());
+
   await app.listen(port);
 
   const logger = new Logger('Bootstrap Api Server');

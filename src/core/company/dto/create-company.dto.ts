@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, Matches } from 'class-validator';
 
 export class CreateCompanyDto {
   @IsNotEmpty()
@@ -7,5 +7,6 @@ export class CreateCompanyDto {
 
   @IsNotEmpty()
   @IsString()
+  @Matches(/^(\d{10}|\d{12})$/, { message: 'COMPANY_INN' })
   inn: string;
 }

@@ -1,22 +1,20 @@
+import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
+  IsBoolean,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
   MaxLength,
+  ValidateNested,
 } from 'class-validator';
+import { CreateRevisionKontragentPeriodDto } from 'src/core/revision-kontragent/dto/revision-kontragent-period.dto';
 
-export class CreateRevisionDto {
+class RevisionKontragentDto {
   @IsNotEmpty()
-  @IsString()
-  @MaxLength(30)
-  title: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @MaxLength(30)
-  inn: string;
+  @IsNumber()
+  kontragentId: number;
 
   @IsNotEmpty()
   @IsString()
@@ -25,9 +23,20 @@ export class CreateRevisionDto {
 
   @IsOptional()
   @IsNumber({}, { each: true })
-  @ArrayMaxSize(10)
+  @ArrayMaxSize(10, { message: 'MAXIMUM_OF_FILES_10' })
   fileIdList?: number[];
 
-  @IsNotEmpty()
-  year: { name: string; period: boolean[] }[];
+  @ValidateNested()
+  @Type(() => CreateRevisionKontragentPeriodDto)
+  years: CreateRevisionKontragentPeriodDto[];
+}
+
+export class CreateRevisionDto {
+  @ValidateNested()
+  @Type(() => RevisionKontragentDto)
+  kontragents: RevisionKontragentDto[];
+
+  @IsBoolean()
+  @IsOptional()
+  isUseReferalBalance: boolean;
 }

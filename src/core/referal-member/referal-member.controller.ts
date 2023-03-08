@@ -40,7 +40,7 @@ export class ReferalMemberController {
     @GetReferal() referal: ReferalEntity,
     @GetAccount() user: UserEntity,
   ): Promise<ReferalMemberEntity> {
-    return this.referalMemberService.createReferalMember(referal, user);
+    return this.referalMemberService.createReferalMember(referal, user, false);
   }
 
   @Get('/')
